@@ -1,7 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import SQLiteManager, { ConsultaUsuarios, InserirUsuario, excluirBancoDeDados } from './components/SQLiteManager/SQLiteManager';
+import { StyleSheet, Text, SafeAreaView } from 'react-native';
 
+import SQLiteManager, { ConsultaUsuarios, InserirUsuario, excluirBancoDeDados } from './components/SQLiteManager/SQLiteManager';
+import Estabelecimento from './components/Estabelecimento/Estabelecimento';
 export default function App() {
   // InserirUsuario('Furegati3r22');
   // ConsultaUsuarios( usuario =>{
@@ -11,11 +12,11 @@ export default function App() {
 
  
   return (
-    <View style={styles.container}>
-      <Text>Gestor Agenda! Bora gurizada</Text>
-      <SQLiteManager></SQLiteManager>
+    <SafeAreaView style={styles.container}>
+      <Estabelecimento></Estabelecimento>
+      {/* <SQLiteManager></SQLiteManager> */}
       <StatusBar style="auto" />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
+   
     justifyContent: 'center',
   },
 });
