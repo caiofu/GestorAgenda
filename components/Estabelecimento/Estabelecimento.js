@@ -9,6 +9,7 @@ import styles from './StyleEstabelecimento';
 
 export default function Estabelecimento()
 {
+   
     const [image, setImage] = useState(null);
     const selecionaImagem = async () => {
        
@@ -38,7 +39,10 @@ export default function Estabelecimento()
                     <Text style={styles.btnLogoText}>SELECIONAR LOGO</Text>
                 </TouchableOpacity>
             </View>  
-            <TextInput label="Nome do Estabelecimento"   theme={{colors:{primary: '#006699'}}} style={styles.inputFormulario}/>
+            <TextInput label="Nome do Estabelecimento"   theme={{
+                                                                 colors:{primary: '#006699'},
+
+                                                                 }}  style={styles.inputFormulario}/>
             <TextInput label="CNPJ"   theme={{colors:{primary: '#006699'}}} style={styles.inputFormulario}/>
             <TextInput label="Ramo de atividade"   theme={{colors:{primary: '#006699'}}} style={styles.inputFormulario}/>
             <TouchableOpacity style={styles.btnSalvar}>

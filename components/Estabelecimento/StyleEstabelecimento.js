@@ -1,5 +1,4 @@
 import { StyleSheet } from "react-native";
-import { Colors } from "react-native/Libraries/NewAppScreen";
 
 const styles = StyleSheet.create({
     container:
@@ -9,7 +8,11 @@ const styles = StyleSheet.create({
 
     inputFormulario:
     {
-        marginLeft:10, marginRight:10, marginBottom:13, backgroundColor: 'rgba(112, 120, 147, 0.3)'
+        marginLeft:10, 
+        marginRight:10, 
+        marginBottom:13, 
+        backgroundColor: 'rgba(112, 120, 147, 0.3)',
+      
     },
 
     boxLogo:
@@ -24,7 +27,7 @@ const styles = StyleSheet.create({
     {
         backgroundColor:'#006699',
         borderRadius:5,
-        padding:5,
+        padding:8,
         fontWeight:'bold',
         color:'red'
     },
@@ -33,7 +36,8 @@ const styles = StyleSheet.create({
     {
         alignSelf:'center', 
         color:'#ffff',
-        fontWeight:'bold'
+        fontFamily:'Rubik_700Bold'
+        
     },
     
     btnSalvar:
@@ -48,9 +52,10 @@ const styles = StyleSheet.create({
     btnSalvarText:
     {
         color:'#ffff',
-        fontWeight:'bold',
+      
         fontSize:20,
         alignSelf:'center',
+        fontFamily:'Rubik_700Bold'
 
     }
 });
