@@ -57,6 +57,12 @@ const styles = StyleSheet.create({
         alignSelf:'center',
         fontFamily:'Rubik_700Bold'
 
+    },
+
+    msgHelper:
+    {
+        color:'red',
+        fontFamily:'Rubik_300Light'
     }
 });
 

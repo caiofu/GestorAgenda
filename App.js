@@ -20,11 +20,7 @@ export default function App()
   if (!fontsLoaded && !fontError) {
     return null;
   }
-  //Fontes padrão do sistema
-  // const [fontsLoaded] = useFonts({
-    
-  //   'Rubik-Bold': require('./assets/fonts/Rubik-Bold.ttf'),
-  // });
+
 
   // InserirUsuario('Furegati3r22');
   // ConsultaUsuarios( usuario =>{
