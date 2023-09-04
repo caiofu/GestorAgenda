@@ -48,7 +48,14 @@ const styles = StyleSheet.create({
         padding:20,
         borderRadius:5
     },
-
+    btnSalvarDesabilitado:
+    {
+        backgroundColor:'#9e9e9e',
+        marginLeft:20,
+        marginRight:20,
+        padding:20,
+        borderRadius:5
+    },
     btnSalvarText:
     {
         color:'#ffff',

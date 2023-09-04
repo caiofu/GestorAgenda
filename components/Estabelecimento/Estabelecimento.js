@@ -15,6 +15,8 @@ export default function Estabelecimento()
     
     
     const [cnpj, setCnpj]                                       = useState(null);
+    const [cnpjValido, setCnpjValido]                           = useState(false);
+   
     const [ramoAtividade, setRamoAtividade]                     = useState(null);
     const [msgRamoAtividade, setMsgRamoAtividade]               = useState(false);
 
@@ -57,8 +59,20 @@ export default function Estabelecimento()
         //Ramo de atividade
        
     }
+
+    function ValidaCnpj(txtCnpj)
+    {
+      
+        if(txtCnpj.length < 14)
+        {
+
+            return false;
+        }
+       
+        return true;
+    }
     
- 
+ console.log(cnpjValido);
     return(
     
         <SafeAreaView style={styles.container}>
@@ -70,10 +84,15 @@ export default function Estabelecimento()
             </View> 
             {msgNomeEstabelecimento == true ? <HelperText style={styles.msgHelper}>Este campo é obrigatório</HelperText> : ''}
             <TextInput label="Nome do Estabelecimento" onChangeText={setEstabelecimento}   theme={{ colors:{primary: msgNomeEstabelecimento ? 'red' : '#006699'},}}  style={styles.inputFormulario}/>
-                                                               
-            <TextInput label="CNPJ" keyboardType="numeric"  theme={{colors:{primary: '#006699'}}} style={styles.inputFormulario}/>
+
+             {cnpjValido === false ? <HelperText style={styles.msgHelper}>Digite um CNPJ valido!</HelperText> : ''}                                                  
+            <TextInput label="CNPJ" keyboardType="numeric" maxLength={14} onChangeText={txtCnpj =>{
+                setCnpj(txtCnpj);//Atualiza o estado do CNPJ
+                setCnpjValido(ValidaCnpj(txtCnpj));//Chama a função de validação e seta a ubfirnalai do CNPJ Valido
+            }} theme={{colors:{primary: cnpjValido ? '#006699' : 'red'}}} style={styles.inputFormulario}/>
+
             <TextInput label="Ramo de atividade"   theme={{colors:{primary: '#006699'}}} style={styles.inputFormulario}/>
-            <TouchableOpacity style={styles.btnSalvar} onPress={ValidaEnvio}>
+            <TouchableOpacity disabled={cnpjValido  == false? true : false } style={cnpjValido  == false? styles.btnSalvarDesabilitado : styles.btnSalvar} onPress={ValidaEnvio}>
                 <Text style={styles.btnSalvarText} >SALVAR</Text>
             </TouchableOpacity>
         </SafeAreaView>
