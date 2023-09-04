@@ -14,7 +14,7 @@ export default function Estabelecimento()
     const [msgNomeEstabelecimento, setMsgNomeEstabelecimento]   = useState(false);
     
     
-    const [cnpj, setCnpj]                                       = useState(null);
+    const [cnpj, setCnpj]                                       = useState(0);
     const [cnpjValido, setCnpjValido]                           = useState(false);
    
     const [ramoAtividade, setRamoAtividade]                     = useState(null);
@@ -72,7 +72,7 @@ export default function Estabelecimento()
         return true;
     }
     
- console.log(cnpjValido);
+ console.log(cnpj);
     return(
     
         <SafeAreaView style={styles.container}>
@@ -85,11 +85,12 @@ export default function Estabelecimento()
             {msgNomeEstabelecimento == true ? <HelperText style={styles.msgHelper}>Este campo é obrigatório</HelperText> : ''}
             <TextInput label="Nome do Estabelecimento" onChangeText={setEstabelecimento}   theme={{ colors:{primary: msgNomeEstabelecimento ? 'red' : '#006699'},}}  style={styles.inputFormulario}/>
 
-             {cnpjValido === false ? <HelperText style={styles.msgHelper}>Digite um CNPJ valido!</HelperText> : ''}                                                  
+             {cnpjValido === false && cnpj > 0 ? <HelperText style={styles.msgHelper}>Digite um CNPJ valido!</HelperText> : ''}                                                  
             <TextInput label="CNPJ" keyboardType="numeric" maxLength={14} onChangeText={txtCnpj =>{
                 setCnpj(txtCnpj);//Atualiza o estado do CNPJ
+               
                 setCnpjValido(ValidaCnpj(txtCnpj));//Chama a função de validação e seta a ubfirnalai do CNPJ Valido
-            }} theme={{colors:{primary: cnpjValido ? '#006699' : 'red'}}} style={styles.inputFormulario}/>
+            }} theme={{colors:{primary: cnpjValido === false && cnpj > 0 ? 'red' :'#006699' }}} style={styles.inputFormulario}/>
 
             <TextInput label="Ramo de atividade"   theme={{colors:{primary: '#006699'}}} style={styles.inputFormulario}/>
             <TouchableOpacity disabled={cnpjValido  == false? true : false } style={cnpjValido  == false? styles.btnSalvarDesabilitado : styles.btnSalvar} onPress={ValidaEnvio}>
