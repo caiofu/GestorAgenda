@@ -14,6 +14,7 @@ export default function SQLiteManager()
      useEffect(() => {
         
         // Verificar se o banco de dados já foi criado
+        /*
         db.transaction(tr => {
             tr.executeSql(
                 'SELECT name FROM sqlite_master WHERE type="table";',
@@ -45,6 +46,41 @@ export default function SQLiteManager()
                     }
                 }
             );
+        }); */
+
+
+        db.transaction(tx =>{
+
+          //Estabelecimento
+            tx.executeSql( 'CREATE TABLE IF NOT EXISTS estabelecimento (idEstabelecimento INTEGER PRIMARY KEY AUTOINCREMENT, nomeEstabelecimento TEXT, cnpj TEXT, logo TEXT, ramoAtividade TEXT);',
+            );
+          //Ramo Atividade
+            tx.executeSql(
+              'CREATE TABLE IF NOT EXISTS ramoAtividade (idRamoAtividade INTEGER PRIMARY KEY AUTOINCREMENT, nomeAtividade TEXT);'
+            );
+          //Inserindo dados iniciais ramo de atividade
+          tx.executeSql('SELECT idRamoAtividade FROM ramoAtividade', 
+          [],
+          (_,{rows}) =>{
+            if(rows.length === 0)
+            {
+              tx.executeSql(
+                'INSERT INTO ramoAtividade (nomeAtividade) VALUES (?), (?), (?), (?), (?), (?), (?)',
+                ['Oficina Mecânica', 'Salão de Beleza', 'Clínica de Massagem', 'Personal Trainer', 'Serviços Gerais', 'Barbearia', 'Outros'],
+                (_, result) => {
+                    console.log('Tabela criada com sucesso e valores inseridos');
+                 
+                },
+                (_, error) => {
+                    console.error('Erro ao criar tabela e inserir valores:', error);
+                }
+              )
+            }
+            else
+            {
+              console.log('valores ja inseridos');
+            }
+          })
         });
     }, []);
    
