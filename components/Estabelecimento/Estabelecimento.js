@@ -1,14 +1,31 @@
 import React, { useState } from "react";
-import { HelperText, TextInput } from 'react-native-paper';
+import { HelperText, TextInput, List } from 'react-native-paper';
 import {SafeAreaView, Text, Button, Image, View, StyleSheet, TouchableOpacity } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
-
+import { SelectList } from "react-native-dropdown-select-list";
+import { useEffect } from "react";
 //ESTILO
 import styles from './StyleEstabelecimento';
+import { ConsultaRamoAtividade } from "../SQLiteManager/SQLiteManager";
 
 
 export default function Estabelecimento()
 {
+ 
+    //BUSCA O RAMO DE ATIVIDADE (Usamos o useEffect para carregar somente na criaçao do componente)
+    const [listaRamoAtividade, setListaRamoAtividade] = useState([]);
+    useEffect(() => {
+        // Chame a função de consulta diretamente
+        ConsultaRamoAtividade((ramoAtividades) => {
+        const retorno = ramoAtividades.map((atividade) => ({
+            key: atividade.idRamoAtividade.toString(),
+            value: atividade.nomeAtividade,
+        }));
+            console.log(retorno);
+            setListaRamoAtividade(retorno);
+        });
+    }, []);
+ 
     //VARIAVEIS DE ESTADO
     const [nomeEstabelecimento, setEstabelecimento]             = useState(null);
     const [msgNomeEstabelecimento, setMsgNomeEstabelecimento]   = useState(false);
@@ -20,6 +37,10 @@ export default function Estabelecimento()
     const [ramoAtividade, setRamoAtividade]                     = useState(null);
     const [msgRamoAtividade, setMsgRamoAtividade]               = useState(false);
 
+    //testes
+    const [selected, setSelected] =useState("");
+  
+    //fim testes
     const [image, setImage]                                     = useState(null);
     const [envio, setEnvio]                                     = useState(false);
    
@@ -71,8 +92,7 @@ export default function Estabelecimento()
        
         return true;
     }
-    
- console.log(cnpj);
+
     return(
     
         <SafeAreaView style={styles.container}>
@@ -92,7 +112,14 @@ export default function Estabelecimento()
                 setCnpjValido(ValidaCnpj(txtCnpj));//Chama a função de validação e seta a ubfirnalai do CNPJ Valido
             }} theme={{colors:{primary: cnpjValido === false && cnpj > 0 ? 'red' :'#006699' }}} style={styles.inputFormulario}/>
 
-            <TextInput label="Ramo de atividade"   theme={{colors:{primary: '#006699'}}} style={styles.inputFormulario}/>
+
+
+            <SelectList placeholder="Ramo de atividade" searchPlaceholder="Pesquisar" fontFamily="Rubik_400Regular" boxStyles={styles.inputFormulario}
+                    setSelected={(val) => setSelected(val)} 
+                    data={listaRamoAtividade} 
+                    save="value"
+            />
+
             <TouchableOpacity disabled={cnpjValido  == false? true : false } style={cnpjValido  == false? styles.btnSalvarDesabilitado : styles.btnSalvar} onPress={ValidaEnvio}>
                 <Text style={styles.btnSalvarText} >SALVAR</Text>
             </TouchableOpacity>
