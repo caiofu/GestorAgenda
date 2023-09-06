@@ -4,14 +4,19 @@ import {SafeAreaView, Text, Button, Image, View, StyleSheet, TouchableOpacity } 
 import * as ImagePicker from 'expo-image-picker';
 import { SelectList } from "react-native-dropdown-select-list";
 import { useEffect } from "react";
+import * as FileSystem from 'expo-file-system';
+
+import {ConsultaEstabelecimento, InserirEstabelecimento} from '../SQLiteManager/SQLEstabelecimento';  
+
 //ESTILO
 import styles from './StyleEstabelecimento';
-import { ConsultaRamoAtividade } from "../SQLiteManager/SQLiteManager";
+import {ConsultaRamoAtividade, ExcluirBancoDeDados } from "../SQLiteManager/SQLiteManager";
 
 
 export default function Estabelecimento()
 {
  
+
     //BUSCA O RAMO DE ATIVIDADE (Usamos o useEffect para carregar somente na criaçao do componente)
     const [listaRamoAtividade, setListaRamoAtividade] = useState([]);
     useEffect(() => {
@@ -21,7 +26,7 @@ export default function Estabelecimento()
             key: atividade.idRamoAtividade.toString(),
             value: atividade.nomeAtividade,
         }));
-            console.log(retorno);
+            //console.log(retorno);
             setListaRamoAtividade(retorno);
         });
     }, []);
@@ -31,7 +36,7 @@ export default function Estabelecimento()
     const [msgNomeEstabelecimento, setMsgNomeEstabelecimento]   = useState(false);
     
     
-    const [cnpj, setCnpj]                                       = useState(0);
+    const [cnpj, setCnpj]                                       = useState(null);
     const [cnpjValido, setCnpjValido]                           = useState(false);
    
     const [ramoAtividade, setRamoAtividade]                     = useState(null);
@@ -47,9 +52,9 @@ export default function Estabelecimento()
     const selecionaImagem = async () => 
     {
        
-        let resultado = await ImagePicker.launchImageLibraryAsync({
+        const resultado = await ImagePicker.launchImageLibraryAsync({
             //Definindo as opções do imagePicker
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [4,3]
         });
@@ -69,29 +74,74 @@ export default function Estabelecimento()
     function ValidaEnvio()
     {
         //Estabelecimento
-        if (nomeEstabelecimento === null || nomeEstabelecimento === "") {
+        if (nomeEstabelecimento === null || nomeEstabelecimento === "")
+         {
             setEnvio(false);
             setMsgNomeEstabelecimento(true);
           
           } else {
             setEnvio(true);
             setMsgNomeEstabelecimento(false);
+            MoveImagem();
+            InserirEstabelecimento('','',image,'');
+           
           }
-        //Ramo de atividade
-       
+        
+          //Mudar diretorio de imagem
+          
     }
-
+    ConsultaEstabelecimento();
     function ValidaCnpj(txtCnpj)
     {
-      
-        if(txtCnpj.length < 14)
-        {
-
-            return false;
-        }
+        //Filtro para aceitar somente numros
        
-        return true;
+        let cnpjNumeros = txtCnpj.replace(/[^0-9]/g, '');
+        setCnpj(cnpjNumeros);
+       // console.log(cnpj+ '/ numero: '+cnpjNumeros);
+        if(cnpjNumeros.length == 14)
+        {
+         
+            setCnpjValido(true);
+           
+        }
+        else
+        {
+           
+            setCnpjValido(false);
+        }
+        
+        
+      
     }
+
+   //IMAGEM
+   async function MoveImagem() {
+    if (image !== null) {
+      const nomeImagem = image.split('/').pop();
+      const origem = image;
+      const pastaLogoUsuario = `${FileSystem.documentDirectory}logoUsuario/`;
+      const destino = `${pastaLogoUsuario}${nomeImagem}`;
+  
+      try {
+        // Cria a pasta "logoUsuario" se não existir
+        const pastaInfo = await FileSystem.getInfoAsync(pastaLogoUsuario);
+        if (!pastaInfo.exists) {
+          await FileSystem.makeDirectoryAsync(pastaLogoUsuario);
+        }
+  
+        await FileSystem.moveAsync({
+          from: origem,
+          to: destino,
+        });
+        console.log('Imagem movida para:', destino);
+        setImage(destino);
+      } catch (error) {
+        console.error('Erro ao mover a imagem:', error);
+      }
+    } else {
+      console.log('Não é possível mover a imagem');
+    }
+  }
 
     return(
     
@@ -104,17 +154,16 @@ export default function Estabelecimento()
             </View> 
             {msgNomeEstabelecimento == true ? <HelperText style={styles.msgHelper}>Este campo é obrigatório</HelperText> : ''}
             <TextInput label="Nome do Estabelecimento" onChangeText={setEstabelecimento}   theme={{ colors:{primary: msgNomeEstabelecimento ? 'red' : '#006699'},}}  style={styles.inputFormulario}/>
-
-             {cnpjValido === false && cnpj > 0 ? <HelperText style={styles.msgHelper}>Digite um CNPJ valido!</HelperText> : ''}                                                  
-            <TextInput label="CNPJ" keyboardType="numeric" maxLength={14} onChangeText={txtCnpj =>{
-                setCnpj(txtCnpj);//Atualiza o estado do CNPJ
+       
+             {cnpjValido ==false  && cnpj > 0 ? <HelperText style={styles.msgHelper}>Digite um CNPJ valido!</HelperText> : ''}                                                 
+            <TextInput label="CNPJ" keyboardType="numeric" maxLength={14}  onChangeText={txtCnpj =>{
+                ValidaCnpj(txtCnpj);//Atualiza o estado do CNPJ
                
-                setCnpjValido(ValidaCnpj(txtCnpj));//Chama a função de validação e seta a ubfirnalai do CNPJ Valido
-            }} theme={{colors:{primary: cnpjValido === false && cnpj > 0 ? 'red' :'#006699' }}} style={styles.inputFormulario}/>
+            }} theme={{colors:{primary: cnpjValido == false && cnpj > 0 ? 'red' :'#006699' }}} style={styles.inputFormulario}/>
 
 
 
-            <SelectList placeholder="Ramo de atividade" searchPlaceholder="Pesquisar" fontFamily="Rubik_400Regular" boxStyles={styles.inputFormulario}
+            <SelectList placeholder="Ramo de atividade (opcional)" searchPlaceholder="Pesquisar" fontFamily="Rubik_400Regular" boxStyles={styles.inputFormulario}
                     setSelected={(val) => setSelected(val)} 
                     data={listaRamoAtividade} 
                     save="value"

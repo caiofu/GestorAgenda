@@ -5,8 +5,11 @@ import { useState } from 'react';
 //FONT
 import { useFonts, Rubik_400Regular, Rubik_700Bold, Rubik_300Light } from '@expo-google-fonts/rubik'
 
+//NAVEGAÇÃO
+import Navegacao from './components/Navegacao/Navegacao';
+
 //BANCO
-import SQLiteManager, { ConsultaEstabelecimento, ConsultaRamoAtividade, ConsultaUsuarios, ExcluirBancoDeDados, InserirUsuario, ListaTodasTabelas, excluirBancoDeDados } from './components/SQLiteManager/SQLiteManager';
+import SQLiteManager from './components/SQLiteManager/SQLiteManager';
 
 //ASYNC STORAGE
 import { houvePrimeiroAcesso, guardarPrimeiroAcesso, removerAsyncStorage } from './components/AsyncStorage/AsyncStorage';
@@ -28,14 +31,7 @@ export default function App()
     return null;
   }
 
-  // InserirUsuario('Furegati3r22');
-  ConsultaEstabelecimento(usuario => {
-    console.log(usuario);
-  });
-
-  ConsultaRamoAtividade(ret => {
-    console.log(ret);
-  })
+ 
 
   //Async storage  
   houvePrimeiroAcesso().then(ret => {
@@ -49,8 +45,10 @@ export default function App()
  
   return (
     <SafeAreaView style={styles.container}>
-      {primeiroAcesso ? <BoasVindas></BoasVindas> : <Estabelecimento></Estabelecimento>}
-      <SQLiteManager></SQLiteManager>
+      {/* {primeiroAcesso ? <BoasVindas></BoasVindas> : <Estabelecimento></Estabelecimento>} */}
+      {/* <Estabelecimento></Estabelecimento>
+      <SQLiteManager></SQLiteManager> */}
+      <Navegacao></Navegacao>
       <StatusBar style="auto" />
     </SafeAreaView>
   );
