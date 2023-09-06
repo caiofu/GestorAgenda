@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 
 import * as SQLite from 'expo-sqlite';
 
+
 const dbName = 'gestorAgenda.db';
 const db = SQLite.openDatabase(dbName);
 
@@ -105,7 +106,7 @@ export function ExcluirBancoDeDados()
 
       db.transaction(tx => {
         tx.executeSql(
-          'DROP TABLE IF EXISTS ramoAtividade;',
+          'DROP TABLE IF EXISTS estabelecimento;',
           [],
           (_, result) => {
             console.log('A tabela "usuarios" foi excluída com sucesso.');
@@ -117,36 +118,40 @@ export function ExcluirBancoDeDados()
       });
 }
 
-export function InserirEmpresa(nomeEmpresa, teste, sucessoCallback, erroCallback)
-{
-    db.transaction(tr => {
-        tr.executeSql('INSERT INTO empresa (nomeEmpresa, teste) VALUES (?, ?)', [nome, teste],//O VALUES (?) é um placeholder usado para proteger o codigo contra tentativa de sql injection ele prepara a instrução
-        () => {
-            console.log('Empresa inserida com sucesso');
-            if (sucessoCallback) sucessoCallback();
-        },
-        (_, error) => {
-            console.error('Erro ao inserir empresa:', error);
-            if (erroCallback) erroCallback();
-        }
-        ); 
-    });
-}
+// export function InserirEmpresa(nome, cnpj, logo, ramoAtividade, sucessoCallback, erroCallback)
+// {
+//     db.transaction(tr => {
+//         tr.executeSql('INSERT INTO estabelecimento (nomeEstabelecimento , cnpj , logo , ramoAtividade ) VALUES (?, ?, ?, ?)', [nome, cnpj, logo, ramoAtividade],//O VALUES (?) é um placeholder usado para proteger o codigo contra tentativa de sql injection ele prepara a instrução
+//         () => {
+//             console.log('Empresa inserida com sucesso');
+//             if (sucessoCallback) sucessoCallback();
+//         },
+//         (_, error) => {
+//             console.error('Erro ao inserir empresa:', error);
+//             if (erroCallback) erroCallback();
+//         }
+//         ); 
+//     });
+// }
 
-export function ConsultaEstabelecimento()
-{
-    // db.transaction(tr => {
-    //     tr.executeSql('SELECT * FROM estabelecimento ', [], (_, { rows }) => {
-    //         retorno(rows._array);
-    //       });
-    // });
-    db.transaction(tx =>{
-        tx.executeSql('SELECT  * FROM estabelecimento', null, 
-        (txtObj, resultSet)=> resultSet.rows._array,
-        (txtObj, error) => console.log(error)
-        );
-    });
-}
+// export function ConsultaEstabelecimento()
+// {
+   
+//     db.transaction(tx =>{
+//         tx.executeSql('SELECT  * FROM estabelecimento', null, 
+//         (txtObj, resultSet)=>{
+//           const results = resultSet.rows._array;
+//           // resolve(results);
+//           console.log(results);
+//         }, 
+//         (txtObj, error) => {
+//           console.log(error);
+//             //reject(error)
+//         }
+//         );
+        
+//     });
+// }
 
 export function ConsultaRamoAtividade(callback) 
 {
