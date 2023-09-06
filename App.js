@@ -42,7 +42,6 @@ export default function App()
     setPrimeiroAcesso(ret);
   });
   console.log('É o primeiro acesso? ' + primeiroAcesso);
-  removerAsyncStorage();
 
   //  ConsultaEstabelecimento( usuario =>{
   //    console.log(usuario);
