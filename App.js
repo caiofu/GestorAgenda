@@ -47,7 +47,8 @@ export default function App()
     <SafeAreaView style={styles.container}>
       {/* {primeiroAcesso ? <BoasVindas></BoasVindas> : <Estabelecimento></Estabelecimento>} */}
       {/* <Estabelecimento></Estabelecimento>
-      <SQLiteManager></SQLiteManager> */}
+      */}
+       <SQLiteManager></SQLiteManager>
       <Navegacao></Navegacao>
       <StatusBar style="auto" />
     </SafeAreaView>

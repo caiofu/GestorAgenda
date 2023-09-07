@@ -1,11 +1,21 @@
-import {SafeAreaView, Text, Button } from "react-native";
+import {SafeAreaView, Text, Button, TouchableOpacity, View } from "react-native";
+import {FontAwesome5} from '@expo/vector-icons';
+
+import styles from "./StyleHome";
 
 export default function Home({navigation})
 {
     return(
-      <SafeAreaView>
-        <Text style={{paddingTop:200}}>Éssa é a home</Text>
-        <Button title="Estabelecimento" onPress={() => navigation.navigate('Estabelecimento') }></Button>
+      <SafeAreaView style={{margin:10}}>
+        <TouchableOpacity onPress={() => navigation.navigate('Estabelecimento') }>
+          <View style={styles.boxBotao}>
+            <View style={styles.iconeBotao}>
+              <FontAwesome5 style={styles.iconeBotao} name="store" size={34} color='#ffffff' />
+              <Text style={styles.txtBotao}>Negócio</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+       
       </SafeAreaView>
     )
 }
