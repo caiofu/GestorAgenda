@@ -70,6 +70,15 @@ const styles = StyleSheet.create({
     {
         color:'red',
         fontFamily:'Rubik_300Light'
+    },
+
+    txtAnimacao:
+    {
+        alignSelf:'center',
+        color:'#006699',
+        fontFamily:'Rubik_700Bold',
+        fontSize:22,
+        marginTop:6
     }
 });
 

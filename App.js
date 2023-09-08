@@ -18,6 +18,10 @@ import { houvePrimeiroAcesso, guardarPrimeiroAcesso, removerAsyncStorage } from 
 import Estabelecimento from './components/Estabelecimento/Estabelecimento';
 import BoasVindas from './components/BoasVindas/BoasVindas';
 
+
+
+
+
 export default function App() 
 {
   const [primeiroAcesso, setPrimeiroAcesso] = useState(null);
@@ -31,7 +35,7 @@ export default function App()
     return null;
   }
 
- 
+
 
   //Async storage  
   houvePrimeiroAcesso().then(ret => {

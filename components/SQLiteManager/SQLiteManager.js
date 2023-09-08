@@ -14,41 +14,7 @@ export default function SQLiteManager()
     //CRIAR BANCO DE DADOS
      useEffect(() => {
         
-        // Verificar se o banco de dados já foi criado
-        /*
-        db.transaction(tr => {
-            tr.executeSql(
-                'SELECT name FROM sqlite_master WHERE type="table";',
-                [],
-                (_, { rows }) => {
-                    if (rows.length > 0) {
-                        
-                        console.log('Banco de dados já criado');
-                        setDbCriado(true);
-                    } else {
-                        console.log('Criando banco de dados e tabelas');
-                        tr.executeSql(
-                            'CREATE TABLE IF NOT EXISTS estabelecimento (idEstabelecimento INTEGER PRIMARY KEY AUTOINCREMENT, nomeEstabelecimento TEXT, cnpj TEXT, logo TEXT, ramoAtividade TEXT);'
-                        );
-                        tr.executeSql(
-                            'CREATE TABLE IF NOT EXISTS ramoAtividade (idRamoAtividade INTEGER PRIMARY KEY AUTOINCREMENT, nomeAtividade TEXT);'
-                        );
-                        tr.executeSql(
-                            'INSERT INTO ramoAtividade (nomeAtividade) VALUES (?), (?), (?), (?), (?), (?), (?)',
-                            ['Oficina Mecânica', 'Salão de Beleza', 'Clínica de Massagem', 'Personal Trainer', 'Serviços Gerais', 'Barbearia', 'Outros'],
-                            (_, result) => {
-                                console.log('Tabela criada com sucesso e valores inseridos');
-                                setDbCriado(true);
-                            },
-                            (_, error) => {
-                                console.error('Erro ao criar tabela e inserir valores:', error);
-                            }
-                        );
-                    }
-                }
-            );
-        }); */
-
+    
 
         db.transaction(tx =>{
 
