@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { HelperText, TextInput } from 'react-native-paper';
-import {SafeAreaView, Text,  Image, View, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
+import { HelperText, TextInput} from 'react-native-paper';
+import {SafeAreaView, Text,  Image, View, StyleSheet, TouchableOpacity, ActivityIndicator, Modal } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import { SelectList } from "react-native-dropdown-select-list";
 import { useEffect } from "react";
 import * as FileSystem from 'expo-file-system';
+
 
 import {ConsultaEstabelecimento, ConsultaEstabelecimento1, InserirEstabelecimento} from '../SQLiteManager/SQLEstabelecimento';  
 
@@ -131,6 +132,7 @@ export default function Estabelecimento()
             setEnvio(true);
             setMsgNomeEstabelecimento(false);
             await MoveImagem(); //NAO ESQUECER DE TROCAR O NOME DESSA FUNÇAO POIS ELA FAZ MUITO MAIS QUE MOVER A IMAGEM
+            setModalVisivel(true);
           console.log(image)
         
           }
@@ -161,6 +163,8 @@ export default function Estabelecimento()
         
       
     }
+
+    //
    
    //IMAGEM (MUDAR O NOME POR NAO ESTA SOMENTE MOVENTO A IMAGEM E SIM INSERINDO NA TABELA ESTABELECIMENTO TB)
    async function MoveImagem() {
@@ -222,18 +226,17 @@ export default function Estabelecimento()
     }
   }
 
+  //MODAL
+  const [modalVisivel, setModalVisivel] = useState(false);
+
+ 
     return(
       
       <SafeAreaView style={styles.container}>
       
-      {animacaoSalvando == true && dadosCarregados == true ? ( //dadosCarregados serve para somente carregar tudo quando tiver buscados os dados evitando campos vazios
-        <View>
-          <ActivityIndicator size={70} color="#006699" />
-          <Text style={styles.txtAnimacao}>Salvando</Text>
-        </View>
-      ) : (
-        <>
-        {/* <Image source={{uri: image}}  style={{ width: 200, height: 200 }}></Image> */}
+     
+       
+        
           <View style={styles.boxLogo}>
             {image != null ? (
               <Image source={{ uri: image }} style={{ width: 200, height: 200, alignSelf: 'center' }} />
@@ -243,6 +246,9 @@ export default function Estabelecimento()
             <TouchableOpacity style={styles.btnLogo} onPress={selecionaImagem}>
               <Text style={styles.btnLogoText}>SELECIONAR LOGO</Text>
             </TouchableOpacity>
+          </View>
+          <View>
+
           </View>
           {msgNomeEstabelecimento == true ? (
             <HelperText style={styles.msgHelper}>Este campo é obrigatório</HelperText>
@@ -298,8 +304,27 @@ export default function Estabelecimento()
        
             <Text style={styles.btnSalvarText}>{primeiroCadastro ? 'SALVAR' : 'ATUALIZAR'}</Text>
           </TouchableOpacity>
-        </>
-      )}
+          
+      
+          <Modal animationType="slide" transparent={true} visible={modalVisivel}>
+          <View style={styles.contornoModal}>
+            <View style={styles.janelaModal}>
+              {animacaoSalvando ? (
+                <View>
+                  <ActivityIndicator size={70} color="#006699" />
+                  <Text style={styles.txtAnimacao}>Salvando</Text>
+                </View>
+              ) : (
+                <>
+                  <Text style={styles.txtModal}>Dados salvos com sucesso!</Text>
+                  <TouchableOpacity style={styles.btnModal} onPress={() => {setModalVisivel(false)}} >
+                    <Text style={styles.txtBtnModal}>CONTINUAR</Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            </View>
+          </View>
+      </Modal>
     </SafeAreaView>
     )
 }

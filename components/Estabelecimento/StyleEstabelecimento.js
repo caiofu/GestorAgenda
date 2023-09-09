@@ -79,7 +79,53 @@ const styles = StyleSheet.create({
         fontFamily:'Rubik_700Bold',
         fontSize:22,
         marginTop:6
+    },
+
+    contornoModal:
+    {
+        flex: 1, 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        backgroundColor: 'rgba(128, 128, 128, 0.5)'
+    },
+    janelaModal:
+    {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    txtModal:
+    {
+        fontFamily:'Rubik_700Bold',
+        color:'#006699',
+        fontSize:18
+    },
+    btnModal:
+    {
+        marginTop:28,
+        
+        backgroundColor:"#006699",
+        padding:8,
+        borderRadius:9,
+
+    },
+    txtBtnModal:
+    {
+        color:'#ffff',
+        fontFamily:'Rubik_700Bold',
+
     }
+
 });
 
 export default styles;
