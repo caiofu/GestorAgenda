@@ -229,7 +229,7 @@ export default function Estabelecimento()
   //MODAL
   const [modalVisivel, setModalVisivel] = useState(false);
 
- 
+
     return(
       
       <SafeAreaView style={styles.container}>

@@ -43,15 +43,12 @@ export default function App()
   });
   console.log('É o primeiro acesso? ' + primeiroAcesso);
 
-  //  ConsultaEstabelecimento( usuario =>{
-  //    console.log(usuario);
-  //  });
+ 
  
   return (
     <SafeAreaView style={styles.container}>
-      {/* {primeiroAcesso ? <BoasVindas></BoasVindas> : <Estabelecimento></Estabelecimento>} */}
-      {/* <Estabelecimento></Estabelecimento>
-      */}
+      {primeiroAcesso ? <BoasVindas></BoasVindas> : <Estabelecimento></Estabelecimento>} 
+     
        <SQLiteManager></SQLiteManager>
       <Navegacao></Navegacao>
       <StatusBar style="auto" />
