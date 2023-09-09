@@ -1,5 +1,4 @@
-import { SafeAreaView } from "react-native-safe-area-context";
-import SQLiteManager from "./SQLiteManager";
+
 import * as SQLite from 'expo-sqlite';
 
 const dbName = 'gestorAgenda.db';
@@ -43,26 +42,8 @@ export function InserirEstabelecimento(nome, cnpj, logo, ramoAtividade, tipoAcao
   }
   
 
-// export function ConsultaEstabelecimento()
-// {
-   
-//     db.transaction(tx =>{
-//         tx.executeSql('SELECT  * FROM estabelecimento', null, 
-//         (txtObj, resultSet)=>{
-//           const results = resultSet.rows._array;
-//           // resolve(results);
-//           //console.log(results);
-//         }, 
-//         (txtObj, error) => {
-//           console.log(error);
-//             //reject(error)
-//         }
-//         );
-        
-//     });
-// }
 
-export function ConsultaEstabelecimento1(callback) {
+export function ConsultaEstabelecimento(callback) {
   db.transaction((tx) => {
     tx.executeSql(
       'SELECT * FROM estabelecimento  LIMIT 1', // Adicione "LIMIT 1" para retornar apenas um resultado

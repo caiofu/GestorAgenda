@@ -6,12 +6,13 @@ import { SelectList } from "react-native-dropdown-select-list";
 import { useEffect } from "react";
 import * as FileSystem from 'expo-file-system';
 
-
-import {ConsultaEstabelecimento, ConsultaEstabelecimento1, InserirEstabelecimento} from '../SQLiteManager/SQLEstabelecimento';  
+//BANCO DE DADOS
+import {ConsultaEstabelecimento,  InserirEstabelecimento} from '../SQLiteManager/SQLEstabelecimento';  
+import { ConsultaRamoAtividade } from "../SQLiteManager/SQLRamoAtividade";
 
 //ESTILO
 import styles from './StyleEstabelecimento';
-import {ConsultaRamoAtividade, ExcluirBancoDeDados } from "../SQLiteManager/SQLiteManager";
+
 
 
 export default function Estabelecimento()
@@ -23,7 +24,7 @@ export default function Estabelecimento()
     useEffect(() => {
        
 
-        ConsultaEstabelecimento1((resultado) => {
+        ConsultaEstabelecimento((resultado) => {
           if (resultado !== null) {
             
             setPrimeiroCadastro(false);
@@ -82,7 +83,7 @@ export default function Estabelecimento()
    
     const [ramoAtividade, setRamoAtividade]                     = useState(null);
     const [idRamoAtividade, setIdRamoAtividade]                 = useState(null);
-    const [msgRamoAtividade, setMsgRamoAtividade]               = useState(false);
+
 
     const [idEstabelecimento, setIdEstabelecimento]             = useState(null);
     
@@ -131,7 +132,7 @@ export default function Estabelecimento()
           } else {
             setEnvio(true);
             setMsgNomeEstabelecimento(false);
-            await MoveImagem(); //NAO ESQUECER DE TROCAR O NOME DESSA FUNÇAO POIS ELA FAZ MUITO MAIS QUE MOVER A IMAGEM
+            await SalvandoDados(); //NAO ESQUECER DE TROCAR O NOME DESSA FUNÇAO POIS ELA FAZ MUITO MAIS QUE MOVER A IMAGEM
             setModalVisivel(true);
           console.log(image)
         
@@ -164,10 +165,9 @@ export default function Estabelecimento()
       
     }
 
-    //
-   
+
    //IMAGEM (MUDAR O NOME POR NAO ESTA SOMENTE MOVENTO A IMAGEM E SIM INSERINDO NA TABELA ESTABELECIMENTO TB)
-   async function MoveImagem() {
+   async function SalvandoDados() {
    
     if (image !== null) {
       const nomeImagem = image.split('/').pop();
@@ -182,7 +182,7 @@ export default function Estabelecimento()
           await FileSystem.makeDirectoryAsync(pastaLogoUsuario);
         }
        
-       // console.log('DESTINO==',destino)
+
         await FileSystem.moveAsync({
           from: origem,
           to: destino,
@@ -191,7 +191,6 @@ export default function Estabelecimento()
         setImage(destino);
 
         //INSERINDO DADOS
-
         //Verificando se é primeiro acesso para trocar o tipo de query entre insert e update
         let tipoAcao= "";
         primeiroCadastro ? tipoAcao = "insercao" : tipoAcao = "atualizacao";
@@ -200,23 +199,22 @@ export default function Estabelecimento()
           nomeEstabelecimento,cnpj,destino,ramoAtividade,tipoAcao, idEstabelecimento
         )
           .then((inseridoComSucesso) => {
-            // Aqui, você pode executar sua animação com base no resultado
+            //Executando a animação
            
             setAnimacaoSalvando(true)
             if (inseridoComSucesso) {
-              // Inserção bem-sucedida, execute sua animação de sucesso
+              // Inserção bem-sucedida
       
               setAnimacaoSalvando(false);
             } else {
               
-              // Inserção falhou, execute uma animação de erro, se necessário
-              // ...
+              // Inserção falhou
               console.log('erro ao inserir');
             }
           })
           .catch((error) => {
-            // Lidar com erros, se houver
-            // ...
+            // Lidar com erros
+           
           });
       } catch (error) {
         console.error('Erro ao mover a imagem:', error);
