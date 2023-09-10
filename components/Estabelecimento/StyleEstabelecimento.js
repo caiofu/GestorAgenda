@@ -3,25 +3,27 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
     container:
     {
-      
+        display:'flex',
+        flexDirection:'column',
+        justifyContent:'center',
     },
 
     inputFormulario:
     {
-        marginLeft:10, 
-        marginRight:10, 
-        marginBottom:13, 
+        marginLeft:15, 
+        marginRight:15, 
+        marginBottom:20, 
         backgroundColor: 'rgba(112, 120, 147, 0.3)',
-      
     },
 
     boxLogo:
     {
         borderWidth:1, 
         width:"50%", 
-        marginLeft:10, 
-        marginBottom:10, 
-        borderRadius:8
+        marginBottom:15, 
+        marginTop:15,
+        borderRadius:8,
+        alignSelf:'center',
     },
     btnLogo:
     {

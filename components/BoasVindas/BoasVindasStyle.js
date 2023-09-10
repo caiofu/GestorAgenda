@@ -19,14 +19,18 @@ const styles = StyleSheet.create({
 
     button:
     {
-        width: '40%',
+        width: '50%',
         alignSelf: 'center',
         backgroundColor:'#ffffff',
         color:'#006699',
         borderRadius:5,
         padding:8,
     },
-
+    continueButtonText:
+    {
+        fontSize:19,
+        fontFamily:'Rubik_700Bold'
+    },
     boxLogo:
     {
         width:"90%",
