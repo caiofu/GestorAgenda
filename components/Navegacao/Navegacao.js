@@ -6,6 +6,7 @@ import {FontAwesome5} from '@expo/vector-icons';
 //Componentes (telas para navegação)
 import Home from '../Home/Home';
 import Estabelecimento from "../Estabelecimento/Estabelecimento";
+import Wizard from "../Wizard/Wizard";
 
 const Stack = createNativeStackNavigator(); //Responsavel pela navegação Stack 
 const Tab   = createBottomTabNavigator(); //Responsavel pela navegaçao BottomTabs
@@ -23,8 +24,9 @@ function StackTelas()
 {
     return(
         <Stack.Navigator >
-        <Stack.Screen name="Gestor Agenda | " component={Home} />
+        <Stack.Screen name="Gestor Agenda |" component={Home} />
         <Stack.Screen name="Estabelecimento" component={Estabelecimento}/>
+       
     </Stack.Navigator>
     )
 }

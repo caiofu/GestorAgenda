@@ -12,6 +12,7 @@ import { ConsultaRamoAtividade } from "../SQLiteManager/SQLRamoAtividade";
 
 //ESTILO
 import styles from './StyleEstabelecimento';
+import { ExcluirBancoDeDados } from "../SQLiteManager/SQLiteManager";
 
 
 
@@ -25,6 +26,7 @@ export default function Estabelecimento()
        
 
         ConsultaEstabelecimento((resultado) => {
+          console.log("RESULTADO"+resultado)
           if (resultado !== null) {
             
             setPrimeiroCadastro(false);
@@ -47,7 +49,7 @@ export default function Estabelecimento()
             // Trate o caso em que nenhum resultado foi encontrado
             console.log("Nenhum resultado encontrado.");
           }
-          setDadosCarregados(true);
+         // setDadosCarregados(true);
         });
 
          // Chame a função de consulta diretamente
@@ -165,8 +167,6 @@ export default function Estabelecimento()
       
     }
 
-
-   //IMAGEM (MUDAR O NOME POR NAO ESTA SOMENTE MOVENTO A IMAGEM E SIM INSERINDO NA TABELA ESTABELECIMENTO TB)
    async function SalvandoDados() {
    
     if (image !== null) {

@@ -30,6 +30,39 @@ export async function houvePrimeiroAcesso() {
     }
 };
 
+export async function guardaWizardAtivo(valor){
+    try{
+        await AsyncStorage.setItem(
+            'pulouTutorial',
+             valor.toString(),
+        );
+        console.log('Salvo o status de "Pulou o tutorial" ');
+    } catch(error)
+    {
+        console.log('Erro ao guardar o estado de pulou o tutoriol - asyn storage => ', error);
+    }
+}
+
+export async function WizardAtivo() {
+    try {
+        const valorString = await AsyncStorage.getItem('pulouTutorial');
+        
+        if (valorString === 'true') {
+          console.log('O usuário pulou o tutorial: true');
+          return true;
+        } else if (valorString === 'false') {
+          console.log('O usuário pulou o tutorial: false');
+          return false;
+        } else {
+          console.log('Valor inválido no AsyncStorage');
+          return false; // Ou qualquer outro valor padrão que você deseje usar
+        }
+      } catch (error) {
+        console.log('Erro ao verificar o estado de "pulou o tutorial" - AsyncStorage', error);
+        return false; // Ou qualquer outro valor padrão que você deseje usar em caso de erro
+      }
+};
+
 export const removerAsyncStorage = async () => {
     try {
       await AsyncStorage.clear()
