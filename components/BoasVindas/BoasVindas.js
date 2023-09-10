@@ -13,7 +13,7 @@ export default function BoasVindas() {
             </View>
             <Text style={styles.textoBoasVindas}>Bem-vinda(o) ao GestorAgenda!</Text>
             <Button style={styles.button} textColor='#006699'  mode="contained" onPress={() => console.log('Botão pressionado')}>
-                Continuar
+                <Text style={styles.continueButtonText}>Continuar</Text>
             </Button>
         </SafeAreaView>
     );
