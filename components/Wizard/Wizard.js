@@ -38,7 +38,7 @@ export default function Wizard({atualizarWizardAtivo})
        WizardAtivo().then(ret => {
         setWizardAtivo(ret);
         atualizarWizardAtivo(false)
-       console.log('reeeeeeet', ret)
+      
       });
 
     }

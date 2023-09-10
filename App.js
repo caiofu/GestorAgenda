@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import { useState, useContext } from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 //FONT
 import { useFonts, Rubik_400Regular, Rubik_700Bold, Rubik_300Light } from '@expo-google-fonts/rubik'
@@ -9,7 +10,7 @@ import { useFonts, Rubik_400Regular, Rubik_700Bold, Rubik_300Light } from '@expo
 import Navegacao from './components/Navegacao/Navegacao';
 
 //BANCO
-import SQLiteManager from './components/SQLiteManager/SQLiteManager';
+import SQLiteManager, { ExcluirBancoDeDados } from './components/SQLiteManager/SQLiteManager';
 
 //ASYNC STORAGE
 import { houvePrimeiroAcesso, guardarPrimeiroAcesso, removerAsyncStorage, WizardAtivo, guardaWizardAtivo } from './components/AsyncStorage/AsyncStorage';
@@ -17,14 +18,8 @@ import { houvePrimeiroAcesso, guardarPrimeiroAcesso, removerAsyncStorage, Wizard
 //COMPONENTES CRIADOS
 import Estabelecimento from './components/Estabelecimento/Estabelecimento';
 import BoasVindas from './components/BoasVindas/BoasVindas';
-
-
-//testes
-import NavegacaoWizard from './components/Wizard/NavegacaoWizard';
 import Wizard from './components/Wizard/Wizard';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-
-
+import { ConsultaEstabelecimento } from './components/SQLiteManager/SQLEstabelecimento';
 
 
 export default function App() 
@@ -34,6 +29,12 @@ export default function App()
   
   //LIDANDO COM O TUTORIAL
   const [wizardAtivo, setWizardAtivo] = useState(null);
+
+  //LINDADO COM O BOAS VINDAS
+  const [boasVindasAtivo, setBoasVindasAtivo] = useState(null);
+
+  //LIDANDO COM PRIMEIRO CADASTRO DE ESTABELECIMNTO
+  const [estabelecimentoCadastro, setEstabelecimentoCAdastro] = useState(null);
    
   //Usando as fontes padrões do sistema (a partir daqui pode se usado no sistema todo.)
   const [fontsLoaded, fontError] = useFonts({
@@ -55,29 +56,39 @@ export default function App()
    //VERIFICANDO NO ASYNC STORAGE O ESTADO ATUAL DO PULOU TUTORIAL AO CARREGAR O COMPONENTE
    WizardAtivo().then(ret => {
     setWizardAtivo(ret);
-   console.log('reeeeeeet', ret)
   });
 
   // Função para atualizar o estado wizardAtivo (quando usuario clicar em pular o tutorial)
   const atualizarWizardAtivo = (novoValor) => {
     setWizardAtivo(novoValor);
   };
- console.log("WIZARD ATIVO ---->", wizardAtivo)
 
+   // Função para atualizar o estado boasVindasAtivo (quando usuario clicar em continuar)
+   const atualizaBoasVindas = (novoValor) => {
+    setBoasVindasAtivo(novoValor);
+  };
+  //CONSULTA NO BANCO SE JA TEM ESTABELECIMENTO CADASTRADO
+  ConsultaEstabelecimento((resultado) => {
+    if(resultado === null)
+    {
+      setEstabelecimentoCAdastro(true);
+    }
+  })
+
+  //TRECHO QUE RESETA TUDO PARA TESTES
+  //  removerAsyncStorage();
+  //  guardaWizardAtivo('true');
+  //  ExcluirBancoDeDados();
+  //--------------------------------
   return (
   <SafeAreaProvider>
     <SafeAreaView style={styles.container}>
       <SQLiteManager></SQLiteManager>
-       {/* {primeiroAcesso ? <BoasVindas></BoasVindas> : <Estabelecimento></Estabelecimento>}
-      
-       
-      <Navegacao></Navegacao> */}
-     {wizardAtivo ? <Wizard atualizarWizardAtivo={atualizarWizardAtivo}  /> :  <Navegacao></Navegacao> }
-
-      <StatusBar style="auto" />
-     
-     
-     
+       {primeiroAcesso ? (<BoasVindas atualizaBoasVindas={atualizaBoasVindas}/>)
+        :wizardAtivo ? ( <Wizard atualizarWizardAtivo={atualizarWizardAtivo} />)
+        // :estabelecimentoCadastro ? <Estabelecimento/>
+        :<Navegacao></Navegacao>}
+      <StatusBar style="auto" />     
     </SafeAreaView>
     </SafeAreaProvider>
   );

@@ -4,7 +4,17 @@ import * as React from 'react';
 import { Button } from 'react-native-paper';
 import { useFonts, Rubik_400Regular, Rubik_700Bold, Rubik_300Light } from '@expo-google-fonts/rubik'
 
-export default function BoasVindas() {
+//ASYNC STORAGE
+import {guardarPrimeiroAcesso} from "../AsyncStorage/AsyncStorage.js";
+
+export default function BoasVindas({atualizaBoasVindas}) {
+    function Continuar()
+    {
+        
+        guardarPrimeiroAcesso();
+        atualizaBoasVindas(false);
+    }
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -12,7 +22,7 @@ export default function BoasVindas() {
                 <Image source={require('../../assets/logo/logo-sem-fundo.png')} style={{ width: '80%', height: 200, alignSelf: 'center' }}></Image>
             </View>
             <Text style={styles.textoBoasVindas}>Bem-vinda(o) ao GestorAgenda!</Text>
-            <Button style={styles.button} textColor='#006699'  mode="contained" onPress={() => console.log('Botão pressionado')}>
+            <Button style={styles.button} textColor='#006699'  mode="contained" onPress={Continuar}>
                 <Text style={styles.continueButtonText}>Continuar</Text>
             </Button>
         </SafeAreaView>

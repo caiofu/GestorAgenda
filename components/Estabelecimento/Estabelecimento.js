@@ -5,6 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { SelectList } from "react-native-dropdown-select-list";
 import { useEffect } from "react";
 import * as FileSystem from 'expo-file-system';
+import { useNavigation } from "@react-navigation/native";
 
 //BANCO DE DADOS
 import {ConsultaEstabelecimento,  InserirEstabelecimento} from '../SQLiteManager/SQLEstabelecimento';  
@@ -12,7 +13,7 @@ import { ConsultaRamoAtividade } from "../SQLiteManager/SQLRamoAtividade";
 
 //ESTILO
 import styles from './StyleEstabelecimento';
-import { ExcluirBancoDeDados } from "../SQLiteManager/SQLiteManager";
+
 
 
 
@@ -224,6 +225,16 @@ export default function Estabelecimento()
     }
   }
 
+
+  //INDO PARA HOME
+ 
+    const navigation = useNavigation();
+    const Continuar = () => {
+      setModalVisivel(false);
+      navigation.navigate('Gestor Agenda'); 
+    };
+
+   
   //MODAL
   const [modalVisivel, setModalVisivel] = useState(false);
 
@@ -315,7 +326,7 @@ export default function Estabelecimento()
               ) : (
                 <>
                   <Text style={styles.txtModal}>Dados salvos com sucesso!</Text>
-                  <TouchableOpacity style={styles.btnModal} onPress={() => {setModalVisivel(false)}} >
+                  <TouchableOpacity style={styles.btnModal} onPress={Continuar}  >
                     <Text style={styles.txtBtnModal}>CONTINUAR</Text>
                   </TouchableOpacity>
                 </>
