@@ -32,8 +32,8 @@ export default function Estabelecimento()
             
             setPrimeiroCadastro(false);
            // let jsonTe = resultado;
-        
-           setImage(resultado.logo);
+            resultado.logo === '' ? setImage(null) :  setImage(resultado.logo); //Verifica se é a imagem padrao
+          
            setIdEstabelecimento(resultado.idEstabelecimento);
            setNomeEstabelecimento(resultado.nomeEstabelecimento);
            setCnpj(resultado.cnpj);
@@ -117,6 +117,7 @@ export default function Estabelecimento()
         }
         else if (resultado.assets)
         {
+          
             setImage(resultado.assets[0].uri);
             console.log("IMAGEM NOVA",image)
         
@@ -133,8 +134,9 @@ export default function Estabelecimento()
             setMsgNomeEstabelecimento(true);
           
           }
-          else if(!cnpjValido)
+          else if(cnpjValido == false && cnpj != "")
           {
+            console.log('tamanho', cnpj.length)
             console.log('cnpjInvalido')
           }
            else {
@@ -153,11 +155,11 @@ export default function Estabelecimento()
     function ValidaCnpj(txtCnpj)
     {
         //Filtro para aceitar somente numros
-       
+       console.log('chama')
         let cnpjNumeros = txtCnpj.replace(/[^0-9]/g, '');
         setCnpj(cnpjNumeros);
-       
-        if(cnpjNumeros.length == 14)
+      
+        if(cnpjNumeros.length === 14 || cnpjNumeros.length === 0)
         {
          
             setCnpjValido(true);
@@ -169,13 +171,14 @@ export default function Estabelecimento()
             setCnpjValido(false);
         }
         
-        
+
       
     }
 
    async function SalvandoDados() {
-   
-    if (image !== null) {
+   console.log("a imagem agora",image)
+    if (image !== null) 
+    {
       const nomeImagem = image.split('/').pop();
       const origem = image;
       const pastaLogoUsuario = `${FileSystem.documentDirectory}logoUsuario/`;
@@ -196,13 +199,21 @@ export default function Estabelecimento()
         console.log('Imagem movida para:', destino);
         setImage(destino);
 
-        //INSERINDO DADOS
+     
+      } catch (error) {
+        console.error('Erro ao mover a imagem:', error);
+      }
+    } else {
+      console.log('Não é possível mover a imagem');
+    }
+
+       //INSERINDO DADOS (foi colocado nesse trecho que mesmo sem imagem e para salvar.)
         //Verificando se é primeiro acesso para trocar o tipo de query entre insert e update
         let tipoAcao= "";
         primeiroCadastro ? tipoAcao = "insercao" : tipoAcao = "atualizacao";
-        
+       
         InserirEstabelecimento(
-          nomeEstabelecimento,cnpj,destino,ramoAtividade,tipoAcao, idEstabelecimento
+          nomeEstabelecimento,cnpj,image,ramoAtividade,tipoAcao, idEstabelecimento
         )
           .then((inseridoComSucesso) => {
             //Executando a animação
@@ -222,12 +233,6 @@ export default function Estabelecimento()
             // Lidar com erros
            
           });
-      } catch (error) {
-        console.error('Erro ao mover a imagem:', error);
-      }
-    } else {
-      console.log('Não é possível mover a imagem');
-    }
   }
 
 
@@ -242,7 +247,7 @@ export default function Estabelecimento()
    
   //MODAL
   const [modalVisivel, setModalVisivel] = useState(false);
-
+console.log("IMAGEM=====================>", image);
 
     return(
       
@@ -252,7 +257,7 @@ export default function Estabelecimento()
        
         
           <View style={styles.boxLogo}>
-            {image != null ? (
+            {image != null && image != '' ? (
               <Image source={{ uri: image }} style={{ width: 200, height: 200, alignSelf: 'center' }} />
             ) : (
               <Image source={require('../../assets/logo/logo-app.png')} style={{ width: 200, height: 200 }} />
