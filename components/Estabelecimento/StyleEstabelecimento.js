@@ -22,6 +22,8 @@ const styles = StyleSheet.create({
         width:"50%", 
         marginBottom:15, 
         marginTop:15,
+        paddingRight:6,
+        paddingLeft:6,
         borderRadius:8,
         alignSelf:'center',
     },
@@ -31,7 +33,9 @@ const styles = StyleSheet.create({
         borderRadius:5,
         padding:8,
         fontWeight:'bold',
-        color:'red'
+        color:'red',
+        marginBottom:2,
+        marginTop:2
     },
 
     btnLogoText:
@@ -40,6 +44,14 @@ const styles = StyleSheet.create({
         color:'#ffff',
         fontFamily:'Rubik_700Bold'
         
+    },
+
+    imgLogo:
+    {
+        width: 190,
+        height: 190,
+        alignSelf: 'center',
+        margin:2
     },
     
     btnSalvar:

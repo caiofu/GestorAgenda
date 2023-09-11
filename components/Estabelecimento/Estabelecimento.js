@@ -136,7 +136,7 @@ export default function Estabelecimento()
           }
           else if(cnpjValido == false && cnpj != "")
           {
-            console.log('tamanho', cnpj.length)
+           
             console.log('cnpjInvalido')
           }
            else {
@@ -155,7 +155,7 @@ export default function Estabelecimento()
     function ValidaCnpj(txtCnpj)
     {
         //Filtro para aceitar somente numros
-       console.log('chama')
+    
         let cnpjNumeros = txtCnpj.replace(/[^0-9]/g, '');
         setCnpj(cnpjNumeros);
       
@@ -176,7 +176,7 @@ export default function Estabelecimento()
     }
 
    async function SalvandoDados() {
-   console.log("a imagem agora",image)
+   
     if (image !== null) 
     {
       const nomeImagem = image.split('/').pop();
@@ -247,18 +247,14 @@ export default function Estabelecimento()
    
   //MODAL
   const [modalVisivel, setModalVisivel] = useState(false);
-console.log("IMAGEM=====================>", image);
+
 
     return(
       
       <SafeAreaView style={styles.container}>
-      
-     
-       
-        
           <View style={styles.boxLogo}>
             {image != null && image != '' ? (
-              <Image source={{ uri: image }} style={{ width: 200, height: 200, alignSelf: 'center' }} />
+              <Image source={{ uri: image }} style={styles.imgLogo} />
             ) : (
               <Image source={require('../../assets/logo/logo-app.png')} style={{ width: 200, height: 200 }} />
             )}
