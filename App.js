@@ -1,8 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, SafeAreaView } from 'react-native';
-import { useState, useContext } from 'react';
+import { useState, useContext} from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import {AppStateProvider} from './components/Contexts/AppStateContext'
 //FONT
 import { useFonts, Rubik_400Regular, Rubik_700Bold, Rubik_300Light } from '@expo-google-fonts/rubik'
 
@@ -24,6 +25,8 @@ import { ConsultaEstabelecimento } from './components/SQLiteManager/SQLEstabelec
 
 export default function App() 
 {
+
+
   //LIDANDO COM PRIMEIRO ACESSO
   const [primeiroAcesso, setPrimeiroAcesso] = useState(null);
   
@@ -34,7 +37,7 @@ export default function App()
   const [boasVindasAtivo, setBoasVindasAtivo] = useState(null);
 
   //LIDANDO COM PRIMEIRO CADASTRO DE ESTABELECIMNTO
-  const [estabelecimentoCadastro, setEstabelecimentoCAdastro] = useState(null);
+  const [estabelecimentoCadastro, setEstabelecimentoCadastro] = useState(null);
    
   //Usando as fontes padrões do sistema (a partir daqui pode se usado no sistema todo.)
   const [fontsLoaded, fontError] = useFonts({
@@ -71,25 +74,31 @@ export default function App()
   ConsultaEstabelecimento((resultado) => {
     if(resultado === null)
     {
-      setEstabelecimentoCAdastro(true);
+      setEstabelecimentoCadastro(true);
+    }
+    else
+    {
+      setEstabelecimentoCadastro(false);
     }
   })
 
   //TRECHO QUE RESETA TUDO PARA TESTES
-  //  removerAsyncStorage();
-  //  guardaWizardAtivo('true');
-  //  ExcluirBancoDeDados();
+    //  removerAsyncStorage();
+    //  guardaWizardAtivo('true');
+    //  ExcluirBancoDeDados();
   //--------------------------------
+  
   return (
   <SafeAreaProvider>
+    <AppStateProvider>
     <SafeAreaView style={styles.container}>
       <SQLiteManager></SQLiteManager>
        {primeiroAcesso ? (<BoasVindas atualizaBoasVindas={atualizaBoasVindas}/>)
         :wizardAtivo ? ( <Wizard atualizarWizardAtivo={atualizarWizardAtivo} />)
-        // :estabelecimentoCadastro ? <Estabelecimento/>
-        :<Navegacao></Navegacao>}
+        :<Navegacao ></Navegacao>}
       <StatusBar style="auto" />     
     </SafeAreaView>
+    </AppStateProvider>
     </SafeAreaProvider>
   );
 }

@@ -151,7 +151,7 @@ export default function Estabelecimento()
        
         let cnpjNumeros = txtCnpj.replace(/[^0-9]/g, '');
         setCnpj(cnpjNumeros);
-        console.log(cnpj+ '/ numero: '+cnpjNumeros);
+       
         if(cnpjNumeros.length == 14)
         {
          
@@ -272,7 +272,7 @@ export default function Estabelecimento()
             }} value={nomeEstabelecimento}
             style={styles.inputFormulario}
           />
-          {console.log("CNPJ AGORA:",cnpj.length+"VALIDO: "+cnpjValido)}
+      
          
           {cnpjValido == false  && cnpj.length > 0 ? (
             <HelperText style={styles.msgHelper}>Digite um CNPJ válido!</HelperText>

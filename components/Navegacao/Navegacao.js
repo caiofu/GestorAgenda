@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useRoute } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {FontAwesome5} from '@expo/vector-icons';
@@ -8,7 +8,8 @@ import {ConsultaEstabelecimento} from '../SQLiteManager/SQLEstabelecimento';
 //Componentes (telas para navegação)
 import Home from '../Home/Home';
 import Estabelecimento from "../Estabelecimento/Estabelecimento";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAppState } from "../Contexts/AppStateContext";
 
 
 const Stack = createNativeStackNavigator(); //Responsavel pela navegação Stack 
@@ -50,19 +51,14 @@ function PrimeiroCadastroEstabelecimento()
 }
 export default function Navegacao()
 {
-       //CONSULTA NO BANCO SE JA TEM ESTABELECIMENTO CADASTRADO
-  const [estabelecimentoCadastro, setEstabelecimentoCadastro] = useState(null);
-  ConsultaEstabelecimento((resultado) => {
-    if(resultado === null)
-    {
-      //setEstabelecimentoCAdastro(true);
-      setEstabelecimentoCadastro(true);
-    }
-  })
-    console.log('eees', estabelecimentoCadastro)
+ 
+  const {navegacaoEstabelecimento, setNavegacaoEstabelecimento} = useAppState();
+
+
     return(
         <NavigationContainer>
-            {estabelecimentoCadastro ?<PrimeiroCadastroEstabelecimento></PrimeiroCadastroEstabelecimento>: <Tabs></Tabs> }
+            {navegacaoEstabelecimento ?<PrimeiroCadastroEstabelecimento></PrimeiroCadastroEstabelecimento>: <Tabs></Tabs> }
+          
         </NavigationContainer>
     )
 }
