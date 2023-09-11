@@ -41,7 +41,7 @@ function PrimeiroCadastroEstabelecimento()
 {
     return(
         <Stack.Navigator  >
-        <Stack.Screen name="Estabelecimento" component={Estabelecimento}/>       
+        <Stack.Screen name="Estabelecimento" component={Estabelecimento} />       
       <Stack.Screen name="Gestor Agenda" component={Home} />
      
      

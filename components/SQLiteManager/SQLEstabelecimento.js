@@ -61,7 +61,7 @@ export function ConsultaEstabelecimento(callback) {
         }
       },
       (error) => {
-        console.error('Erro ao executar consulta:', error);
+        console.log('Erro ao executar consulta:');
         
       }
     );
