@@ -29,7 +29,7 @@ export default function App() {
   const [primeiroAcesso, setPrimeiroAcesso] = useState(null);
 
   //LIDANDO COM O TUTORIAL
-  const [wizardAtivo, setWizardAtivo] = useState(null);
+  const [wizardAtivo, setWizardAtivo] = useState(true);
 
   //LINDADO COM O BOAS VINDAS
   const [boasVindasAtivo, setBoasVindasAtivo] = useState(null);
@@ -79,9 +79,9 @@ export default function App() {
   })
 
   //TRECHO QUE RESETA TUDO PARA TESTES
-  // removerAsyncStorage();
-  // guardaWizardAtivo('true');
-  // ExcluirBancoDeDados();
+   //removerAsyncStorage();
+   //guardaWizardAtivo('true');
+   //ExcluirBancoDeDados();
   //--------------------------------
 
   return (

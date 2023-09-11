@@ -48,10 +48,10 @@ export async function WizardAtivo() {
         const valorString = await AsyncStorage.getItem('pulouTutorial');
         
         if (valorString === 'true') {
-          console.log('O usuário pulou o tutorial: true');
+          console.log('Wizard: true');
           return true;
         } else if (valorString === 'false') {
-          console.log('O usuário pulou o tutorial: false');
+          console.log('Wizard: false');
           return false;
         } else {
           console.log('Valor inválido no AsyncStorage');
