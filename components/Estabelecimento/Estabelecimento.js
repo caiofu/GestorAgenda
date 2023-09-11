@@ -132,12 +132,17 @@ export default function Estabelecimento()
             setEnvio(false);
             setMsgNomeEstabelecimento(true);
           
-          } else {
+          }
+          else if(!cnpjValido)
+          {
+            console.log('cnpjInvalido')
+          }
+           else {
             setEnvio(true);
             setMsgNomeEstabelecimento(false);
-            await SalvandoDados(); //NAO ESQUECER DE TROCAR O NOME DESSA FUNÇAO POIS ELA FAZ MUITO MAIS QUE MOVER A IMAGEM
+            await SalvandoDados(); 
             setModalVisivel(true);
-          console.log(image)
+          
         
           }
         
@@ -306,8 +311,9 @@ export default function Estabelecimento()
           />
   
           <TouchableOpacity
-            disabled={cnpjValido == false ? true : false}
-            style={cnpjValido == false ? styles.btnSalvarDesabilitado : styles.btnSalvar}
+          style={styles.btnSalvar}
+            // disabled={cnpjValido == false ? true : false}
+            // style={cnpjValido == false ? styles.btnSalvarDesabilitado : styles.btnSalvar}
             onPress={ValidaEnvio}
           >
        
