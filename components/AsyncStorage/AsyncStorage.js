@@ -55,7 +55,8 @@ export async function WizardAtivo() {
           return false;
         } else {
           console.log('Valor inválido no AsyncStorage');
-          return false; // Ou qualquer outro valor padrão que você deseje usar
+          guardaWizardAtivo('true');
+          return true; // Ou qualquer outro valor padrão que você deseje usar
         }
       } catch (error) {
         console.log('Erro ao verificar o estado de "pulou o tutorial" - AsyncStorage', error);

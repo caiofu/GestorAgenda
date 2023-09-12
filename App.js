@@ -17,7 +17,6 @@ import SQLiteManager, { ExcluirBancoDeDados } from './components/SQLiteManager/S
 import { houvePrimeiroAcesso, guardarPrimeiroAcesso, removerAsyncStorage, WizardAtivo, guardaWizardAtivo } from './components/AsyncStorage/AsyncStorage';
 
 //COMPONENTES CRIADOS
-import Estabelecimento from './components/Estabelecimento/Estabelecimento';
 import BoasVindas from './components/BoasVindas/BoasVindas';
 import Wizard from './components/Wizard/Wizard';
 import { ConsultaEstabelecimento } from './components/SQLiteManager/SQLEstabelecimento';
@@ -29,7 +28,7 @@ export default function App() {
   const [primeiroAcesso, setPrimeiroAcesso] = useState(null);
 
   //LIDANDO COM O TUTORIAL
-  const [wizardAtivo, setWizardAtivo] = useState(true);
+  const [wizardAtivo, setWizardAtivo] = useState(null);
 
   //LINDADO COM O BOAS VINDAS
   const [boasVindasAtivo, setBoasVindasAtivo] = useState(null);
