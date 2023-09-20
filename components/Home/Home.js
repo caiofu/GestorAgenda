@@ -9,6 +9,9 @@ import styles from "./StyleHome";
 
 export default function Home({ navigation }) {
   const { navegacaoEstabelecimento, setNavegacaoEstabelecimento } = useAppState();
+  
+ 
+
 
   ConsultaEstabelecimento((resultado) => {
     if(resultado === null)

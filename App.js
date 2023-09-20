@@ -3,9 +3,14 @@ import { StyleSheet, SafeAreaView } from 'react-native';
 import { useState, useContext } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { AppStateProvider } from './components/Contexts/AppStateContext'
+//CONTEXT
+import { AppStateProvider, useAppState } from './components/Contexts/AppStateContext'
+
 //FONT
 import { useFonts, Rubik_400Regular, Rubik_700Bold, Rubik_300Light } from '@expo-google-fonts/rubik'
+
+//TEMA
+import darkTheme from './Tema/darkTheme';
 
 //NAVEGAÇÃO
 import Navegacao from './components/Navegacao/Navegacao';
@@ -23,6 +28,8 @@ import { ConsultaEstabelecimento } from './components/SQLiteManager/SQLEstabelec
 
 
 export default function App() {
+
+
 
   //LIDANDO COM PRIMEIRO ACESSO
   const [primeiroAcesso, setPrimeiroAcesso] = useState(null);
@@ -44,6 +51,7 @@ export default function App() {
   if (!fontsLoaded && !fontError) {
     return null;
   }
+  
 
 
 

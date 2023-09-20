@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { NavigationContainer, useRoute } from "@react-navigation/native";
+import { NavigationContainer, useRoute, DefaultTheme, DarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {FontAwesome5} from '@expo/vector-icons';
@@ -12,13 +12,15 @@ import { useState, useEffect } from "react";
 import { useAppState } from "../Contexts/AppStateContext";
 
 
+
+
 const Stack = createNativeStackNavigator(); //Responsavel pela navegação Stack 
 const Tab   = createBottomTabNavigator(); //Responsavel pela navegaçao BottomTabs
 
 function Tabs()
 {
     return(
-        <Tab.Navigator screenOptions={{headerShown: false, tabBarActiveTintColor:'#006699'}}>
+        <Tab.Navigator screenOptions={{headerShown: false, tabBarActiveTintColor:'#006699',}}>
             <Tab.Screen name="Home" component={StackTelas} options={{tabBarIcon: ({color, size}) => (<FontAwesome5 name="home" size={size} color={color} />),}} ></Tab.Screen>
         </Tab.Navigator>
     )
@@ -28,7 +30,7 @@ function StackTelas()
 {
 
     return(
-        <Stack.Navigator  >
+        <Stack.Navigator>
             
         <Stack.Screen name="Gestor Agenda" component={Home} />
         <Stack.Screen name="Estabelecimento" component={Estabelecimento}/>
@@ -53,10 +55,11 @@ export default function Navegacao()
 {
  
   const {navegacaoEstabelecimento, setNavegacaoEstabelecimento} = useAppState();
-
+//Tema
+const { tema, MudarTema } = useAppState();
 
     return(
-        <NavigationContainer>
+        <NavigationContainer theme={tema === 'light' ? DefaultTheme : DarkTheme}> 
             {navegacaoEstabelecimento ?<PrimeiroCadastroEstabelecimento></PrimeiroCadastroEstabelecimento>: <Tabs></Tabs> }
           
         </NavigationContainer>
