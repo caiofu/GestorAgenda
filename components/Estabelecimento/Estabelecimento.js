@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { HelperText, TextInput} from 'react-native-paper';
-import {SafeAreaView, Text,  Image, View, StyleSheet, TouchableOpacity, ActivityIndicator, Modal } from "react-native";
+import {SafeAreaView, Text,  Image, View, StyleSheet, TouchableOpacity, ActivityIndicator, Modal, ScrollView } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import { SelectList } from "react-native-dropdown-select-list";
 import { useEffect } from "react";
@@ -252,6 +252,7 @@ export default function Estabelecimento()
     return(
       
       <SafeAreaView style={styles.container}>
+        <ScrollView>
           <View style={styles.boxLogo}>
             {image != null && image != '' ? (
               <Image source={{ uri: image }} style={styles.imgLogo} />
@@ -299,11 +300,12 @@ export default function Estabelecimento()
             value={cnpj}
           />
 
-          <SelectList
+          <SelectList 
             placeholder="Ramo de atividade (opcional)"
             searchPlaceholder="Pesquisar"
             fontFamily="Rubik_400Regular"
-            boxStyles={styles.inputFormulario}
+            boxStyles={styles.inputFormularioSelect}
+            dropdownStyles={{ alignSelf:'center',   width:'89%'}}
             setSelected={(val) => {setRamoAtividade(val);}}
             data={listaRamoAtividade}
             save="value"
@@ -340,7 +342,9 @@ export default function Estabelecimento()
               )}
             </View>
           </View>
+          
       </Modal>
+      </ScrollView>
     </SafeAreaView>
     )
 }

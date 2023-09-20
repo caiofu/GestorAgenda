@@ -11,8 +11,16 @@ const styles = StyleSheet.create({
     inputFormulario:
     {
         marginLeft:15, 
-        marginRight:15, 
+        marginRight:25, 
         marginBottom:20, 
+        backgroundColor: 'rgba(112, 120, 147, 0.3)',
+    },
+
+    inputFormularioSelect:
+    {
+        marginLeft:15, 
+        marginRight:25, 
+ 
         backgroundColor: 'rgba(112, 120, 147, 0.3)',
     },
 
@@ -59,6 +67,7 @@ const styles = StyleSheet.create({
         backgroundColor:'#006699',
         marginLeft:20,
         marginRight:20,
+        marginTop:20,
         padding:20,
         borderRadius:5
     },
