@@ -11,6 +11,7 @@ import { useFonts, Rubik_400Regular, Rubik_700Bold, Rubik_300Light } from '@expo
 
 //TEMA
 import darkTheme from './Tema/darkTheme';
+import lightTheme from './Tema/lightTheme';
 
 //NAVEGAÇÃO
 import Navegacao from './components/Navegacao/Navegacao';

@@ -2,16 +2,22 @@
 import React, { useContext, useState } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Modal, Button } from 'react-native-paper';
+import { useAppState } from "../Contexts/AppStateContext";
 
 //CSS
 import styles from './StyleWizard';
 import { guardaWizardAtivo, WizardAtivo } from '../AsyncStorage/AsyncStorage';
+import darkTheme from '../../Tema/darkTheme';
+import lightTheme from '../../Tema/lightTheme';
 
 export default function Wizard({ atualizarWizardAtivo }) {
 
     const [wizardAtivo, setWizardAtivo] = useState(null);
     const [passo, setPasso] = useState(1);
 
+    //Tema
+    const { tema, MudarTema } = useAppState();
+    
     let totalPassos = 2;
 
     function ProximoPasso() {
@@ -42,14 +48,14 @@ export default function Wizard({ atualizarWizardAtivo }) {
         setWizardAtivo(ret);
 
     });
-
+    console.log('tema atual --->', tema)
     // console.log(passo)
     return (
         <View style={{ flex: 1 }}>
             <Modal animationType="slide" visible={wizardAtivo}>
-                <View style={{ backgroundColor: '#fff', height: '100%' }}>
+                <View style={{ backgroundColor: tema === 'light' ? lightTheme.backgroundColor: darkTheme.backgroundColor, height: '100%' }}>
                     <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={PularWizard}>
-                        <Text style={styles.btnWizard}>Pular tutorial</Text>
+                        <Text style={[styles.btnWizard, {color: tema === 'light' ? lightTheme.textColor : darkTheme.textColor}  ]}>Pular tutorial</Text>
                     </TouchableOpacity>
                     {passo === 1 && (
                         <View style={{ height: '83%' }}>
@@ -60,16 +66,16 @@ export default function Wizard({ atualizarWizardAtivo }) {
                 <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, flexDirection: 'row', justifyContent: 'space-between' }}>
                     {passo > 1 ?
                         <TouchableOpacity style={{ alignSelf: 'flex-start' }} onPress={PassoAnterior}>
-                            <Text style={styles.btnWizard}>Anterior</Text>
+                            <Text style={[styles.btnWizard, {color: tema === 'light' ? lightTheme.textColor : darkTheme.textColor}  ]}>Anterior</Text>
                         </TouchableOpacity>
                         : <TouchableOpacity style={{ alignSelf: 'flex-start' }} />}
 
 
                     {/* <Button textColor='#006699'  style={{ alignSelf: 'flex-start' }} onPress={PassoAnterior}>Anterior</Button> */}
                     {passo == totalPassos ? <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={PularWizard}>
-                        <Text style={styles.btnWizard}>Terminar</Text>
+                        <Text style={[styles.btnWizard, {color: tema === 'light' ? lightTheme.textColor : darkTheme.textColor}  ]}>Terminar</Text>
                     </TouchableOpacity> : <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={ProximoPasso}>
-                        <Text style={styles.btnWizard}>Próximo</Text>
+                        <Text style={[styles.btnWizard, {color: tema === 'light' ? lightTheme.textColor : darkTheme.textColor}  ]}>Próximo</Text>
                     </TouchableOpacity>}
 
                 </View>
