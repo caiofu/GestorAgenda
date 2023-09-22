@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import {useColorScheme } from "react-native";
 import { NavigationContainer, useRoute, DefaultTheme, DarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -11,8 +11,11 @@ import Configuracoes from "../Configuracoes/Configuracoes";
 import Estabelecimento from "../Estabelecimento/Estabelecimento";
 
 import { useState, useEffect } from "react";
+
 //CONTEXT
 import { useAppState } from "../Contexts/AppStateContext";
+
+
 
 
 
@@ -22,6 +25,9 @@ const Tab   = createBottomTabNavigator(); //Responsavel pela navegaçao BottomTa
 
 function Tabs()
 {
+    //PEGANDO O TEMA
+const temaAtual = useColorScheme(); //'light / 'dark'
+console.log('tema atuall teste ---->',temaAtual);
     //AQUI É ONDE FICA A BARRA NA PARTE INFERIOR COM OS BOTOES DE NAVEGAÇÃO
     return(
         <Tab.Navigator screenOptions={{headerShown: false, tabBarActiveTintColor:'#006699',}}>
@@ -62,6 +68,7 @@ export default function Navegacao()
     const {navegacaoEstabelecimento, setNavegacaoEstabelecimento} = useAppState();
     //Tema
     const { tema, MudarTema } = useAppState();
+   
    
     return(
         <NavigationContainer theme={tema === 'light' ? DefaultTheme : DarkTheme}> 

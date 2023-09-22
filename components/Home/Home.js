@@ -1,4 +1,4 @@
-import { SafeAreaView, Text, Button, TouchableOpacity, View } from "react-native";
+import { SafeAreaView, Text, Button, TouchableOpacity, View, } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons';
 
 //CONTEXT
