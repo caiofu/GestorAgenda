@@ -152,28 +152,62 @@ export default function Estabelecimento()
           
     }
    
-    function ValidaCnpj(txtCnpj)
-    {
-        //Filtro para aceitar somente numros
+    function ValidaCnpj(txtCnpj) {
+      let cnpjNumeros = txtCnpj.replace(/[^0-9]/g, '');
+      setCnpj(cnpjNumeros);
     
-        let cnpjNumeros = txtCnpj.replace(/[^0-9]/g, '');
-        setCnpj(cnpjNumeros);
-      
-        if(cnpjNumeros.length === 14 || cnpjNumeros.length === 0)
-        {
-         
-            setCnpjValido(true);
-           
-        }
-        else
-        {
-           
-            setCnpjValido(false);
-        }
-        
-
-      
+      if (cnpjNumeros.length !== 14) {
+        setCnpjValido(false); // CNPJ com tamanho inválido
+        return;
+      }
+    
+      // Verifica se todos os dígitos são iguais; se forem, o CNPJ é inválido
+      if (/^(\d)\1+$/.test(cnpjNumeros)) {
+        setCnpjValido(false);
+        return;
+      }
+    
+      // Calcula o primeiro dígito verificador
+      let tamanho = cnpjNumeros.length - 2;
+      let numeros = cnpjNumeros.substring(0, tamanho);
+      let digitos = cnpjNumeros.substring(tamanho);
+      let soma = 0;
+      let pos = tamanho - 7;
+    
+      for (let i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2) pos = 9;
+      }
+    
+      let resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+      if (resultado !== parseInt(digitos.charAt(0))) {
+        setCnpjValido(false);
+        return;
+      }
+    
+      // Calcula o segundo dígito verificador
+      tamanho += 1;
+      numeros = cnpjNumeros.substring(0, tamanho);
+      digitos = cnpjNumeros.substring(tamanho);
+      soma = 0;
+      pos = tamanho - 7;
+    
+      for (let i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2) pos = 9;
+      }
+    
+      resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+      if (resultado !== parseInt(digitos.charAt(0))) {
+        setCnpjValido(false);
+        return;
+      }
+    
+      // O CNPJ é válido
+      setCnpjValido(true);
     }
+    
+    
 
    async function SalvandoDados() {
    
