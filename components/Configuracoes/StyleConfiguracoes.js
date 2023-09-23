@@ -7,7 +7,8 @@ const styles = StyleSheet.create({
         alignItems: "center"
       },
       switch: {
-        marginLeft: 10
+        marginLeft: 10,
+      
       },
       txtSwitchTema:
       {

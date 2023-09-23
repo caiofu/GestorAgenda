@@ -25,7 +25,7 @@ export default function Configuracoes()
             <ScrollView>
                 <View style={styles.switchContainer}>
                     <Text style={[styles.txtSwitchTema, {color: tema === 'light' ? lightTheme.textColor : darkTheme.textColor}  ]}>Tema Escuro</Text>
-                    <Switch style={styles.switch} value={darkModeOn} onValueChange={AtivarDarkMode}></Switch>
+                    <Switch  style={styles.switch}  color= '#006699'  value={darkModeOn} onValueChange={AtivarDarkMode}></Switch>
                 </View>
             </ScrollView>
         </SafeAreaView>
