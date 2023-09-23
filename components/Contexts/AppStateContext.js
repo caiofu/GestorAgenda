@@ -1,6 +1,7 @@
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
+import {SalvaTema, VerificaTema} from '../AsyncStorage/AsyncStorage';
 
 const AppStateContext = createContext();
 
@@ -10,19 +11,32 @@ export const useAppState = () => {
 
 export const AppStateProvider = ({ children }) => {
   //RESPONSAVEL PELA NAVEGAÇAO TORNANDO O ACESSO A PRIMEIRA VEZ OBRIGATORIO
-  const [navegacaoEstabelecimento, setNavegacaoEstabelecimento] = useState(null); 
+  const [navegacaoEstabelecimento, setNavegacaoEstabelecimento] = useState(null);
+  const [tema, setTema] = useState(null);
+  const [asynTemaCriado, setAsyncTemaCriado] = useState(false);
+  useEffect(() => {
+    async function carregaTema(){ //Usamos dentro de uma função async para poder espera o resultado de VerificaTema
+      const temaAsync = await  VerificaTema();
+      setTema( temaAsync !== null ? temaAsync : useColorScheme());
+      console.log('Tema async ==>', temaAsync)
+    }
+  
+    carregaTema();
+  }, [])
   //RESPONSAVEL PELA TROCA DE TEMA
-  const temaAtual = useColorScheme();
-  const [tema, setTema] = useState(temaAtual); //não esquecer depois de trazer o tema que esta no dispositivo.
+ 
+
+  console.log('CARREGOU O TEMA NO CONTEXT ------>', tema)
   
   const MudarTema =() =>
   {
-    setTema(tema === 'light' ? 'dark' : 'light');
+    setTema(tema === 'light' ? 'dark' : 'light'); //Muda no appContext para popular para todo o app
+    SalvaTema(tema); //salva no asyncStorage
   };
 
   return (
-    <AppStateContext.Provider value={{ navegacaoEstabelecimento, setNavegacaoEstabelecimento, tema, MudarTema }}>
+    <AppStateContext.Provider value={{ navegacaoEstabelecimento, setNavegacaoEstabelecimento, tema, MudarTema, setTema }}>
       {children}
     </AppStateContext.Provider>
-  );
+   );
 };

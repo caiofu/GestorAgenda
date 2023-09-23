@@ -3,6 +3,7 @@ import { StyleSheet, SafeAreaView } from 'react-native';
 import { useState, useContext } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+
 //CONTEXT
 import { AppStateProvider, useAppState } from './components/Contexts/AppStateContext'
 

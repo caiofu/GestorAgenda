@@ -48,7 +48,7 @@ export default function Wizard({ atualizarWizardAtivo }) {
         setWizardAtivo(ret);
 
     });
-    console.log('tema atual --->', tema)
+
     // console.log(passo)
     return (
         <View style={{ flex: 1 }}>

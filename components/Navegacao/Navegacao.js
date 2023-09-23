@@ -15,6 +15,10 @@ import { useState, useEffect } from "react";
 //CONTEXT
 import { useAppState } from "../Contexts/AppStateContext";
 
+//ASYNC STORAGE
+import {SalvaTema,VerificaTema} from "../AsyncStorage/AsyncStorage";
+
+
 
 
 
@@ -25,9 +29,8 @@ const Tab   = createBottomTabNavigator(); //Responsavel pela navegaçao BottomTa
 
 function Tabs()
 {
-    //PEGANDO O TEMA
-const temaAtual = useColorScheme(); //'light / 'dark'
-console.log('tema atuall teste ---->',temaAtual);
+
+
     //AQUI É ONDE FICA A BARRA NA PARTE INFERIOR COM OS BOTOES DE NAVEGAÇÃO
     return(
         <Tab.Navigator screenOptions={{headerShown: false, tabBarActiveTintColor:'#006699',}}>
@@ -65,10 +68,20 @@ function PrimeiroCadastroEstabelecimento()
 export default function Navegacao()
 {
  
-    const {navegacaoEstabelecimento, setNavegacaoEstabelecimento} = useAppState();
-    //Tema
-    const { tema, MudarTema } = useAppState();
+    const {navegacaoEstabelecimento, setNavegacaoEstabelecimento, tema, setTema} = useAppState();
+    //Tema (Provavel que tenha validar antes no boas vindas e no wizard caso seja o primeiro uso)
+    
+         // Use useEffect para executar as operações de tema uma vez após a renderização.
+  useEffect(() => {
+
    
+
+    // Chame suas funções relacionadas ao tema aqui, após a renderização.
+    SalvaTema(tema, setTema);
+    console.log('tema atuall teste (navegacao)---->', tema);
+   console.log( VerificaTema());
+  }, [tema]);
+        
    
     return(
         <NavigationContainer theme={tema === 'light' ? DefaultTheme : DarkTheme}> 
