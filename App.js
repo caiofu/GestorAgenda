@@ -61,7 +61,7 @@ export default function App() {
   houvePrimeiroAcesso().then(ret => {
     setPrimeiroAcesso(ret);
   });
-  console.log('É o primeiro acesso? ' + primeiroAcesso);
+ 
 
   //VERIFICANDO NO ASYNC STORAGE O ESTADO ATUAL DO PULOU TUTORIAL AO CARREGAR O COMPONENTE
   WizardAtivo().then(ret => {
@@ -88,14 +88,15 @@ export default function App() {
   })
 
   //TRECHO QUE RESETA TUDO PARA TESTES
-   //removerAsyncStorage();
-   //guardaWizardAtivo('true');
-   //ExcluirBancoDeDados();
+  //  removerAsyncStorage();
+  //  guardaWizardAtivo('true');
+  //  ExcluirBancoDeDados();
   //--------------------------------
 
   return (
+    <AppStateProvider>
     <SafeAreaProvider>
-      <AppStateProvider>
+    
         <SafeAreaView style={styles.container}>
           <SQLiteManager></SQLiteManager>
 
@@ -105,8 +106,9 @@ export default function App() {
 
           <StatusBar style="auto" />
         </SafeAreaView>
-      </AppStateProvider>
+      
     </SafeAreaProvider>
+    </AppStateProvider>
   );
 }
 

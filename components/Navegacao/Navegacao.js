@@ -27,6 +27,7 @@ import {SalvaTema,VerificaTema} from "../AsyncStorage/AsyncStorage";
 const Stack = createNativeStackNavigator(); //Responsavel pela navegação Stack 
 const Tab   = createBottomTabNavigator(); //Responsavel pela navegaçao BottomTabs
 
+
 function Tabs()
 {
 
@@ -69,6 +70,7 @@ export default function Navegacao()
 {
  
     const {navegacaoEstabelecimento, setNavegacaoEstabelecimento, tema, setTema} = useAppState();
+    const temaSistema = useColorScheme();
     //Tema (Provavel que tenha validar antes no boas vindas e no wizard caso seja o primeiro uso)
     
          // Use useEffect para executar as operações de tema uma vez após a renderização.
@@ -77,7 +79,7 @@ export default function Navegacao()
    
 
     // Chame suas funções relacionadas ao tema aqui, após a renderização.
-    SalvaTema(tema, setTema);
+    SalvaTema(tema === null ? temaSistema : tema);
     console.log('tema atuall teste (navegacao)---->', tema);
    
   }, [tema]);

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { HelperText, TextInput} from 'react-native-paper';
-import {SafeAreaView, Text,  Image, View, StyleSheet, TouchableOpacity, ActivityIndicator, Modal, ScrollView } from "react-native";
+import {SafeAreaView, Text,  Image, View, StyleSheet, TouchableOpacity, ActivityIndicator, Modal, ScrollView, KeyboardAvoidingView } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import { SelectList } from "react-native-dropdown-select-list";
 import { useEffect } from "react";
@@ -284,6 +284,7 @@ export default function Estabelecimento()
     return(
       
       <SafeAreaView style={styles.container}>
+        <KeyboardAvoidingView  behavior={Platform.OS === 'ios' ? 'padding' : null} enabled>
         <ScrollView>
           <View style={styles.boxLogo}>
             {image != null && image != '' ? (
@@ -377,6 +378,7 @@ export default function Estabelecimento()
           
       </Modal>
       </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
     )
 }

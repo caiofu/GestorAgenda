@@ -1,5 +1,4 @@
-
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
 import {SalvaTema, VerificaTema} from '../AsyncStorage/AsyncStorage';
 
@@ -13,12 +12,16 @@ export const AppStateProvider = ({ children }) => {
   //RESPONSAVEL PELA NAVEGAÇAO TORNANDO O ACESSO A PRIMEIRA VEZ OBRIGATORIO
   const [navegacaoEstabelecimento, setNavegacaoEstabelecimento] = useState(null);
   const [tema, setTema] = useState(null);
+  const temaSistema  = useColorScheme();
 
   useEffect(() => {
     async function carregaTema(){ //Usamos dentro de uma função async para poder espera o resultado de VerificaTema
       const temaAsync = await  VerificaTema();
-      setTema( temaAsync !== null ? temaAsync : useColorScheme());
-      console.log('Tema async ==>', temaAsync)
+      
+      setTema( temaAsync !== '' ? temaAsync : temaSistema);
+      
+      console.log('Tema async ==>', temaAsync + 'temaaaaaaaaaa ---->', tema)
+      
     }
   
     carregaTema();
@@ -30,7 +33,8 @@ export const AppStateProvider = ({ children }) => {
   
   const MudarTema =() =>
   {
-    setTema(tema === 'light' ? 'dark' : 'light'); //Muda no appContext para popular para todo o app
+    const novoTema = tema === 'light' ? 'dark' : 'light'; // Determina o novo tema
+    setTema(novoTema); //Muda no appContext para popular para todo o app
     SalvaTema(tema); //salva no asyncStorage
   };
 

@@ -65,13 +65,14 @@ export async function WizardAtivo() {
       }
 };
 
-export async function SalvaTema(tema, setTema){
+export async function SalvaTema(tema){
 
   try {
-  
+    
     await AsyncStorage.setItem('temaAtual', tema);
 
  } catch (error) {
+    console.log('ERRO VALOR DO TEMA ASYNC', tema)
     console.log('Erro ao criar async slavaTema -> ', error);
  }
 }
@@ -82,7 +83,10 @@ export async function VerificaTema()
   try {
     const temaSalvo = await AsyncStorage.getItem('temaAtual');
     
-    return temaSalvo;
+    console.log('TEMA SALVO ----------->',temaSalvo)
+    temaSalvo === null ? '' : temaSalvo; //Null foi tirado para nao dar erro.
+
+    return temaSalvo; 
   } catch (error) {
     console.log('Não foi possivel verificar o tema -> ', error);
     return error;

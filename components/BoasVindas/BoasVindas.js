@@ -2,7 +2,7 @@ import { SafeAreaView, View, Image, Text } from "react-native";
 import styles from './BoasVindasStyle.js'
 import * as React from 'react';
 import { Button } from 'react-native-paper';
-import { useFonts, Rubik_400Regular, Rubik_700Bold, Rubik_300Light } from '@expo-google-fonts/rubik'
+
 
 //ASYNC STORAGE
 import {guardarPrimeiroAcesso} from "../AsyncStorage/AsyncStorage.js";
