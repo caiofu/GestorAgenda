@@ -79,7 +79,7 @@ export default function Navegacao()
     // Chame suas funções relacionadas ao tema aqui, após a renderização.
     SalvaTema(tema, setTema);
     console.log('tema atuall teste (navegacao)---->', tema);
-   console.log( VerificaTema());
+   
   }, [tema]);
         
    

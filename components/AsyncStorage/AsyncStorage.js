@@ -81,7 +81,7 @@ export async function VerificaTema()
 {
   try {
     const temaSalvo = await AsyncStorage.getItem('temaAtual');
-    console.log('tema salvo atualemnte no AsyncStoroge ->', temaSalvo)
+    
     return temaSalvo;
   } catch (error) {
     console.log('Não foi possivel verificar o tema -> ', error);

@@ -13,7 +13,7 @@ export const AppStateProvider = ({ children }) => {
   //RESPONSAVEL PELA NAVEGAÇAO TORNANDO O ACESSO A PRIMEIRA VEZ OBRIGATORIO
   const [navegacaoEstabelecimento, setNavegacaoEstabelecimento] = useState(null);
   const [tema, setTema] = useState(null);
-  const [asynTemaCriado, setAsyncTemaCriado] = useState(false);
+
   useEffect(() => {
     async function carregaTema(){ //Usamos dentro de uma função async para poder espera o resultado de VerificaTema
       const temaAsync = await  VerificaTema();
