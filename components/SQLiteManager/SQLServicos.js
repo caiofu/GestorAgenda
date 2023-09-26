@@ -1,46 +1,41 @@
-
 import * as SQLite from 'expo-sqlite';
-
 const dbName = 'gestorAgenda.db';
 const db = SQLite.openDatabase(dbName);
 
-export function InserirEstabelecimento(nome, cnpj, logo, ramoAtividade, tipoAcao, id) 
-{
-   
-    if(tipoAcao === 'insercao')
-    {
-      query ='INSERT INTO estabelecimento (nomeEstabelecimento , cnpj , logo , ramoAtividade ) VALUES (?, ?, ?, ?)' ;
-      
-    }
-    else if (tipoAcao === 'atualizacao')
-    {
-      query = 'UPDATE estabelecimento SET nomeEstabelecimento = ?, cnpj = ?, logo = ?, ramoAtividade = ? WHERE idEstabelecimento = ?';
-    }
-    return new Promise((resolve, reject) => {
-      db.transaction(
-        (tr) => {
-        
-          tr.executeSql(
-            query,
-            tipoAcao === 'insercao' ?[nome, cnpj, logo, ramoAtividade] :[nome, cnpj, logo, ramoAtividade, id],
-            () => {
-              console.log('Empresa inserida com sucesso');
-              resolve(true); // Resolve a Promise com sucesso
-            },
-            (_, error) => {
-              console.error('Erro ao inserir empresa:', error);
-              reject(error); // Rejeita a Promise com o erro
-            }
-          );
-        },
-        (transactionError) => {
-          console.error('Erro na transação:', transactionError);
-          reject(transactionError); // Rejeita a Promise com o erro de transação
-        }
-      );
-    });
+export function InserirEstabelecimento(nome, cnpj, logo, ramoAtividade, tipoAcao, id) {
+
+  if (tipoAcao === 'insercao') {
+    query = 'INSERT INTO estabelecimento (nomeEstabelecimento , cnpj , logo , ramoAtividade ) VALUES (?, ?, ?, ?)';
+
   }
-  
+  else if (tipoAcao === 'atualizacao') {
+    query = 'UPDATE estabelecimento SET nomeEstabelecimento = ?, cnpj = ?, logo = ?, ramoAtividade = ? WHERE idEstabelecimento = ?';
+  }
+  return new Promise((resolve, reject) => {
+    db.transaction(
+      (tr) => {
+
+        tr.executeSql(
+          query,
+          tipoAcao === 'insercao' ? [nome, cnpj, logo, ramoAtividade] : [nome, cnpj, logo, ramoAtividade, id],
+          () => {
+            console.log('Empresa inserida com sucesso');
+            resolve(true); // Resolve a Promise com sucesso
+          },
+          (_, error) => {
+            console.error('Erro ao inserir empresa:', error);
+            reject(error); // Rejeita a Promise com o erro
+          }
+        );
+      },
+      (transactionError) => {
+        console.error('Erro na transação:', transactionError);
+        reject(transactionError); // Rejeita a Promise com o erro de transação
+      }
+    );
+  });
+}
+
 
 
 export function ConsultaEstabelecimento(callback) {
@@ -62,7 +57,7 @@ export function ConsultaEstabelecimento(callback) {
       },
       (error) => {
         console.log('Erro ao executar consulta:');
-        
+
       }
     );
   });
