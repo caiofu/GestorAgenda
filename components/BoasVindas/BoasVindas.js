@@ -1,13 +1,24 @@
-import { SafeAreaView, View, Image, Text } from "react-native";
+import { SafeAreaView, View, Image, Text, useColorScheme } from "react-native";
 import styles from './BoasVindasStyle.js'
 import * as React from 'react';
 import { Button } from 'react-native-paper';
 
 
 //ASYNC STORAGE
-import {guardarPrimeiroAcesso} from "../AsyncStorage/AsyncStorage.js";
+import {guardarPrimeiroAcesso, SalvaTema} from "../AsyncStorage/AsyncStorage.js";
+
+//CONTEXT 
+import { useAppState } from "../Contexts/AppStateContext";
+
 
 export default function BoasVindas({atualizaBoasVindas}) {
+
+    //CARREGANDO O TEMA A PRIMEIRA VEZ.
+    const { tema} = useAppState();
+    console.log('tema boas vindas ---->', tema)
+    const temaSistema = useColorScheme();
+    console.log('tema sistema --->', tema)
+    SalvaTema(tema === null ? temaSistema : tema);
     function Continuar()
     {
         
