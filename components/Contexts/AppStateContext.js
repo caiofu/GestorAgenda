@@ -17,10 +17,10 @@ export const AppStateProvider = ({ children }) => {
   useEffect(() => {
     async function carregaTema(){ //Usamos dentro de uma função async para poder espera o resultado de VerificaTema
       const temaAsync = await  VerificaTema();
-      
+      console.log('TEMAASYNC ==', temaAsync + 'tema ===>', tema)
       setTema( temaAsync !== '' ? temaAsync : temaSistema);
       
-      console.log('Tema async ==>', temaAsync + 'temaaaaaaaaaa ---->', tema)
+     
       
     }
   

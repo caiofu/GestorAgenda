@@ -68,7 +68,7 @@ export async function WizardAtivo() {
 export async function SalvaTema(tema){
 
   try {
-    
+     console.log('salvo no async -->', tema)
     await AsyncStorage.setItem('temaAtual', tema);
 
  } catch (error) {
