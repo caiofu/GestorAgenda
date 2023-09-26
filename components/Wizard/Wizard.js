@@ -49,7 +49,7 @@ export default function Wizard({ atualizarWizardAtivo }) {
 
     });
 
-    // console.log(passo)
+  
     return (
         <View style={{ flex: 1 }}>
             <Modal animationType="slide" visible={wizardAtivo}>

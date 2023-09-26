@@ -14,8 +14,8 @@ export default function Configuracoes()
 
      //Tema
      const { tema, MudarTema } = useAppState();
-     console.log('tema na configuração',tema)
-     const [darkModeOn, setDarkModeOn] = useState(tema === 'dark');
+     console.log('tema switch =======>', tema)
+     const [darkModeOn, setDarkModeOn] = useState(tema === 'dark' ? true : false);
     function AtivarDarkMode()
     {
         setDarkModeOn(!darkModeOn);
