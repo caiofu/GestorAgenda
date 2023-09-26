@@ -20,6 +20,7 @@ import { houvePrimeiroAcesso, guardarPrimeiroAcesso, removerAsyncStorage, Wizard
 import BoasVindas from './components/BoasVindas/BoasVindas';
 import Wizard from './components/Wizard/Wizard';
 import { ConsultaEstabelecimento } from './components/SQLiteManager/SQLEstabelecimento';
+import Colaboradores from './components/Colaboradores/Colaboradores';
 
 
 export default function App() {
@@ -91,8 +92,8 @@ export default function App() {
 
           {primeiroAcesso ? (<BoasVindas atualizaBoasVindas={atualizaBoasVindas} />)
             : wizardAtivo ? (<Wizard atualizarWizardAtivo={atualizarWizardAtivo} />)
-              : <Navegacao ></Navegacao>}
-
+              : <Colaboradores></Colaboradores> //<Navegacao ></Navegacao>}
+            }
           <StatusBar style="auto" />
         </SafeAreaView>
       </AppStateProvider>
