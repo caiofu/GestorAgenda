@@ -14,13 +14,14 @@ const styles = StyleSheet.create({
         marginRight:25, 
         marginBottom:20, 
         backgroundColor: 'rgba(112, 120, 147, 0.3)',
+        
     },
 
     inputFormularioSelect:
     {
         marginLeft:15, 
         marginRight:25, 
- 
+        tintColor:'red',
         backgroundColor: 'rgba(112, 120, 147, 0.3)',
     },
 

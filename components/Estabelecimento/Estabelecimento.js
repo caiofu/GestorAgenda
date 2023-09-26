@@ -5,7 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { SelectList } from "react-native-dropdown-select-list";
 import { useEffect } from "react";
 import * as FileSystem from 'expo-file-system';
-import { useNavigation } from "@react-navigation/native";
+import { DarkTheme, useNavigation } from "@react-navigation/native";
 
 //BANCO DE DADOS
 import {ConsultaEstabelecimento,  InserirEstabelecimento} from '../SQLiteManager/SQLEstabelecimento';  
@@ -13,8 +13,11 @@ import { ConsultaRamoAtividade } from "../SQLiteManager/SQLRamoAtividade";
 
 //ESTILO
 import styles from './StyleEstabelecimento';
+import darkTheme from '../../Tema/darkTheme';
+import lightTheme from '../../Tema/lightTheme';
 
-
+//CONTEXT
+import { useAppState } from "../Contexts/AppStateContext";
 
 
 export default function Estabelecimento()
@@ -74,6 +77,7 @@ export default function Estabelecimento()
       setIdRamoAtividade(chaveSelecionada);
     }, [selected, listaRamoAtividade]); //Esse trecho éa dependencia do useEffect estamos falando para o useEffect fica oberservando as mudanças nesse trecho para alteraças
     
+   
     //VARIAVEIS DE ESTADO
     const [dadosCarregados, setDadosCarregados] = useState(false);
 
@@ -97,6 +101,15 @@ export default function Estabelecimento()
     const [envio, setEnvio]                                     = useState(false);
 
     const [primeiroCadastro, setPrimeiroCadastro]               = useState(false);
+
+    //COR DO TEMA
+    const {tema} = useAppState();
+    const [corTema, setCorTema] = useState('#006699');
+
+     useEffect(()=>{
+  
+      tema === 'light' ? setCorTema('#006699') : setCorTema(DarkTheme.colors.text);
+        },[tema])
    
     //ENVIO
   
@@ -281,6 +294,7 @@ export default function Estabelecimento()
   const [modalVisivel, setModalVisivel] = useState(false);
 
 
+
     return(
       
       <SafeAreaView style={styles.container}>
@@ -305,10 +319,12 @@ export default function Estabelecimento()
             ''
           )}
           <TextInput
+            textColor={corTema}
+            
             label="Nome do Estabelecimento"
             onChangeText={setNomeEstabelecimento}
             theme={{
-              colors: { primary: msgNomeEstabelecimento ? 'red' : '#006699' },
+              colors: { primary: msgNomeEstabelecimento ? 'red' : corTema, onSurfaceVariant:  msgNomeEstabelecimento ? 'red' : corTema   }
             }} value={nomeEstabelecimento}
             style={styles.inputFormulario}
           />
@@ -327,7 +343,7 @@ export default function Estabelecimento()
               ValidaCnpj(txtCnpj); //Atualiza o estado do CNPJ
             }}
             theme={{
-              colors: { primary: cnpjValido == false && cnpj > 0 ? 'red' : '#006699' },
+              colors: { primary: cnpjValido == false && cnpj > 0 ? 'red' : corTema, onSurfaceVariant:  cnpjValido == false && cnpj > 0  ? 'red' : corTema  },
             }}
             style={styles.inputFormulario}
             value={cnpj}
@@ -336,12 +352,15 @@ export default function Estabelecimento()
           <SelectList 
             placeholder="Ramo de atividade (opcional)"
             searchPlaceholder="Pesquisar"
+           
             fontFamily="Rubik_400Regular"
             boxStyles={styles.inputFormularioSelect}
             dropdownStyles={{ alignSelf:'center',   width:'89%'}}
             setSelected={(val) => {setRamoAtividade(val);}}
             data={listaRamoAtividade}
+            dropdownTextStyles={{color: corTema}}
             save="value"
+            
             defaultOption={{key:idRamoAtividade,value:ramoAtividade}}
             
           />
