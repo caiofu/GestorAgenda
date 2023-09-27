@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { HelperText, TextInput } from 'react-native-paper';
+import { HelperText, TextInput, Button } from 'react-native-paper';
 import { SafeAreaView, Text, Image, View, StyleSheet, TouchableOpacity, ActivityIndicator, Modal } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import { SelectList } from "react-native-dropdown-select-list";
@@ -79,7 +79,7 @@ export default function Servicos() {
     servicosSelecionados.forEach(element => {
       UpdateAtivoServico(element.label, 1, ramoAtividadeTeste);
     });
-    
+
     navigation.navigate('Gestor Agenda');
   };
 
@@ -90,7 +90,7 @@ export default function Servicos() {
       resultado.forEach(element => {
         listaGeral.push(element.nomeServico);
 
-        if(element.ativo == 1){
+        if (element.ativo == 1) {
           listaAtivos.push(element.nomeServico);
         }
 
@@ -118,6 +118,28 @@ export default function Servicos() {
           items={listaServicos}
           selectedItems={servicosSelecionados}
           onSelectionsChange={onSelectionsChange} />
+      </View>
+      <View>
+        {/* aqui vou por toda a lógica relacionada aos serviços criados pelo usuário */}
+        <SelectMultiple
+          items={listaServicos}
+          selectedItems={servicosSelecionados}
+          onSelectionsChange={onSelectionsChange} />
+      </View>
+      <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center', marginTop: 20, marginBottom: 10, display: 'flex', flexDirection: 'row' }}>
+        <TextInput
+          style={{ width: '70%', height: 40, borderColor: 'gray', marginBottom: 10 }}
+          placeholder="Insira outros serviços"
+        // value={inputValue}
+        // onChangeText={(text) => setInputValue(text)}
+        />
+        <Button
+          style={{ width: '20%', height: 40, borderColor: 'gray', backgroundColor: '#006699', borderRadius: 5 }}
+          title="Save"
+        //onPress={handleSave}
+        >
+          <Text style={styles.btnSalvarText}>OK</Text>
+        </Button>
       </View>
 
       {/* <SelectList
