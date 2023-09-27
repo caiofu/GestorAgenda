@@ -1,5 +1,5 @@
 import { SafeAreaView, Text, Button, TouchableOpacity, View } from "react-native";
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 
 //CONTEXT
 import { useAppState } from "../Contexts/AppStateContext";
@@ -22,12 +22,22 @@ export default function Home({ navigation }) {
   })
 
   return (
-    <SafeAreaView style={{ margin: 10 }}>
+    <SafeAreaView style={{ margin: 10, display:'flex', flexDirection:'row' }}>
       <TouchableOpacity style={styles.homeContainer} onPress={() => navigation.navigate('Estabelecimento')}>
         <View style={styles.boxBotao}>
           <View style={styles.iconeBotao}>
             <FontAwesome5 style={styles.iconeBotao} name="store" size={34} color='#ffffff' />
             <Text style={styles.txtBotao}>Negócio</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+
+
+      <TouchableOpacity style={styles.homeContainer} onPress={() => navigation.navigate('Colaboradores')}>
+        <View style={styles.boxBotao}>
+          <View style={styles.iconeBotao}>
+            <FontAwesome5 style={styles.iconeBotao} name="house-user" size={34} color='#ffffff' />
+            <Text style={styles.txtBotao}>Colab</Text>
           </View>
         </View>
       </TouchableOpacity>

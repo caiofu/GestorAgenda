@@ -79,9 +79,9 @@ export default function App() {
   })
 
   //TRECHO QUE RESETA TUDO PARA TESTES
-   //removerAsyncStorage();
-   //guardaWizardAtivo('true');
-   //ExcluirBancoDeDados();
+  //  removerAsyncStorage();
+  //  guardaWizardAtivo('true');
+  //  ExcluirBancoDeDados();
   //--------------------------------
 
   return (
@@ -92,8 +92,7 @@ export default function App() {
 
           {primeiroAcesso ? (<BoasVindas atualizaBoasVindas={atualizaBoasVindas} />)
             : wizardAtivo ? (<Wizard atualizarWizardAtivo={atualizarWizardAtivo} />)
-              : <Colaboradores></Colaboradores> //<Navegacao ></Navegacao>}
-            }
+              : <Navegacao ></Navegacao>}
           <StatusBar style="auto" />
         </SafeAreaView>
       </AppStateProvider>

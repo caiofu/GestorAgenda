@@ -8,6 +8,7 @@ import {ConsultaEstabelecimento} from '../SQLiteManager/SQLEstabelecimento';
 //Componentes (telas para navegação)
 import Home from '../Home/Home';
 import Estabelecimento from "../Estabelecimento/Estabelecimento";
+import Colaboradores from "../Colaboradores/Colaboradores";
 import { useState, useEffect } from "react";
 import { useAppState } from "../Contexts/AppStateContext";
 
@@ -32,7 +33,8 @@ function StackTelas()
             
         <Stack.Screen name="Gestor Agenda" component={Home} />
         <Stack.Screen name="Estabelecimento" component={Estabelecimento}/>
-       
+        <Stack.Screen name="Colaboradores" component={Colaboradores}/>
+
         </Stack.Navigator>
     )
 }

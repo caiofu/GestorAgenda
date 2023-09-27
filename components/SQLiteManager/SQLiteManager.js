@@ -18,6 +18,11 @@ export default function SQLiteManager() {
       //Estabelecimento
       tx.executeSql('CREATE TABLE IF NOT EXISTS estabelecimento (idEstabelecimento INTEGER PRIMARY KEY AUTOINCREMENT, nomeEstabelecimento TEXT, cnpj TEXT, logo TEXT, ramoAtividade TEXT);',
       );
+
+      //Colaborador
+      tx.executeSql('CREATE TABLE IF NOT EXISTS colaborador (idColaborador INTEGER PRIMARY KEY AUTOINCREMENT, nomeColaborador TEXT);',
+      );
+
       //Ramo Atividade
       tx.executeSql(
         'CREATE TABLE IF NOT EXISTS ramoAtividade (idRamoAtividade INTEGER PRIMARY KEY AUTOINCREMENT, nomeAtividade TEXT);'
@@ -30,6 +35,8 @@ export default function SQLiteManager() {
             tx.executeSql(
               'INSERT INTO ramoAtividade (nomeAtividade) VALUES (?), (?), (?), (?), (?), (?), (?)',
               ['Oficina Mecânica', 'Salão de Beleza', 'Clínica de Massagem', 'Personal Trainer', 'Serviços Gerais', 'Barbearia', 'Outros'],
+              // 'INSERT INTO colaborador (nomeColaborador) VALUES (?)',
+              // ['Proprietário'],
               (_, result) => {
                 console.log('Tabela criada com sucesso e valores inseridos');
 
@@ -43,6 +50,29 @@ export default function SQLiteManager() {
             console.log('valores ja inseridos');
           }
         })
+
+        //Inserindo 1° Colaborador - Proprietário
+      tx.executeSql('SELECT idColaborador FROM colaborador',
+      [],
+      (_, { rows }) => {
+        if (rows.length === 0) {
+          tx.executeSql(
+            'INSERT INTO colaborador (nomeColaborador) VALUES (?)',
+            ['Proprietário'],
+
+            (_, result) => {
+              console.log('Tabela criada com sucesso e valores inseridos - table Colaborador');
+
+            },
+            (_, error) => {
+              console.error('Erro ao criar tabela e inserir valores - table Colaborador:', error);
+            }
+          )
+        }
+        else {
+          console.log('valores ja inseridos - table Colaborador');
+        }
+      })
     });
   }, []);
 
