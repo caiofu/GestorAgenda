@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {FontAwesome5, FontAwesome} from '@expo/vector-icons';
 
-import {ConsultaEstabelecimento} from '../SQLiteManager/SQLEstabelecimento';
+import { ConsultaEstabelecimento } from '../SQLiteManager/SQLEstabelecimento';
 //Componentes (telas para navegação)
 import Home from '../Home/Home';
 import Configuracoes from "../Configuracoes/Configuracoes";
@@ -14,19 +14,12 @@ import { useState, useEffect } from "react";
 
 //CONTEXT
 import { useAppState } from "../Contexts/AppStateContext";
-
+import Servicos from "../Servicos/Servicos";
 //ASYNC STORAGE
 import {SalvaTema,VerificaTema} from "../AsyncStorage/AsyncStorage";
 
-
-
-
-
-
-
 const Stack = createNativeStackNavigator(); //Responsavel pela navegação Stack 
-const Tab   = createBottomTabNavigator(); //Responsavel pela navegaçao BottomTabs
-
+const Tab = createBottomTabNavigator(); //Responsavel pela navegaçao BottomTabs
 
 function Tabs()
 {
@@ -41,31 +34,27 @@ function Tabs()
     )
 }
 
-function StackTelas()
-{
-
-    return(
-        <Stack.Navigator>
-            
-        <Stack.Screen name="Gestor Agenda" component={Home} />
-        <Stack.Screen name="Estabelecimento" component={Estabelecimento}/>
-       
+function StackTelas() {
+    return (
+        <Stack.Navigator  >
+            <Stack.Screen name="Gestor Agenda" component={Home} />
+            <Stack.Screen name="Serviços" component={Servicos} options={{ headerLeft: null }} />
+            <Stack.Screen name="Estabelecimento" component={Estabelecimento} />
         </Stack.Navigator>
     )
 }
 
-function PrimeiroCadastroEstabelecimento()
-{
-    return(
-        <Stack.Navigator  >
-        <Stack.Screen name="Estabelecimento" component={Estabelecimento} />       
-      <Stack.Screen name="Gestor Agenda" component={Home} />
-     
-     
-      </Stack.Navigator>
+function PrimeiroCadastroEstabelecimento() {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="Estabelecimento" component={Estabelecimento} />
+            //<Stack.Screen name="Serviços" component={Servicos} options={{ headerLeft: null }} />
+            <Stack.Screen name="Gestor Agenda" component={Home} />
+        </Stack.Navigator>
     )
-  
+
 }
+
 export default function Navegacao()
 {
  
@@ -74,10 +63,7 @@ export default function Navegacao()
     //Tema (Provavel que tenha validar antes no boas vindas e no wizard caso seja o primeiro uso)
     
          // Use useEffect para executar as operações de tema uma vez após a renderização.
-  useEffect(() => {
-
-   
-
+  useEffect(() => {  
     // Chame suas funções relacionadas ao tema aqui, após a renderização.
     SalvaTema(tema === null ? temaSistema : tema);
     console.log('tema atuall teste (navegacao)---->', tema);
@@ -88,7 +74,6 @@ export default function Navegacao()
     return(
         <NavigationContainer theme={tema === 'light' ? DefaultTheme : DarkTheme}> 
             {navegacaoEstabelecimento ?<PrimeiroCadastroEstabelecimento></PrimeiroCadastroEstabelecimento>: <Tabs></Tabs> }
-          
         </NavigationContainer>
     )
 }
