@@ -18,7 +18,7 @@ import lightTheme from './Tema/lightTheme';
 import Navegacao from './components/Navegacao/Navegacao';
 
 //BANCO
-import SQLiteManager, { ExcluirBancoDeDados } from './components/SQLiteManager/SQLiteManager';
+import SQLiteManager, { ExcluirBancoDeDados, ListaTodasTabelas } from './components/SQLiteManager/SQLiteManager';
 
 //ASYNC STORAGE
 import { houvePrimeiroAcesso, guardarPrimeiroAcesso, removerAsyncStorage, WizardAtivo, guardaWizardAtivo } from './components/AsyncStorage/AsyncStorage';
