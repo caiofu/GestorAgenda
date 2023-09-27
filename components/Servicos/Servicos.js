@@ -8,13 +8,18 @@ import * as FileSystem from 'expo-file-system';
 import { useNavigation } from "@react-navigation/native";
 import { ConsultaEstabelecimento, InserirEstabelecimento } from '../SQLiteManager/SQLEstabelecimento';
 import { ConsultaRamoAtividade } from "../SQLiteManager/SQLRamoAtividade";
+import SelectMultiple from 'react-native-select-multiple';
 import styles from './StyleServicos';
+import { GetServicosPorRamo, UpdateAtivoServico } from "../SQLiteManager/SQLServicos";
 
 export default function Servicos() {
   const [ramoAtividade, setRamoAtividade] = useState(null);
   const [envio, setEnvio] = useState(false);
   const [animacaoSalvando, setAnimacaoSalvando] = useState(false);
   const [modalVisivel, setModalVisivel] = useState(false);
+  const [listaServicos, setListaServicos] = useState([]);
+  const [servicosSelecionados, setServicosSelecionados] = useState([]);
+  const ramoAtividadeTeste = 2;
 
   // Get ramo de atividade salvo
   useEffect(() => {
@@ -66,13 +71,54 @@ export default function Servicos() {
   // Navega para a tela 'Home'
   const navigation = useNavigation();
   const Continuar = () => {
+    listaServicos.forEach(element => {
+      UpdateAtivoServico(element, 0, ramoAtividadeTeste);
+    });
+
     // setModalVisivel(false);
+    servicosSelecionados.forEach(element => {
+      UpdateAtivoServico(element.label, 1, ramoAtividadeTeste);
+    });
+    
     navigation.navigate('Gestor Agenda');
   };
 
+  useEffect(() => {
+    GetServicosPorRamo(ramoAtividadeTeste, (resultado) => {
+      let listaGeral = [];
+      let listaAtivos = [];
+      resultado.forEach(element => {
+        listaGeral.push(element.nomeServico);
+
+        if(element.ativo == 1){
+          listaAtivos.push(element.nomeServico);
+        }
+
+        console.log('Resultado de get servico por ramo - nome:' + element.nomeServico);
+        console.log('Resultado de get servico por ramo - ativo:' + element.ativo);
+      });
+      setListaServicos(listaGeral);
+      setServicosSelecionados(listaAtivos);
+    });
+
+    //verificar se serviço está ativo, aí salva em servicosSelecionados
+  }, []);
+
+  onSelectionsChange = (selecionados) => {
+    // save the selections to this.state
+    setServicosSelecionados(selecionados);
+    console.log(selecionados);
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.titulo}>{ramoAtividade}</Text>
+      <Text style={styles.titulo}>Selecione os serviços que a empresa oferece:</Text>
+      <View>
+        <SelectMultiple
+          items={listaServicos}
+          selectedItems={servicosSelecionados}
+          onSelectionsChange={onSelectionsChange} />
+      </View>
 
       {/* <SelectList
         placeholder="Ramo de atividade (opcional)"
