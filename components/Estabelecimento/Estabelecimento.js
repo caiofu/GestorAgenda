@@ -355,7 +355,7 @@ export default function Estabelecimento()
           <SelectList 
             placeholder="Ramo de atividade (opcional)"
             searchPlaceholder=""
-            labelStyles={{color:'#fff'}}
+        
             fontFamily="Rubik_400Regular"
             boxStyles={styles.inputFormularioSelect}
             dropdownStyles={{ alignSelf:'center',   width:'89%'}}
@@ -367,7 +367,7 @@ export default function Estabelecimento()
             searchicon={<FontAwesome5 name="search" size={17} color={corTema} />} 
             closeicon={<FontAwesome name="close" size={24} color={corTema}/>}
             defaultOption={{key:idRamoAtividade,value:ramoAtividade}}
-            inputStyles={{color:'#fff'}}
+            inputStyles={{color: corTema}}
             
           />
          
