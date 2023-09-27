@@ -25,7 +25,7 @@ export default function Home({ navigation }) {
   })
 
   return (
-    <SafeAreaView style={{ margin: 10 }}>
+    <SafeAreaView style={{ margin: 10 , display: 'flex', flexDirection:'row'}}>
       <TouchableOpacity style={styles.homeContainer} onPress={() => navigation.navigate('Estabelecimento')}>
         <View style={styles.boxBotao}>
           <View style={styles.iconeBotao}>
@@ -34,6 +34,17 @@ export default function Home({ navigation }) {
           </View>
         </View>
       </TouchableOpacity>
+
+      <TouchableOpacity style={styles.homeContainer} onPress={() => navigation.navigate('Serviços')}>
+        <View style={styles.boxBotao}>
+          <View style={styles.iconeBotao}>
+            <FontAwesome5 style={styles.iconeBotao} name="store" size={34} color='#ffffff' />
+            <Text style={styles.txtBotao}>Serviços</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+
+      
 
     </SafeAreaView>
   )
