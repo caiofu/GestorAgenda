@@ -21,25 +21,26 @@ import {SalvaTema,VerificaTema} from "../AsyncStorage/AsyncStorage";
 const Stack = createNativeStackNavigator(); //Responsavel pela navegação Stack 
 const Tab = createBottomTabNavigator(); //Responsavel pela navegaçao BottomTabs
 
-function Tabs({tema})
+function Tabs()
 {
 
-    
+    const { tema} = useAppState();
     //AQUI É ONDE FICA A BARRA NA PARTE INFERIOR COM OS BOTOES DE NAVEGAÇÃO
     return(
         <Tab.Navigator screenOptions={{headerShown: false, tabBarActiveTintColor:'#006699',}}>
-            <Tab.Screen name="Tela Inicial" component={StackTelas} options={{tabBarIcon: ({color, size}) => (<FontAwesome5 name="home" size={size} color={color} />),}} ></Tab.Screen>
+            <Tab.Screen name="Tela Inicial" component={StackTelas} initialParams={{tema1:tema}} options={{tabBarIcon: ({color, size}) => (<FontAwesome5 name="home" size={size} color={color} />),}} ></Tab.Screen>
             <Tab.Screen name="Configuracoes"  component={Configuracoes}   options={{tabBarIcon: ({color, size}) => (<FontAwesome name="gear" size={size} color={color} />),headerShown:true, headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text, title:'Configurações'}   }></Tab.Screen>
         </Tab.Navigator>
     )
 }
 
 function StackTelas() {
+    const { tema} = useAppState();
     return (
         <Stack.Navigator  >
-            <Stack.Screen name="Gestor Agenda" component={Home} />
-            <Stack.Screen name="Serviços" component={Servicos} options={{ headerLeft: null }} />
-            <Stack.Screen name="Estabelecimento" component={Estabelecimento} />
+            <Stack.Screen name="Gestor Agenda" component={Home} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}} />
+            <Stack.Screen name="Serviços" component={Servicos} options={{ headerLeft: null, headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text }} />
+            <Stack.Screen name="Estabelecimento" component={Estabelecimento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}} />
         </Stack.Navigator>
     )
 }
@@ -66,7 +67,7 @@ export default function Navegacao()
   useEffect(() => {  
     // Chame suas funções relacionadas ao tema aqui, após a renderização.
     SalvaTema(tema === null ? temaSistema : tema);
-    console.log('tema atuall teste (navegacao)---->', tema);
+ 
    
   }, [tema]);
         
