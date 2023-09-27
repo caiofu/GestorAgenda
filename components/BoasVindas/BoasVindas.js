@@ -1,13 +1,29 @@
-import { SafeAreaView, View, Image, Text } from "react-native";
+import { SafeAreaView, View, Image, Text, useColorScheme, } from "react-native";
 import styles from './BoasVindasStyle.js'
-import * as React from 'react';
+import { useEffect } from "react"; 
 import { Button } from 'react-native-paper';
-import { useFonts, Rubik_400Regular, Rubik_700Bold, Rubik_300Light } from '@expo-google-fonts/rubik'
+
 
 //ASYNC STORAGE
-import {guardarPrimeiroAcesso} from "../AsyncStorage/AsyncStorage.js";
+import {guardarPrimeiroAcesso, SalvaTema} from "../AsyncStorage/AsyncStorage.js";
+
+//CONTEXT 
+import { useAppState } from "../Contexts/AppStateContext";
+
 
 export default function BoasVindas({atualizaBoasVindas}) {
+
+    //CARREGANDO O TEMA A PRIMEIRA VEZ.
+    const { tema, setTema} = useAppState();
+    console.log('tema boas vindas ---->', tema)
+    const temaSistema = useColorScheme();
+    
+    useEffect(() => {
+        // Atualizar o tema apenas quando o componente for montado
+        setTema(temaSistema);
+      }, []);
+    
+    //SalvaTema(tema === null ? temaSistema : tema);
     function Continuar()
     {
         

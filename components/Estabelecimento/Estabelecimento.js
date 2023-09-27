@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { HelperText, TextInput} from 'react-native-paper';
-import {SafeAreaView, Text,  Image, View, StyleSheet, TouchableOpacity, ActivityIndicator, Modal } from "react-native";
+import {SafeAreaView, Text,  Image, View, StyleSheet, TouchableOpacity, ActivityIndicator, Modal, ScrollView, KeyboardAvoidingView } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import { SelectList } from "react-native-dropdown-select-list";
+import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
+
 import { useEffect } from "react";
 import * as FileSystem from 'expo-file-system';
-import { useNavigation } from "@react-navigation/native";
+import { DarkTheme, useNavigation } from "@react-navigation/native";
 
 //BANCO DE DADOS
 import {ConsultaEstabelecimento,  InserirEstabelecimento} from '../SQLiteManager/SQLEstabelecimento';  
@@ -13,8 +15,12 @@ import { ConsultaRamoAtividade } from "../SQLiteManager/SQLRamoAtividade";
 
 //ESTILO
 import styles from './StyleEstabelecimento';
+import darkTheme from '../../Tema/darkTheme';
+import lightTheme from '../../Tema/lightTheme';
 
-
+//CONTEXT
+import { useAppState } from "../Contexts/AppStateContext";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 
 export default function Estabelecimento()
@@ -74,6 +80,7 @@ export default function Estabelecimento()
       setIdRamoAtividade(chaveSelecionada);
     }, [selected, listaRamoAtividade]); //Esse trecho éa dependencia do useEffect estamos falando para o useEffect fica oberservando as mudanças nesse trecho para alteraças
     
+   
     //VARIAVEIS DE ESTADO
     const [dadosCarregados, setDadosCarregados] = useState(false);
 
@@ -97,6 +104,15 @@ export default function Estabelecimento()
     const [envio, setEnvio]                                     = useState(false);
 
     const [primeiroCadastro, setPrimeiroCadastro]               = useState(false);
+
+    //COR DO TEMA
+    const {tema} = useAppState();
+    const [corTema, setCorTema] = useState('#006699');
+
+     useEffect(()=>{
+  
+      tema === 'light' ? setCorTema('#006699') : setCorTema(DarkTheme.colors.text);
+        },[tema])
    
     //ENVIO
   
@@ -152,27 +168,59 @@ export default function Estabelecimento()
           
     }
    
-    function ValidaCnpj(txtCnpj)
-    {
-        //Filtro para aceitar somente numros
+    function ValidaCnpj(txtCnpj) {
+      let cnpjNumeros = txtCnpj.replace(/[^0-9]/g, '');
+      setCnpj(cnpjNumeros);
     
-        let cnpjNumeros = txtCnpj.replace(/[^0-9]/g, '');
-        setCnpj(cnpjNumeros);
-      
-        if(cnpjNumeros.length === 14 || cnpjNumeros.length === 0)
-        {
-         
-            setCnpjValido(true);
-           
-        }
-        else
-        {
-           
-            setCnpjValido(false);
-        }
-        
-
-      
+      if (cnpjNumeros.length !== 14) {
+        setCnpjValido(false); // CNPJ com tamanho inválido
+        return;
+      }
+    
+      // Verifica se todos os dígitos são iguais; se forem, o CNPJ é inválido
+      if (/^(\d)\1+$/.test(cnpjNumeros)) {
+        setCnpjValido(false);
+        return;
+      }
+    
+      // Calcula o primeiro dígito verificador
+      let tamanho = cnpjNumeros.length - 2;
+      let numeros = cnpjNumeros.substring(0, tamanho);
+      let digitos = cnpjNumeros.substring(tamanho);
+      let soma = 0;
+      let pos = tamanho - 7;
+    
+      for (let i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2) pos = 9;
+      }
+    
+      let resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+      if (resultado !== parseInt(digitos.charAt(0))) {
+        setCnpjValido(false);
+        return;
+      }
+    
+      // Calcula o segundo dígito verificador
+      tamanho += 1;
+      numeros = cnpjNumeros.substring(0, tamanho);
+      digitos = cnpjNumeros.substring(tamanho);
+      soma = 0;
+      pos = tamanho - 7;
+    
+      for (let i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2) pos = 9;
+      }
+    
+      resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+      if (resultado !== parseInt(digitos.charAt(0))) {
+        setCnpjValido(false);
+        return;
+      }
+    
+      // O CNPJ é válido
+      setCnpjValido(true);
     }
 
    async function SalvandoDados() {
@@ -249,9 +297,12 @@ export default function Estabelecimento()
   const [modalVisivel, setModalVisivel] = useState(false);
 
 
+
     return(
       
       <SafeAreaView style={styles.container}>
+        <KeyboardAvoidingView  behavior={Platform.OS === 'ios' ? 'padding' : null} enabled>
+        <ScrollView>
           <View style={styles.boxLogo}>
             {image != null && image != '' ? (
               <Image source={{ uri: image }} style={styles.imgLogo} />
@@ -271,10 +322,12 @@ export default function Estabelecimento()
             ''
           )}
           <TextInput
+            textColor={corTema}
+            
             label="Nome do Estabelecimento"
             onChangeText={setNomeEstabelecimento}
             theme={{
-              colors: { primary: msgNomeEstabelecimento ? 'red' : '#006699' },
+              colors: { primary: msgNomeEstabelecimento ? 'red' : corTema, onSurfaceVariant:  msgNomeEstabelecimento ? 'red' : corTema   }
             }} value={nomeEstabelecimento}
             style={styles.inputFormulario}
           />
@@ -293,24 +346,31 @@ export default function Estabelecimento()
               ValidaCnpj(txtCnpj); //Atualiza o estado do CNPJ
             }}
             theme={{
-              colors: { primary: cnpjValido == false && cnpj > 0 ? 'red' : '#006699' },
+              colors: { primary: cnpjValido == false && cnpj > 0 ? 'red' : corTema, onSurfaceVariant:  cnpjValido == false && cnpj > 0  ? 'red' : corTema  },
             }}
             style={styles.inputFormulario}
             value={cnpj}
           />
 
-          <SelectList
+          <SelectList 
             placeholder="Ramo de atividade (opcional)"
-            searchPlaceholder="Pesquisar"
+            searchPlaceholder=""
+            labelStyles={{color:'#fff'}}
             fontFamily="Rubik_400Regular"
-            boxStyles={styles.inputFormulario}
+            boxStyles={styles.inputFormularioSelect}
+            dropdownStyles={{ alignSelf:'center',   width:'89%'}}
             setSelected={(val) => {setRamoAtividade(val);}}
             data={listaRamoAtividade}
+            dropdownTextStyles={{color: corTema}}
             save="value"
+            arrowicon={<FontAwesome5 name="chevron-down" size={17} color={corTema} />} 
+            searchicon={<FontAwesome5 name="search" size={17} color={corTema} />} 
+            closeicon={<FontAwesome name="close" size={24} color={corTema}/>}
             defaultOption={{key:idRamoAtividade,value:ramoAtividade}}
+            inputStyles={{color:'#fff'}}
             
           />
-  
+         
           <TouchableOpacity
           style={styles.btnSalvar}
             // disabled={cnpjValido == false ? true : false}
@@ -340,7 +400,10 @@ export default function Estabelecimento()
               )}
             </View>
           </View>
+          
       </Modal>
+      </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
     )
 }
