@@ -89,7 +89,7 @@ console.log('TESTe --->', useColorScheme())
 
   //TRECHO QUE RESETA TUDO PARA TESTES
    //removerAsyncStorage();
-    //guardaWizardAtivo('true');
+   // guardaWizardAtivo('true');
     //ExcluirBancoDeDados();
   //--------------------------------
 

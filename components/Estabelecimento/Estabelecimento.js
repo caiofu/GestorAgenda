@@ -3,6 +3,8 @@ import { HelperText, TextInput} from 'react-native-paper';
 import {SafeAreaView, Text,  Image, View, StyleSheet, TouchableOpacity, ActivityIndicator, Modal, ScrollView, KeyboardAvoidingView } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import { SelectList } from "react-native-dropdown-select-list";
+import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
+
 import { useEffect } from "react";
 import * as FileSystem from 'expo-file-system';
 import { DarkTheme, useNavigation } from "@react-navigation/native";
@@ -18,6 +20,7 @@ import lightTheme from '../../Tema/lightTheme';
 
 //CONTEXT
 import { useAppState } from "../Contexts/AppStateContext";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 
 export default function Estabelecimento()
@@ -351,8 +354,8 @@ export default function Estabelecimento()
 
           <SelectList 
             placeholder="Ramo de atividade (opcional)"
-            searchPlaceholder="Pesquisar"
-           
+            searchPlaceholder=""
+            labelStyles={{color:'#fff'}}
             fontFamily="Rubik_400Regular"
             boxStyles={styles.inputFormularioSelect}
             dropdownStyles={{ alignSelf:'center',   width:'89%'}}
@@ -360,11 +363,14 @@ export default function Estabelecimento()
             data={listaRamoAtividade}
             dropdownTextStyles={{color: corTema}}
             save="value"
-            
+            arrowicon={<FontAwesome5 name="chevron-down" size={17} color={corTema} />} 
+            searchicon={<FontAwesome5 name="search" size={17} color={corTema} />} 
+            closeicon={<FontAwesome name="close" size={24} color={corTema}/>}
             defaultOption={{key:idRamoAtividade,value:ramoAtividade}}
+            inputStyles={{color:'#fff'}}
             
           />
-  
+         
           <TouchableOpacity
           style={styles.btnSalvar}
             // disabled={cnpjValido == false ? true : false}
