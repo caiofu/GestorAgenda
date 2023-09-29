@@ -45,6 +45,35 @@ export function GetServicosPorId(idServico, callback) {
   });
 }
 
+export function GetServicosAtivo(callback) {
+  db.transaction((tx) => {
+    tx.executeSql(
+      'SELECT * FROM servicos WHERE ativo = ?',
+      [1],
+      (tx, results) => {
+        console.log('Número de registros encontrados:', results.rows.length);
+
+        const servicos = [];
+
+        // Iterar sobre os resultados e adicionar cada registro ao array de serviços
+        for (let i = 0; i < results.rows.length; i++) {
+          const servico = results.rows.item(i);
+          servicos.push(servico);
+        }
+
+        callback(servicos); // Chamar a função de callback com o array de serviços
+      },
+      (error) => {
+        console.log('Erro ao extrair serviços ativos: ' + error);
+        callback(null); // Trate o erro e chame a função de callback com null
+      }
+    );
+  });
+}
+
+
+
+
 export function UpdateAtivoServico (nomeServico, ativo, idRamoAtividade) {
   db.transaction((tx) => {
     tx.executeSql(

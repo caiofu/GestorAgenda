@@ -3,7 +3,7 @@ import { FAB, PaperProvider, Portal, Modal } from "react-native-paper";
 import {  useNavigation } from "@react-navigation/native";
 
 //SQL
-import { GetServicosPorRamo } from "../SQLiteManager/SQLServicos";
+import { GetServicosAtivo, GetServicosPorRamo } from "../SQLiteManager/SQLServicos";
 import { useEffect, useState } from "react";
 
 export default function Servicos()
@@ -24,7 +24,18 @@ export default function Servicos()
       }
     //Busca lista
     useEffect(() => {
-        GetServicosPorRamo(1,(servicos) => {
+        // GetServicosPorRamo(1,(servicos) => {
+        //      console.log('teste ---------->', servicos)
+        //     const retorno = servicos.map((listaServico) => ({
+        //         idServico: listaServico.idServico.toString(),
+        //         idRamoAtividade: listaServico.idRamoAtividade,
+        //         nomeServico: listaServico.nomeServico,
+        //         descricao: listaServico.descricao
+        //     }));
+        //       setListaServicosVinculados(retorno);
+        //     }); 
+
+         GetServicosAtivo((servicos) => {
              console.log('teste ---------->', servicos)
             const retorno = servicos.map((listaServico) => ({
                 idServico: listaServico.idServico.toString(),

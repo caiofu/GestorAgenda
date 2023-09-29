@@ -7,7 +7,7 @@ import { SelectList, MultipleSelectList } from "react-native-dropdown-select-lis
 
 //SQLITE
 import { ConsultaRamoAtividade } from "../SQLiteManager/SQLRamoAtividade";
-import { GetServicosPorRamo, UpdateAtivoServico } from "../SQLiteManager/SQLServicos";
+import { GetServicosPorRamo, UpdateAtivoServico, UpdateAtivoServicoPorId, GetServicosAtivo } from "../SQLiteManager/SQLServicos";
 
 //CONTEXT
 import { useAppState } from "../Contexts/AppStateContext";
@@ -88,6 +88,26 @@ export default function NovoServico()
     {
         setBtnImportar(true);
     }
+
+    //SALVANDO A IMPORTAÇAO
+    function BotaoSalvaImportacao() {
+      
+        // Crie uma matriz para armazenar os ids correspondentes aos nomes dos serviços selecionados
+        //const idsSelecionados = [];
+      
+        // Para cada serviço selecionado, encontre o id correspondente na listaServicos
+        servicoSelecionado.forEach((servicoSelecionado) => {
+          const servicoEncontrado = listaServicos.find((item) => item.value === servicoSelecionado);
+          if (servicoEncontrado) {
+            // idsSelecionados.push(servicoEncontrado.key);UpdateAtivoServicoPorId(idServico, 0);
+            UpdateAtivoServicoPorId(servicoEncontrado.key, 1);
+          }
+        });
+      
+        // Agora, 'idsSelecionados' contém os ids correspondentes aos nomes dos serviços selecionados
+        console.log('Ids dos serviços selecionados:', );
+      }
+   
     
     return(
         <SafeAreaView>
@@ -120,11 +140,12 @@ export default function NovoServico()
                             save="value"
                             setSelected={(val) => setServicoSelecionado(val)}
                             onSelect={() =>alert(servicoSelecionado)}
+                            
                         />
 
                        
                         
-                        <TouchableOpacity style={servicoSelecionado.length === 0 ? styles.btnDesabilitado : styles.btn} disabled={true}>
+                        <TouchableOpacity style={servicoSelecionado.length === 0 ? styles.btnDesabilitado : styles.btn} disabled={servicoSelecionado.length === 0 ? true : false} onPress={BotaoSalvaImportacao}>
                             <View style={[styles.btnContainer, {alignSelf:'center'}]}>
                                 <Text style={styles.btnText}>IMPORTAR</Text>
                             </View>
