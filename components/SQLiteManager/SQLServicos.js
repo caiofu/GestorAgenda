@@ -1,4 +1,5 @@
 import * as SQLite from 'expo-sqlite';
+
 const db = SQLite.openDatabase('gestorAgenda.db');
 
 export function GetServicosPorRamo(idRamoAtividade, callback) {
@@ -7,14 +8,16 @@ export function GetServicosPorRamo(idRamoAtividade, callback) {
       'SELECT * FROM servicos where idRamoAtividade = ?',
       [idRamoAtividade],
       (tx, results) => {
+        console.log('lengs ->',results.rows.length)
         const len = results.rows.length;
         const servicos = [];
 
         for (let i = 0; i < len; i++) {
           const row = results.rows.item(i);
           servicos.push(row);
+          console.log('row --->', row)
         }
-        console.log('Dentro de servicos: ' + servicos)
+        console.log('Dentro de servicos: ' + servicos[0])
         callback(servicos);
       },
       (error) => {

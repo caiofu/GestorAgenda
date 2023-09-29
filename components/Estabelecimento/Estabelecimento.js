@@ -289,7 +289,7 @@ export default function Estabelecimento()
     const navigation = useNavigation();
     const Continuar = () => {
       setModalVisivel(false);
-      navigation.navigate('Serviços'); 
+      navigation.navigate('Gestor Agenda'); 
     };
 
    

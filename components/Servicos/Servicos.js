@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { HelperText, TextInput, Button } from 'react-native-paper';
 import { SafeAreaView, Text, Image, View, StyleSheet, TouchableOpacity, ActivityIndicator, Modal } from "react-native";
-import * as ImagePicker from 'expo-image-picker';
-import { SelectList } from "react-native-dropdown-select-list";
+import { SelectList,  MultipleSelectList } from "react-native-dropdown-select-list";
 import { useEffect } from "react";
-import * as FileSystem from 'expo-file-system';
+
 import { useNavigation } from "@react-navigation/native";
 import { ConsultaEstabelecimento, InserirEstabelecimento } from '../SQLiteManager/SQLEstabelecimento';
 import { ConsultaRamoAtividade } from "../SQLiteManager/SQLRamoAtividade";
@@ -33,40 +32,18 @@ export default function Servicos() {
     });
   }, []);
 
-  // async function ValidaEnvio() {
-  //   if (nomeEstabelecimento === null || nomeEstabelecimento === "") {
-  //     setEnvio(false);
-  //     setMsgNomeEstabelecimento(true);
-  //   }
-  //   else if (cnpjValido == false && cnpj != "") {
-  //     console.log('cnpjInvalido')
-  //   }
-  //   else {
-  //     setEnvio(true);
-  //     setMsgNomeEstabelecimento(false);
-  //     await SalvandoDados();
-  //     setModalVisivel(true);
-  //   }
-  // }
 
-  // async function SalvandoDados() {
-  //   let tipoAcao = "";
-  //   primeiroCadastro ? tipoAcao = "insercao" : tipoAcao = "atualizacao";
-
-  //   InserirEstabelecimento(
-  //     nomeEstabelecimento, cnpj, image, ramoAtividade, tipoAcao, idEstabelecimento
-  //   ).then((inseridoComSucesso) => {
-  //     setAnimacaoSalvando(true)
-  //     if (inseridoComSucesso) {
-  //       setAnimacaoSalvando(false);
-  //     } else {
-  //       console.log('Não foi possível inserir no banco os serviços.');
-  //     }
-  //   })
-  //     .catch((error) => {
-  //       console.log('Não foi possível salvar no banco os serviços. Erro: ' + error);
-  //     });
-  // }
+  const data = [
+    {key:'1', value:'Mobiles', disabled:true},
+    {key:'2', value:'Appliances'},
+    {key:'3', value:'Cameras'},
+    {key:'4', value:'Computers', disabled:true},
+    {key:'5', value:'Vegetables'},
+    {key:'6', value:'Diary Products'},
+    {key:'7', value:'Drinks'},
+];
+const [selected, setSelected] = React.useState([]);
+  ///
 
   // Navega para a tela 'Home'
   const navigation = useNavigation();
@@ -86,8 +63,9 @@ export default function Servicos() {
   useEffect(() => {
     GetServicosPorRamo(ramoAtividadeTeste, (resultado) => {
       let listaGeral = [];
-      let listaAtivos = [];
+      let listaAtivos = [] ;
       resultado.forEach(element => {
+        console.log('element --->', element)
         listaGeral.push(element.nomeServico);
 
         if (element.ativo == 1) {
@@ -103,7 +81,7 @@ export default function Servicos() {
 
     //verificar se serviço está ativo, aí salva em servicosSelecionados
   }, []);
-
+console.log('Servicos ativos ---->',servicosSelecionados)
   onSelectionsChange = (selecionados) => {
     // save the selections to this.state
     setServicosSelecionados(selecionados);
@@ -140,19 +118,11 @@ export default function Servicos() {
         >
           <Text style={styles.btnSalvarText}>OK</Text>
         </Button>
+
+      
       </View>
 
-      {/* <SelectList
-        placeholder="Ramo de atividade (opcional)"
-        searchPlaceholder="Pesquisar"
-        fontFamily="Rubik_400Regular"
-        boxStyles={styles.inputFormulario}
-        setSelected={(val) => { setRamoAtividade(val); }}
-        data={listaRamoAtividade}
-        save="value"
-        defaultOption={{ key: idRamoAtividade, value: ramoAtividade }}
-      /> */}
-
+ 
       <TouchableOpacity
         style={styles.btnSalvar}
         onPress={Continuar}
@@ -160,25 +130,6 @@ export default function Servicos() {
         <Text style={styles.btnSalvarText}>SALVAR</Text>
       </TouchableOpacity>
 
-      {/* <Modal animationType="slide" transparent={true} visible={modalVisivel}>
-        <View style={styles.contornoModal}>
-          <View style={styles.janelaModal}>
-            {animacaoSalvando ? (
-              <View>
-                <ActivityIndicator size={70} color="#006699" />
-                <Text style={styles.txtAnimacao}>Salvando</Text>
-              </View>
-            ) : (
-              <>
-                <Text style={styles.txtModal}>Dados salvos com sucesso!</Text>
-                <TouchableOpacity style={styles.btnModal} onPress={Continuar}  >
-                  <Text style={styles.txtBtnModal}>CONTINUAR</Text>
-                </TouchableOpacity>
-              </>
-            )}
-          </View>
-        </View>
-      </Modal> */}
 
     </SafeAreaView>
   )

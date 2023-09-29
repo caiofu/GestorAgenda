@@ -88,10 +88,10 @@ console.log('TESTe --->', useColorScheme())
   })
 
   //TRECHO QUE RESETA TUDO PARA TESTES
-   //removerAsyncStorage();
-   // guardaWizardAtivo('true');
-    //ExcluirBancoDeDados();
-  //--------------------------------
+    // removerAsyncStorage();
+    //  guardaWizardAtivo('true');
+    //  ExcluirBancoDeDados();
+  // //--------------------------------
 
   return (
     <AppStateProvider>

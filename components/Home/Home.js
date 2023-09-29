@@ -35,7 +35,7 @@ export default function Home({ navigation }) {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.homeContainer} onPress={() => navigation.navigate('Serviços')}>
+      <TouchableOpacity style={styles.homeContainer} onPress={() => navigation.navigate('Serviços_hml')}>
         <View style={styles.boxBotao}>
           <View style={styles.iconeBotao}>
             <FontAwesome5 style={styles.iconeBotao} name="store" size={34} color='#ffffff' />
