@@ -5,8 +5,9 @@ import styles from "./StyleServicos";
 import { useEffect, useState } from "react";
 import { SelectList, MultipleSelectList } from "react-native-dropdown-select-list";
 
-//COMPONENTES CRIADOS
+//SQLITE
 import { ConsultaRamoAtividade } from "../SQLiteManager/SQLRamoAtividade";
+import { GetServicosPorRamo, UpdateAtivoServico } from "../SQLiteManager/SQLServicos";
 
 //CONTEXT
 import { useAppState } from "../Contexts/AppStateContext";
@@ -17,25 +18,31 @@ export default function NovoServico()
      const {tema} = useAppState();
      const [corTema, setCorTema] = useState('#006699');
 
-     //RATO DE ATIVIDADE
+     //RAMO DE ATIVIDADE
      const [ramoAtividadeSelecionado, setRamoAtividadeSelecionado]          = useState(""); //Usado para seleção da lista
      const [idRamoAtividade, setIdRamoAtividade]                            = useState(null);
-     const [ramoAtividade, setRamoAtividade]                     = useState(null);
+     const [ramoAtividade, setRamoAtividade]                                = useState(null);
      const [listaRamoAtividade, setListaRamoAtividade]                      = useState([]);
+
+     //SERVICOS
+     const [servicoSelecionado, setServicoSelecionado]                      = useState([]);
+     const [listaServicos, setListaServicos]                                = useState([]);
 
      //BOTOES
      const [btnImportar, setBtnImportar] = useState(false);
      const [btnNovo, setBtnNovo]            = useState(false);
+
+     //CONTROLA O TEMA
       useEffect(()=>{
    
        tema === 'light' ? setCorTema('#006699') : setCorTema(DarkTheme.colors.text);
          },[tema])
 
-
-    useEffect(() =>{
+     //BOTAO IMPORTAR E LISTA DE RAMO DE ATIVIDADE    
+     useEffect(() =>{
         if(btnImportar)
         {
-            console.log('trazendo a lista')
+
             ConsultaRamoAtividade((ramoAtividades) => {
                 const retorno = ramoAtividades.map((atividade) => ({
                     key: atividade.idRamoAtividade.toString(),
@@ -49,14 +56,34 @@ export default function NovoServico()
 
     }, [btnImportar])
 
-    //UseEffect exlcuiso para o selectlis ramo de atividade
+    //RESPONSAVEL PELA SELEÇÃO NO LIST RAMO ATIVIDADE
     useEffect(() => {
         // Obtendo chave correspondente ao valor do ramo de atividade
+        
         const chaveSelecionada = listaRamoAtividade.find(item => item.value === ramoAtividadeSelecionado)?.key;
-        //console.log("Chave (key) correspondente ao valor de ramo de atividade:", chaveSelecionada);
         setIdRamoAtividade(chaveSelecionada);
+        console.log(chaveSelecionada)
       }, [ramoAtividadeSelecionado, listaRamoAtividade]);
-
+    
+     //BUSCA A LISTA DE SERVIÇOS DE ACORDO COM RAMO ESCOLHIDO
+     console.log('idRamoAtividade --->', idRamoAtividade);
+     useEffect(() => {
+        if(idRamoAtividade != null)
+        {
+            GetServicosPorRamo(idRamoAtividade,(servicos) => {
+             
+                const retorno = servicos.map((listaServico) => ({
+                    key: listaServico.idServico.toString(),
+                    // idRamoAtividade: listaServico.idRamoAtividade,
+                    value: listaServico.nomeServico,
+                    // descricao: listaServico.descricao
+                }));
+                  setListaServicos(retorno);
+                });
+        }
+        
+    }, [idRamoAtividade])  
+   // console.log('Servicos buscados ---------->', listaServicos)
     function ImportarServico()
     {
         setBtnImportar(true);
@@ -76,7 +103,7 @@ export default function NovoServico()
                         fontFamily="Rubik_400Regular"
                         boxStyles={styles.inputFormularioSelect}
                         dropdownStyles={{ alignSelf: 'center', width: '89%' }}
-                        setSelected={(val) => { setRamoAtividade(val); } }
+                        setSelected={(val) => { setRamoAtividadeSelecionado(val); } }
                         data={listaRamoAtividade}
                         dropdownTextStyles={{ color: corTema }}
                         save="value"
@@ -87,16 +114,22 @@ export default function NovoServico()
                         inputStyles={{ color: corTema }} />
 
                         <MultipleSelectList
-                            placeholder="Nenhum ramo selecionado"
+                            placeholder= {ramoAtividadeSelecionado === ''? 'Nenhum ramo de atividade selecionado' : "Escolha o serviço"}
+                            searchPlaceholder=""
+                            data={listaServicos}
+                            save="value"
+                            setSelected={(val) => setServicoSelecionado(val)}
+                            onSelect={() =>alert(servicoSelecionado)}
                         />
 
                        
                         
-                        <TouchableOpacity style={styles.btnDesabilitado} disabled={true}>
+                        <TouchableOpacity style={servicoSelecionado.length === 0 ? styles.btnDesabilitado : styles.btn} disabled={true}>
                             <View style={[styles.btnContainer, {alignSelf:'center'}]}>
-                                <Text style={styles.btnText}>SALVAR</Text>
+                                <Text style={styles.btnText}>IMPORTAR</Text>
                             </View>
                         </TouchableOpacity>
+
                         <TouchableOpacity style={styles.btnCancelar} disabled={true}>
                             <View style={[styles.btnContainer, {alignSelf:'center'}]}>
                                 <Text style={styles.btnText}>CANCELAR</Text>
@@ -122,7 +155,9 @@ export default function NovoServico()
 
                        
                 </>
+                
            )}
+           {console.log('servico selecionado ----->',servicoSelecionado)}
             </View>
                         
         </SafeAreaView>
