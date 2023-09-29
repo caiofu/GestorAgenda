@@ -100,3 +100,18 @@ export function UpdateServicoPorId (idServico, nome, descricao) {
     );
   });
 }
+
+export function UpdateFavoritoServicoPorId (idServico, favorito) {
+  db.transaction((tx) => {
+    tx.executeSql(
+      'UPDATE servicos SET favorito = ? WHERE idServico = ?',
+      [favorito, idServico],
+      (tx, results) => {
+        console.log('Serviço atualizado com sucesso (UpdateFavoritoServicoPorId)');
+      },
+      (error) => {
+        console.log('Erro ao atualizar serviço (UpdateFavoritoServicoPorId):' + error);
+      }
+    );
+  });
+}

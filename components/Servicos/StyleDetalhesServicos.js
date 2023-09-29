@@ -23,6 +23,7 @@ const StyleDetalhesServicos = StyleSheet.create({
         justifyContent: 'space-evenly',
         paddingTop: 30,
         paddingBottom: 30,
+        maxHeight: 100,
     },
     dadosDiv:
     {
