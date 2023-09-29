@@ -10,7 +10,6 @@ import Home from '../Home/Home';
 import Configuracoes from "../Configuracoes/Configuracoes";
 import Estabelecimento from "../Estabelecimento/Estabelecimento";
 import Servicos from "../Servicos/Servicos";
-import Servicos_hml from "../Servicos/Servicos_hml";
 import NovoServico from "../Servicos/NovoServico";
 import DetalhesServicos from "../Servicos/DetalhesServicos";
 
@@ -44,8 +43,8 @@ function StackTelas() {
     return (
         <Stack.Navigator  >
             <Stack.Screen name="Gestor Agenda" component={Home} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}} />
+            {/* <Stack.Screen name="Serviços" component={Servicos} options={{ headerLeft: null, headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text }} /> */}
             <Stack.Screen name="Serviços" component={Servicos} options={{ headerLeft: null, headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text }} />
-            <Stack.Screen name="Serviços_hml" component={Servicos_hml} options={{ headerLeft: null, headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text }} />
             <Stack.Screen name="Novo Serviço" component={NovoServico} options={{ headerLeft: null, headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text }} />
             <Stack.Screen name="Detalhes serviço" component={DetalhesServicos} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}} />
             <Stack.Screen name="Estabelecimento" component={Estabelecimento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}} />
