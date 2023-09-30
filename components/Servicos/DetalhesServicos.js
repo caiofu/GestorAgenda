@@ -1,5 +1,5 @@
 import { SafeAreaView, TouchableOpacity, View } from "react-native";
-import { Text, Button, TextInput,PaperProvider, Portal, Dialog } from 'react-native-paper';
+import { Text, Button, TextInput,PaperProvider, Portal, Dialog, Tooltip } from 'react-native-paper';
 
 import { StatusBar } from "expo-status-bar";
 import { GetServicosPorRamo, GetServicosPorId, UpdateAtivoServicoPorId, UpdateServicoPorId, UpdateFavoritoServicoPorId } from "../SQLiteManager/SQLServicos";
@@ -18,6 +18,7 @@ export default function DetalhesServicos(props) {
     //NAVIGATION
     const navigation = useNavigation();
 
+
     //CONTEXT
     const {tema,  setAtualisaListaServico, atulizaListaServico } = useAppState();
 
@@ -28,7 +29,35 @@ export default function DetalhesServicos(props) {
 
     //RESPONSAVEL PELAS MENSAGENS POS AÇÃO
     const [msgAcaoVisivel, setMsgAcaoVisivel] = useState(false);
-    const EscondeMsgAcao = () => { setMsgAcaoVisivel(false);   navigation.navigate('Serviços'); setAtualisaListaServico (true)};
+    const EscondeMsgAcao = (tipoMensagem) => { 
+        setMsgAcaoVisivel(false);
+        setAtualisaListaServico (true)
+        //TipoMensagem: E=Erro / S=Sucesso
+        if(tipoMensagem === 'E')
+        {
+            setMsgAcaoVisivel(false);
+        }
+        else if(tipoMensagem === 'S')
+        {
+            navigation.navigate('Serviços');
+        }
+        
+       
+    };
+    const [dialogTitulo, setDialogTitulo]       = useState('');
+    const [dialogMensagem, setDialogMensagem]   = useState('');
+    const [dialogTipoMensagem, setDialogTipoMensagem]       = useState('');
+
+    //TEMA
+    const [corTema, setCorTema] = useState('#006699');
+
+    useEffect(()=>{
+ 
+     tema === 'light' ? setCorTema('#006699') : setCorTema(DarkTheme.colors.text);
+       },[tema])
+
+    //MENSAGEM INPUT (RESPONSAVEL POR DEIXAR VERMELHO CASO O CAMPO NAO PASSAR PELA VALIDAÇÃO)
+    const [msgNomeServico, setMsgNomeServico]   = useState(false);   
 
     useEffect(() => {
      
@@ -36,7 +65,7 @@ export default function DetalhesServicos(props) {
             const retorno = servico;
             //setIconeEstrela(servico.favorito === 1 ? 'star' : 'star-outline');
             setServico(retorno);
-            console.log('passo pelo efeect?')
+         
         });
     }, [atulizaListaServico])
 
@@ -51,7 +80,14 @@ export default function DetalhesServicos(props) {
             {
                 setMsgAcaoVisivel(true);
                 setAtualisaListaServico(true);
-                console.log('serviço desativoad')
+                //Retirando dos favoritos
+                UpdateFavoritoServicoPorId(idServico, 0);
+                setIconeEstrela(0);
+                
+                //Setando a mensagem
+                setDialogTitulo('Sucesso!');
+                setDialogMensagem('Serviço removido.');
+               
             }
             else
             {
@@ -60,8 +96,30 @@ export default function DetalhesServicos(props) {
         });
     }
 
-    function atualizarServicoBanco() {
-        UpdateServicoPorId(idServico, servico.nomeServico, servico.descricao);
+    function atualizarServicoBanco() 
+    {
+        //Validaçoes (Nome Obrigatorio)
+       
+        if(servico.nomeServico === '')
+        {
+          
+           setDialogTipoMensagem('E');
+           setDialogTitulo('Atenção');
+           setDialogMensagem('Campo nome não pode ser vazio!');
+           setMsgNomeServico(true);
+           setMsgAcaoVisivel(true);
+           
+        }
+        else
+        {
+            UpdateServicoPorId(idServico, servico.nomeServico, servico.descricao);
+            setDialogTipoMensagem('S');
+            setDialogTitulo('Sucesso');
+            setDialogMensagem('Serviço atualizado!');
+            setMsgNomeServico(false);
+            setMsgAcaoVisivel(true);
+        }
+       
     }
 
     function atualizarFavoritoBanco() {
@@ -85,14 +143,25 @@ export default function DetalhesServicos(props) {
                             </View>
                         </TouchableOpacity>
                     </View>
-                    <Text variant="titleLarge" style={{ color: 'gray' }}>Nome:</Text>
+                    {/* <Text variant="titleLarge" style={{ color: 'gray' }}>Nome:</Text> */}
                     <TextInput
+                        label="Nome"
                         value={servico.nomeServico}
+                        style={styles.inputFormulario}
+                        theme={{
+                            colors: { primary: msgNomeServico ? 'red' : corTema, onSurfaceVariant:  msgNomeServico ? 'red' : corTema   }
+                          }}
                         onChangeText={(text) => atualizarServicoState({ ...servico, nomeServico: text })}
                     />
-                    <Text variant="titleLarge" style={{ color: 'gray' }}>Descrição:</Text>
+                    {/* <Text variant="titleLarge" style={{ color: 'gray' }}>Descrição:</Text> */}
                     <TextInput
+                        label="Descrição"
                         value={servico.descricao}
+                        textColor="#595a67"
+                        theme={{
+                            colors: {  corTema, onSurfaceVariant:  corTema   },
+                         
+                          }}
                         onChangeText={(text) => atualizarServicoState({ ...servico, descricao: text })}
                         multiline={true}
                     />
@@ -117,12 +186,12 @@ export default function DetalhesServicos(props) {
           
             <Portal>
                 <Dialog visible={msgAcaoVisivel} dismissable={false}  style={{}}>
-                    <Dialog.Title>Sucesso!</Dialog.Title>
+                    <Dialog.Title>{dialogTitulo}</Dialog.Title>
                     <Dialog.Content>
-                    <Text variant="bodyMedium">Serviço Removido da lista</Text>
+                    <Text variant="bodyMedium">{dialogMensagem}</Text>
                     </Dialog.Content>
                     <Dialog.Actions>
-                    <Button onPress={EscondeMsgAcao}>Continuar</Button>
+                    <Button onPress={() =>EscondeMsgAcao(dialogTipoMensagem)}>Continuar</Button>
                     </Dialog.Actions>
                 </Dialog>
             </Portal>

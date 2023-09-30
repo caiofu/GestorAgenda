@@ -1,5 +1,5 @@
-import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
-import { PaperProvider, Dialog, Portal, Button } from "react-native-paper";
+import { View, Text, SafeAreaView, TouchableOpacity, ScrollView } from "react-native";
+import { PaperProvider, Dialog, Portal, Button, TextInput } from "react-native-paper";
 import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
 import styles from "./StyleServicos";
 import { useEffect, useState } from "react";
@@ -19,7 +19,7 @@ export default function NovoServico()
      const navigation = useNavigation();
 
      //CONTEXT
-     const {tema, atulizaListaServico, setAtualizaListaServico  } = useAppState();
+     const {tema, atulizaListaServico, setAtualisaListaServico } = useAppState();
     
      //COR DO TEMA
      const [corTema, setCorTema] = useState('#006699');
@@ -43,13 +43,15 @@ export default function NovoServico()
 
     //  const showDialogImport = () => setVisible(true);
    
-     const hideDialogImport = () => { setImportMensagemVisible(false);   navigation.navigate('Serviços'); setAtualizaListaServico(true)};
+     const hideDialogImport = () => { setImportMensagemVisible(false);   navigation.navigate('Serviços'); setAtualisaListaServico(true)};
 
      //CONTROLA O TEMA
       useEffect(()=>{
    
        tema === 'light' ? setCorTema('#006699') : setCorTema(DarkTheme.colors.text);
          },[tema])
+
+  //IMPORTAÇÃO
 
      //BOTAO IMPORTAR E LISTA DE RAMO DE ATIVIDADE    
      useEffect(() =>{
@@ -96,7 +98,7 @@ export default function NovoServico()
         }
         
     }, [idRamoAtividade])  
-   // console.log('Servicos buscados ---------->', listaServicos)
+ 
     function ImportarServico()
     {
         setBtnImportar(true);
@@ -139,11 +141,16 @@ export default function NovoServico()
         console.log('Ids dos serviços selecionados:', );
       }
    
+    //NOVO SERVIÇO
+    function NovoServico()
+    {
+        setBtnNovo(true);
+    }  
     
     return(
         <PaperProvider>
         <SafeAreaView>
-
+        <ScrollView>
             <View style={{display: 'flex', flexDirection: 'column', flexGrow:1, gap:20, margin:10}} >
              {btnImportar ? 
              (  
@@ -195,7 +202,21 @@ export default function NovoServico()
                             </View>
                         </TouchableOpacity>
                 </>
-             ) : (
+             )  
+             : btnNovo ? //Botao novo serviço
+             (
+                <>
+                    <View>
+                        <TextInput
+                          label="Nome Serviço"
+                        >
+
+                        </TextInput>
+                    </View>
+                </>
+             )
+             :
+             (
            
                 <>
                     <TouchableOpacity style={styles.btn} onPress={ImportarServico}>
@@ -205,7 +226,7 @@ export default function NovoServico()
                             </View>
                         </TouchableOpacity>
                         
-                        <TouchableOpacity style={styles.btn}>
+                        <TouchableOpacity style={styles.btn} onPress={NovoServico}>
                                 <View style={styles.btnContainer}>
                                     <FontAwesome name="plus" size={28} color="#fff" />
                                     <Text style={styles.btnText}>Criar novo</Text>
@@ -232,7 +253,7 @@ export default function NovoServico()
             </Portal>
            
             </View>
-                        
+            </ScrollView>               
         </SafeAreaView>
          </PaperProvider>
     )

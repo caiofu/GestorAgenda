@@ -40,8 +40,8 @@ export default function Servicos()
         //     }));
         //       setListaServicosVinculados(retorno);
         //     }); 
-        if(atulizaListaServico) //Se carrega quando for verdadeiro
-        {
+       // if(atulizaListaServico) //Se carrega quando for verdadeiro
+      //  {
             GetServicosAtivo((servicos) => {
                 console.log('teste ---------->', servicos)
                const retorno = servicos.map((listaServico) => ({
@@ -54,7 +54,7 @@ export default function Servicos()
                  setListaServicosVinculados(retorno);
                }); 
                setAtualisaListaServico(false);
-        }
+        //}
          
     }, [atulizaListaServico])
 
