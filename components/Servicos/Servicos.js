@@ -12,7 +12,7 @@ import styles from "./StyleServicos";
 
 export default function Servicos()
 {
-    const {atulizaListaServico, setAtulizaListaServico} = useAppState();
+    const {atulizaListaServico, setAtualisaListaServico} = useAppState();
 
     const navigation = useNavigation();
     const [listaServicosVinculados, setListaServicosVinculados] = useState([]);
@@ -40,18 +40,22 @@ export default function Servicos()
         //     }));
         //       setListaServicosVinculados(retorno);
         //     }); 
-
-         GetServicosAtivo((servicos) => {
-             console.log('teste ---------->', servicos)
-            const retorno = servicos.map((listaServico) => ({
-                idServico: listaServico.idServico.toString(),
-                idRamoAtividade: listaServico.idRamoAtividade,
-                nomeServico: listaServico.nomeServico,
-                descricao: listaServico.descricao,
-                favorito: listaServico.favorito
-            }));
-              setListaServicosVinculados(retorno);
-            }); 
+        if(atulizaListaServico) //Se carrega quando for verdadeiro
+        {
+            GetServicosAtivo((servicos) => {
+                console.log('teste ---------->', servicos)
+               const retorno = servicos.map((listaServico) => ({
+                   idServico: listaServico.idServico.toString(),
+                   idRamoAtividade: listaServico.idRamoAtividade,
+                   nomeServico: listaServico.nomeServico,
+                   descricao: listaServico.descricao,
+                   favorito: listaServico.favorito
+               }));
+                 setListaServicosVinculados(retorno);
+               }); 
+               setAtualisaListaServico(false);
+        }
+         
     }, [atulizaListaServico])
 
     

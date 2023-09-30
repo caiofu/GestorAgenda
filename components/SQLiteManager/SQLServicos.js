@@ -9,7 +9,7 @@ export function GetServicosPorRamo(idRamoAtividade, callback) {
       'SELECT * FROM servicos where idRamoAtividade = ? and ativo != 1',
       [idRamoAtividade],
       (tx, results) => {
-        console.log('lengs ->',results.rows.length)
+        
         const len = results.rows.length;
         const servicos = [];
 
@@ -34,7 +34,7 @@ export function GetServicosPorId(idServico, callback) {
       'SELECT * FROM servicos where idServico = ?',
       [idServico],
       (tx, results) => {
-        console.log('lengs ->',results.rows.length)
+        
         const len = results.rows.length;
         servico = results.rows.item(0);
         callback(servico);

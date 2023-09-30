@@ -35,9 +35,12 @@ export const AppStateProvider = ({ children }) => {
   };
 
   //RESPONSAVEL PELO SERVIÇO (ATUALIZAÇAO DA LISTA)
-  const [atulizaListaServico, setAtualizaListaServico] = useState(false);
+  const [atulizaListaServico, setAtualisaListaServico] = useState(true);
+
+  //RESPONSAVEL PELO FAVORITOS DE SERVIÇOS
+  const [atualizaFavoritos, setAtulizaFavoritos] = useState(false);
   return (
-    <AppStateContext.Provider value={{ navegacaoEstabelecimento, setNavegacaoEstabelecimento, tema, MudarTema, setTema, atulizaListaServico, setAtualizaListaServico }}>
+    <AppStateContext.Provider value={{ navegacaoEstabelecimento, setNavegacaoEstabelecimento, tema, MudarTema, setTema, atulizaListaServico, setAtualisaListaServico, atualizaFavoritos, setAtulizaFavoritos}}>
       {children}
     </AppStateContext.Provider>
    );

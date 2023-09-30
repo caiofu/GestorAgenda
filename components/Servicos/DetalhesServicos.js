@@ -19,7 +19,7 @@ export default function DetalhesServicos(props) {
     const navigation = useNavigation();
 
     //CONTEXT
-    const {tema,  setAtualizaListaServico  } = useAppState();
+    const {tema,  setAtualisaListaServico, atulizaListaServico } = useAppState();
 
     // Acesse o valor do idServico por meio de props.route.params
     const idServico = props.route.params.id;
@@ -28,20 +28,17 @@ export default function DetalhesServicos(props) {
 
     //RESPONSAVEL PELAS MENSAGENS POS AÇÃO
     const [msgAcaoVisivel, setMsgAcaoVisivel] = useState(false);
-    const EscondeMsgAcao = () => { setMsgAcaoVisivel(false);   navigation.navigate('Serviços'); setAtualizaListaServico(true)};
+    const EscondeMsgAcao = () => { setMsgAcaoVisivel(false);   navigation.navigate('Serviços'); setAtualisaListaServico (true)};
 
     useEffect(() => {
-        console.log('ID ao entrar aqui: ' + idServico);
+     
         GetServicosPorId(idServico, (servico) => {
             const retorno = servico;
-            setIconeEstrela(servico.favorito === 1 ? 'star' : 'star-outline');
+            //setIconeEstrela(servico.favorito === 1 ? 'star' : 'star-outline');
             setServico(retorno);
-            console.log('Valor do retorno em DetalheServicos:' + retorno.nomeServico);
-            console.log('Valor do retorno em DetalheServicos ativo:' + retorno.ativo);
-            console.log('Valor do retorno em DetalheServicos ID:' + retorno.idServico);
-            console.log('Valor do retorno em DetalheServicos favorito:' + retorno.favorito);
+            console.log('passo pelo efeect?')
         });
-    }, [iconeEstrela])
+    }, [atulizaListaServico])
 
     function atualizarServicoState(dado) {
         console.log('Dado: ' + dado.descricao);
@@ -53,7 +50,7 @@ export default function DetalhesServicos(props) {
             if(atualizacaoBemSucedida)
             {
                 setMsgAcaoVisivel(true);
-                setAtualizaListaServico(true);
+                setAtualisaListaServico(true);
                 console.log('serviço desativoad')
             }
             else
@@ -72,6 +69,8 @@ export default function DetalhesServicos(props) {
         valor = servico.favorito === 1 ? 0 : 1
         UpdateFavoritoServicoPorId(idServico, valor);
         setIconeEstrela(valor);
+        //Atualiza o state do context
+        setAtualisaListaServico(true); 
     }
 
     return (
