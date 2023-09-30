@@ -1,5 +1,5 @@
 import { SafeAreaView, ScrollView, View, Text, Button, TouchableOpacity } from "react-native";
-import { FAB, PaperProvider, Portal, Modal } from "react-native-paper";
+import { FAB, PaperProvider, List } from "react-native-paper";
 import {  useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 
@@ -8,6 +8,7 @@ import { GetServicosAtivo, GetServicosPorRamo } from "../SQLiteManager/SQLServic
 
 //CONTEXT
 import { useAppState } from "../Contexts/AppStateContext";
+import styles from "./StyleServicos";
 
 export default function Servicos()
 {
@@ -16,7 +17,7 @@ export default function Servicos()
     const navigation = useNavigation();
     const [listaServicosVinculados, setListaServicosVinculados] = useState([]);
 
-    const onPressFab = () => {
+    const CriarNovoServico = () => {
         // Ação a ser executada quando o botão flutuante for pressionado
       
         navigation.navigate('Novo Serviço'); 
@@ -46,7 +47,8 @@ export default function Servicos()
                 idServico: listaServico.idServico.toString(),
                 idRamoAtividade: listaServico.idRamoAtividade,
                 nomeServico: listaServico.nomeServico,
-                descricao: listaServico.descricao
+                descricao: listaServico.descricao,
+                favorito: listaServico.favorito
             }));
               setListaServicosVinculados(retorno);
             }); 
@@ -56,25 +58,42 @@ export default function Servicos()
   console.log('Retorno da lista -> ', listaServicosVinculados)
     return(
         <PaperProvider>
-            <SafeAreaView style={{ flex: 1 }}>
+            <SafeAreaView style={styles.container}>
                 <ScrollView>
-                    <View style={{borderWidth:1, margin:10, }}>
-                        <Text>Serviços vinculados</Text>
+                    <View style={{borderWidth:1, margin:10, borderRadius:6 }}>
+                        {/* <Text>Serviços vinculados</Text> */}
+                        <List.Accordion 
+                            title="Serviços importados"
+                            id="servicosAccordion"
+                            titleStyle={{color:'#fff'}}
+                            theme={{colors: {text: '#fff',  ba}}}
+                           style={{backgroundColor:'#006699', borderRadius:3}}
+                        >
                         {listaServicosVinculados.map((servico) => (
                             
-                            <TouchableOpacity key={servico.idServico} onPress={() => FuncaoG(servico.idServico)} style={{borderWidth:1, backgroundColor: 'grey'}}>
-                                <Text  key={servico.idServico}>{servico.nomeServico} </Text>
+                            <TouchableOpacity key={servico.idServico} onPress={() => FuncaoG(servico.idServico)} style={styles.itemServico}>
+                                {/* <Text  key={servico.idServico}>{servico.nomeServico} </Text> */}
+                                <List.Item key={servico.idServico}
+                                            title={servico.nomeServico}
+                                            description={servico.descricao}
+                                            titleStyle={styles.itemTitulo}
+                                            descriptionStyle={styles.itemDescricao}
+                                            descriptionNumberOfLines={1}
+                                            right={servico.favorito === 1 ? props => <List.Icon {...props} color="#ffca00" icon="star" /> : ''} />
                                 </TouchableOpacity>
+
                             
                         ))}
+                        </List.Accordion>
                     </View>
                     <View>
                         <Text>Select seria aqui</Text>
                     </View>
+                    
                 </ScrollView>
          
                 {/*Botão novo serviço*/}
-                 <FAB style={{ position: 'absolute', margin: 16, right: 0, bottom: 0, backgroundColor:'#006699' }}icon="plus"  label="Novo serviço"   onPress={onPressFab}/>
+                 <FAB style={{ position: 'absolute', margin: 16, right: 0, bottom: 0, backgroundColor:'#006699' }}icon="plus"  label="Novo serviço"   onPress={CriarNovoServico}/>
             </SafeAreaView>
         </PaperProvider>
         

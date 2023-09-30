@@ -3,9 +3,8 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
     container:
     {
-        display:'flex',
-        flexDirection:'column',
-        justifyContent:'center',
+        flex:1
+    
     },
 
   
@@ -51,12 +50,30 @@ const styles = StyleSheet.create({
 
     },
 
-    msgHelper:
+   // ITEMS
+    itemServico:
     {
-        color:'red',
-        fontFamily:'Rubik_300Light'
+        borderWidth:0.8,
+        
+        margin:5, 
+        borderRadius:10,
+      
     },
 
+    itemTitulo:
+    {
+        color:'#006699',
+        fontSize:13,
+        fontFamily:'Rubik_700Bold'
+    },
+
+    itemDescricao:
+    {
+        fontFamily:'Rubik_300Light',
+        fontStyle:'italic',
+        color:'black',
+        fontSize:12
+    }
   
 
     
