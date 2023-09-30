@@ -1,13 +1,18 @@
 import { SafeAreaView, ScrollView, View, Text, Button, TouchableOpacity } from "react-native";
 import { FAB, PaperProvider, Portal, Modal } from "react-native-paper";
 import {  useNavigation } from "@react-navigation/native";
+import { useEffect, useState } from "react";
 
 //SQL
 import { GetServicosAtivo, GetServicosPorRamo } from "../SQLiteManager/SQLServicos";
-import { useEffect, useState } from "react";
+
+//CONTEXT
+import { useAppState } from "../Contexts/AppStateContext";
 
 export default function Servicos()
 {
+    const {atulizaListaServico, setAtulizaListaServico} = useAppState();
+
     const navigation = useNavigation();
     const [listaServicosVinculados, setListaServicosVinculados] = useState([]);
 
@@ -45,7 +50,9 @@ export default function Servicos()
             }));
               setListaServicosVinculados(retorno);
             }); 
-    }, [])
+    }, [atulizaListaServico])
+
+    
   console.log('Retorno da lista -> ', listaServicosVinculados)
     return(
         <PaperProvider>

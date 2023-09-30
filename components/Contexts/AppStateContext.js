@@ -11,6 +11,8 @@ export const useAppState = () => {
 export const AppStateProvider = ({ children }) => {
   //RESPONSAVEL PELA NAVEGAÇAO TORNANDO O ACESSO A PRIMEIRA VEZ OBRIGATORIO
   const [navegacaoEstabelecimento, setNavegacaoEstabelecimento] = useState(null);
+
+  //RESPONSAVEL PELO TEMA
   const [tema, setTema] = useState(null);
   const temaSistema  = useColorScheme();
 
@@ -19,18 +21,12 @@ export const AppStateProvider = ({ children }) => {
       const temaAsync = await  VerificaTema();
       console.log('TEMAASYNC ==', temaAsync + 'tema ===>', tema)
       setTema( temaAsync !== '' ? temaAsync : temaSistema);
-      
-     
-      
     }
-  
     carregaTema();
   }, [])
-  //RESPONSAVEL PELA TROCA DE TEMA
- 
 
-  console.log('CARREGOU O TEMA NO CONTEXT ------>', tema)
-  
+  //RESPONSAVEL PELA TROCA DE TEMA
+   
   const MudarTema =() =>
   {
     const novoTema = tema === 'light' ? 'dark' : 'light'; // Determina o novo tema
@@ -38,8 +34,10 @@ export const AppStateProvider = ({ children }) => {
     SalvaTema(tema); //salva no asyncStorage
   };
 
+  //RESPONSAVEL PELO SERVIÇO (ATUALIZAÇAO DA LISTA)
+  const [atulizaListaServico, setAtualizaListaServico] = useState(false);
   return (
-    <AppStateContext.Provider value={{ navegacaoEstabelecimento, setNavegacaoEstabelecimento, tema, MudarTema, setTema }}>
+    <AppStateContext.Provider value={{ navegacaoEstabelecimento, setNavegacaoEstabelecimento, tema, MudarTema, setTema, atulizaListaServico, setAtualizaListaServico }}>
       {children}
     </AppStateContext.Provider>
    );

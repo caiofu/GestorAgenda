@@ -1,9 +1,10 @@
 import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
-import { Button } from "react-native-paper";
+import { PaperProvider, Dialog, Portal, Button } from "react-native-paper";
 import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
 import styles from "./StyleServicos";
 import { useEffect, useState } from "react";
 import { SelectList, MultipleSelectList } from "react-native-dropdown-select-list";
+import {  useNavigation } from "@react-navigation/native";
 
 //SQLITE
 import { ConsultaRamoAtividade } from "../SQLiteManager/SQLRamoAtividade";
@@ -14,8 +15,12 @@ import { useAppState } from "../Contexts/AppStateContext";
 
 export default function NovoServico()
 {
+     const navigation = useNavigation();
+
+     //CONTEXT
+     const {tema, atulizaListaServico, setAtualizaListaServico  } = useAppState();
+    
      //COR DO TEMA
-     const {tema} = useAppState();
      const [corTema, setCorTema] = useState('#006699');
 
      //RAMO DE ATIVIDADE
@@ -31,6 +36,13 @@ export default function NovoServico()
      //BOTOES
      const [btnImportar, setBtnImportar] = useState(false);
      const [btnNovo, setBtnNovo]            = useState(false);
+     
+     //DIALOGO IMPORTAR SERVIÇO
+     const [importMensagemVisible, setImportMensagemVisible] = useState(false);
+
+    //  const showDialogImport = () => setVisible(true);
+   
+     const hideDialogImport = () => { setImportMensagemVisible(false);   navigation.navigate('Serviços'); setAtualizaListaServico(true)};
 
      //CONTROLA O TEMA
       useEffect(()=>{
@@ -90,8 +102,11 @@ export default function NovoServico()
     }
 
     //SALVANDO A IMPORTAÇAO
+    const [importadoSucesso, setImportadoSucesso] = useState(false);
     function BotaoSalvaImportacao() {
-      
+        let chamadasBemSucedidas = 0; 
+        const totalChamadas = servicoSelecionado.length;
+        console.log('toatal ',servicoSelecionado.length)
         // Crie uma matriz para armazenar os ids correspondentes aos nomes dos serviços selecionados
         //const idsSelecionados = [];
       
@@ -100,9 +115,24 @@ export default function NovoServico()
           const servicoEncontrado = listaServicos.find((item) => item.value === servicoSelecionado);
           if (servicoEncontrado) {
             // idsSelecionados.push(servicoEncontrado.key);UpdateAtivoServicoPorId(idServico, 0);
-            UpdateAtivoServicoPorId(servicoEncontrado.key, 1);
+            UpdateAtivoServicoPorId(servicoEncontrado.key, 1, (atualizacaoBemSucedida) => {
+                setImportadoSucesso(atualizacaoBemSucedida);
+                if(atualizacaoBemSucedida)
+                {
+                    chamadasBemSucedidas++;
+                }
+                    console.log('contador', chamadasBemSucedidas + 'toatal ',servicoSelecionado.length)
+                if(chamadasBemSucedidas === totalChamadas)
+                {
+                    setImportMensagemVisible(true);
+                    
+                }
+              });
+         
           }
         });
+      
+     
       
         // Agora, 'idsSelecionados' contém os ids correspondentes aos nomes dos serviços selecionados
         console.log('Ids dos serviços selecionados:', );
@@ -110,6 +140,7 @@ export default function NovoServico()
    
     
     return(
+        <PaperProvider>
         <SafeAreaView>
 
             <View style={{display: 'flex', flexDirection: 'column', flexGrow:1, gap:20, margin:10}} >
@@ -136,10 +167,16 @@ export default function NovoServico()
                         <MultipleSelectList
                             placeholder= {ramoAtividadeSelecionado === ''? 'Nenhum ramo de atividade selecionado' : "Escolha o serviço"}
                             searchPlaceholder=""
+                            
                             data={listaServicos}
                             save="value"
-                            setSelected={(val) => setServicoSelecionado(val)}
-                            onSelect={() =>alert(servicoSelecionado)}
+                            //Para evitar erros quando usuario clica na lista vazia
+                            setSelected={(val) => {
+                                if (ramoAtividadeSelecionado !== '') {
+                                  setServicoSelecionado(val);
+                                }
+                              }}
+                           
                             
                         />
 
@@ -178,9 +215,24 @@ export default function NovoServico()
                 </>
                 
            )}
-           {console.log('servico selecionado ----->',servicoSelecionado)}
+
+            {/* Dialogo para quando for salvo com sucesso */}
+          
+            <Portal>
+                <Dialog visible={importMensagemVisible} dismissable={false}  style={{}}>
+                    <Dialog.Title>Sucesso!</Dialog.Title>
+                    <Dialog.Content>
+                    <Text variant="bodyMedium">Serviço importado</Text>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                    <Button onPress={hideDialogImport}>Continuar</Button>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
+           
             </View>
                         
         </SafeAreaView>
+         </PaperProvider>
     )
 }

@@ -2,10 +2,11 @@ import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabase('gestorAgenda.db');
 
+//ESSA LISTA TRAZ TODOS OS SERVIÇOS DIFERENTES DE 1 ( SOMENTE OS INATIVOS)
 export function GetServicosPorRamo(idRamoAtividade, callback) {
   db.transaction((tx) => {
     tx.executeSql(
-      'SELECT * FROM servicos where idRamoAtividade = ?',
+      'SELECT * FROM servicos where idRamoAtividade = ? and ativo != 1',
       [idRamoAtividade],
       (tx, results) => {
         console.log('lengs ->',results.rows.length)
@@ -89,16 +90,18 @@ export function UpdateAtivoServico (nomeServico, ativo, idRamoAtividade) {
   });
 }
 
-export function UpdateAtivoServicoPorId (idServico, campoAtivo) {
+export function UpdateAtivoServicoPorId (idServico, campoAtivo, callback) {
   db.transaction((tx) => {
     tx.executeSql(
       'UPDATE servicos SET ativo = ? WHERE idServico = ?',
       [campoAtivo, idServico],
       (tx, results) => {
-        console.log('Serviço atualizado com sucesso (UpdateAtivoServicoPorId)');
+        callback(true);
+       // console.log('Serviço atualizado com sucesso (UpdateAtivoServicoPorId)');
       },
       (error) => {
-        console.log('Erro ao atualizar serviço (UpdateAtivoServicoPorId):' + error);
+        callback(false);
+        //console.log('Erro ao atualizar serviço (UpdateAtivoServicoPorId):' + error);
       }
     );
   });
