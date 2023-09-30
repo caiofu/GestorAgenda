@@ -10,21 +10,39 @@ const StyleDetalhesServicos = StyleSheet.create({
         alignSelf: 'center',
         justifyContent: 'space-between',
     },
-    button:
+   
+    viewBotoesAcao:
     {
-        display: "flex",
-        width: "30%",
+        // display:'flex',
+        // flexDirection: 'row',
+        // width: '100%',
+        // justifyContent: 'space-evenly',
+        // paddingTop: 30,
+        // paddingBottom: 30,
+        // maxHeight: 100,
+        flexDirection:'row',
+        gap:10,
+        justifyContent: 'space-between',
+        marginBottom:15
     },
-    buttonDiv:
+
+    btnAcao:
     {
-        display:'flex',
-        flexDirection: 'row',
-        width: '100%',
-        justifyContent: 'space-evenly',
-        paddingTop: 30,
-        paddingBottom: 30,
-        maxHeight: 100,
+        backgroundColor:'#006699',
+        flex:1,
+        padding:20,
+        borderRadius:5
     },
+
+    btnAcaoText:
+    {
+        color:'#ffff',
+        fontSize:15,
+        alignSelf:'center',
+        fontFamily:'Rubik_700Bold'
+
+    },
+
     dadosDiv:
     {
         display:'flex',
@@ -32,6 +50,20 @@ const StyleDetalhesServicos = StyleSheet.create({
         width: '100%',
         paddingTop: 30,
         gap: 10,
+    },
+
+    viewFavoritos:
+    {
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf:'flex-end'
+    },
+
+    txtFavoritos:
+    {
+        fontFamily:'Rubik_700Bold',
+    
+        fontSize:13
     }
 });
 

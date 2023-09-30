@@ -60,13 +60,15 @@ export default function Servicos()
         <PaperProvider>
             <SafeAreaView style={styles.container}>
                 <ScrollView>
+                     {/* Lista de serviços importados */}
                     <View style={{borderWidth:1, margin:10, borderRadius:6 }}>
-                        {/* <Text>Serviços vinculados</Text> */}
+                        
+                       
                         <List.Accordion 
                             title="Serviços importados"
                             id="servicosAccordion"
                             titleStyle={{color:'#fff'}}
-                            theme={{colors: {text: '#fff',  ba}}}
+                            
                            style={{backgroundColor:'#006699', borderRadius:3}}
                         >
                         {listaServicosVinculados.map((servico) => (
@@ -85,11 +87,40 @@ export default function Servicos()
                             
                         ))}
                         </List.Accordion>
-                    </View>
-                    <View>
-                        <Text>Select seria aqui</Text>
+
+                         
                     </View>
                     
+                    {/* Lista de serviços criados */}
+                    <View style={{borderWidth:1, margin:10, borderRadius:6 }}>
+                        
+                     
+                        <List.Accordion 
+                            title="Serviços criados"
+                            id="servicosAccordion"
+                            titleStyle={{color:'#fff'}}
+                            
+                           style={{backgroundColor:'#006699', borderRadius:3}}
+                        >
+                        {listaServicosVinculados.map((servico) => (
+                            
+                            <TouchableOpacity key={servico.idServico} onPress={() => FuncaoG(servico.idServico)} style={styles.itemServico}>
+                                {/* <Text  key={servico.idServico}>{servico.nomeServico} </Text> */}
+                                <List.Item key={servico.idServico}
+                                            title={servico.nomeServico}
+                                            description={servico.descricao}
+                                            titleStyle={styles.itemTitulo}
+                                            descriptionStyle={styles.itemDescricao}
+                                            descriptionNumberOfLines={1}
+                                            right={servico.favorito === 1 ? props => <List.Icon {...props} color="#ffca00" icon="star" /> : ''} />
+                                </TouchableOpacity>
+
+                            
+                        ))}
+                        </List.Accordion>
+
+                         
+                    </View>
                 </ScrollView>
          
                 {/*Botão novo serviço*/}

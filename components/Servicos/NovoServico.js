@@ -15,6 +15,7 @@ import { useAppState } from "../Contexts/AppStateContext";
 
 export default function NovoServico()
 {
+    //NAVIGATION
      const navigation = useNavigation();
 
      //CONTEXT
@@ -106,7 +107,7 @@ export default function NovoServico()
     function BotaoSalvaImportacao() {
         let chamadasBemSucedidas = 0; 
         const totalChamadas = servicoSelecionado.length;
-        console.log('toatal ',servicoSelecionado.length)
+       
         // Crie uma matriz para armazenar os ids correspondentes aos nomes dos serviços selecionados
         //const idsSelecionados = [];
       
