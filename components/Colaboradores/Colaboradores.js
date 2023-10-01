@@ -1,6 +1,6 @@
 import { NavigationContainer, useFocusEffect, useNavigation} from '@react-navigation/native'
 import  FormColaboradores from './FormColaboradores'
-import { List, FAB } from 'react-native-paper'
+import { List, FAB, PaperProvider } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
@@ -16,7 +16,6 @@ function Colaboradores() {
   //   listarColaboradores(
   //     (colaboradoresArray) => {
   //       setColaboradores(colaboradoresArray);
-  //       console.log(colaboradores);
   //       setErro(null); // Limpar erro, se houver
   //     },
   //     (error) => {
@@ -25,8 +24,8 @@ function Colaboradores() {
   //   );
   // }, []);
 
-  //tive que usar isso pois devido a tela estar dentro de um navigation, ao entrar e sair do módulo o componente não estava renderizando.
-  //com useFocusEffect, força a renderização, pois ele verifica a entrada e saída do componente.
+  // tive que usar isso pois devido a tela estar dentro de um navigation, ao entrar e sair do módulo o componente não estava renderizando.
+  // com useFocusEffect, força a renderização, pois ele verifica a entrada e saída do componente.
   useFocusEffect(
       React.useCallback(() => {
         console.log('caindo aqui');
@@ -45,14 +44,16 @@ function Colaboradores() {
       };
     }, [])
   );
-  
+
   function itemColaborador(item){
     return (
       <List.Item
+        style={{margin:10}} // alterar para colocar mais estilo nisso aqui, agr to sem ideia
         title={item.nomeColaborador}
         description={'finge que tem um email aqui'}
         left={() => <List.Icon icon="account-circle" />}
         onPress={() => {
+          console.log('pressed')
           navigation.navigate('FormColaboradores', {colaborador: item});
         }}
       />
@@ -60,44 +61,55 @@ function Colaboradores() {
   }
 
   return (
-    <SafeAreaView>
-        <View>
-            {erro ? (
-                <Text>{error}</Text>
-            ) : (
-                colaboradores.length === 0 ? (
-                <Text>Nenhum colaborador encontrado.</Text>
-                ) : (
-                <List.Section>
-                  <List.Subheader>Lista de Colaboradores</List.Subheader>
-                    <FlatList
-                        data={colaboradores}
-                        keyExtractor={(item) => item.idColaborador.toString()}
-                        renderItem={({ item }) => (
-                          itemColaborador(item)
-                          //a performance de uma lista melhora com o uso de flatlist e passando uma função ao renderItem
-                          //ao invés de criar diretamente nele 
-                        )}
-                    />
-                </List.Section>
-                )
-            )}
-            <FAB
-              style={styles.fab}
-              icon="plus"
-              onPress={FormColaboradores}
-            />
-        </View>
-    </SafeAreaView>
+    <PaperProvider>
+      <SafeAreaView
+        style={styles.container}
+      >
+          <View>
+              {erro ? (
+                  <Text>{error}</Text>
+              ) : (
+                  colaboradores.length === 0 ? (
+                  <Text>Nenhum colaborador encontrado.</Text>
+                  ) : (
+                  <List.Section>
+                    <View style={{alignContent: 'center', alignItems: 'center'}}>
+                      <List.Subheader style={styles.subHeader}>Lista de Colaboradores</List.Subheader>
+                    </View>
+                      <FlatList
+                          data={colaboradores}
+                          keyExtractor={(item) => item.idColaborador.toString()}
+                          renderItem={({ item }) => (
+                            itemColaborador(item)
+                            //a performance de uma lista melhora com o uso de flatlist e passando uma função ao renderItem
+                            //ao invés de criar diretamente nele
+                          )}
+                      />
+                  </List.Section>
+                  )
+              )}
+          </View>
+          <FAB
+                style={styles.fab}
+                icon="plus"
+                onPress={() => {
+                  navigation.navigate('FormColaboradores'), {colaborador: null}}}
+              />
+      </SafeAreaView>
+    </PaperProvider>
   );
 }
 
 const styles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
+  container: {
+    flex: 1,
+    // justifyContent: 'center',
+    // alignItems: 'center',
+  },
+  subHeader: {
+    fontFamily: 'Rubik_700Bold', // Define a fonte para Rubik Bold
+    fontSize: 18,
+  },
   fab: {
     position: 'absolute',
     margin: 16,
@@ -109,12 +121,3 @@ const styles = StyleSheet.create({
 
  export default Colaboradores;
 
-// const screenOptions = {
-//     headerStyle: {
-//         backgroundColor: '#fff'
-//     },
-//     headerTintColor: '#000000',
-//     headerTitleStyle: {
-//         fontFamily: 'Rubik_700Bold'
-//     }
-// }
