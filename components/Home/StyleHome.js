@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     {
       borderWidth:1,
       borderColor:'#707893',
-      width:70,
+      width:100,
       height:70,
       margin: 15,
       borderRadius:5,
@@ -27,9 +27,10 @@ const styles = StyleSheet.create({
 
     txtBotao:
     {
-        fontSize:14, 
+        fontSize:10, 
         fontFamily:'Rubik_700Bold',
-        color:'#ffffff'
+        color:'#ffffff',
+        marginBottom:8
     }
 });
 export default styles;

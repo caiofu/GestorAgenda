@@ -1,17 +1,24 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView, useColorScheme } from 'react-native';
 import { useState, useContext } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { AppStateProvider } from './components/Contexts/AppStateContext'
+
+//CONTEXT
+import { AppStateProvider, useAppState } from './components/Contexts/AppStateContext'
+
 //FONT
 import { useFonts, Rubik_400Regular, Rubik_700Bold, Rubik_300Light } from '@expo-google-fonts/rubik'
+
+//TEMA
+import darkTheme from './Tema/darkTheme';
+import lightTheme from './Tema/lightTheme';
 
 //NAVEGAÇÃO
 import Navegacao from './components/Navegacao/Navegacao';
 
 //BANCO
-import SQLiteManager, { ExcluirBancoDeDados } from './components/SQLiteManager/SQLiteManager';
+import SQLiteManager, { ExcluirBancoDeDados, ListaTodasTabelas } from './components/SQLiteManager/SQLiteManager';
 
 //ASYNC STORAGE
 import { houvePrimeiroAcesso, guardarPrimeiroAcesso, removerAsyncStorage, WizardAtivo, guardaWizardAtivo } from './components/AsyncStorage/AsyncStorage';
@@ -24,6 +31,8 @@ import Colaboradores from './components/Colaboradores/Colaboradores';
 
 
 export default function App() {
+
+console.log('TESTe --->', useColorScheme())
 
   //LIDANDO COM PRIMEIRO ACESSO
   const [primeiroAcesso, setPrimeiroAcesso] = useState(null);
@@ -45,6 +54,7 @@ export default function App() {
   if (!fontsLoaded && !fontError) {
     return null;
   }
+  
 
 
 
@@ -52,7 +62,7 @@ export default function App() {
   houvePrimeiroAcesso().then(ret => {
     setPrimeiroAcesso(ret);
   });
-  console.log('É o primeiro acesso? ' + primeiroAcesso);
+ 
 
   //VERIFICANDO NO ASYNC STORAGE O ESTADO ATUAL DO PULOU TUTORIAL AO CARREGAR O COMPONENTE
   WizardAtivo().then(ret => {
@@ -79,14 +89,15 @@ export default function App() {
   })
 
   //TRECHO QUE RESETA TUDO PARA TESTES
-  //  removerAsyncStorage();
-  //  guardaWizardAtivo('true');
-  //  ExcluirBancoDeDados();
+   //removerAsyncStorage();
+   //guardaWizardAtivo('true');
+   //ExcluirBancoDeDados();
   //--------------------------------
 
   return (
+    <AppStateProvider>
     <SafeAreaProvider>
-      <AppStateProvider>
+    
         <SafeAreaView style={styles.container}>
           <SQLiteManager></SQLiteManager>
 
@@ -95,8 +106,9 @@ export default function App() {
               : <Navegacao ></Navegacao>}
           <StatusBar style="auto" />
         </SafeAreaView>
-      </AppStateProvider>
+      
     </SafeAreaProvider>
+    </AppStateProvider>
   );
 }
 

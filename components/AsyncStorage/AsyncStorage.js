@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useColorScheme } from 'react-native';
 
 export async function guardarPrimeiroAcesso() {
     try {
@@ -64,6 +65,33 @@ export async function WizardAtivo() {
       }
 };
 
+export async function SalvaTema(tema){
+
+  try {
+     console.log('salvo no async -->', tema)
+    await AsyncStorage.setItem('temaAtual', tema);
+
+ } catch (error) {
+    console.log('ERRO VALOR DO TEMA ASYNC', tema)
+    console.log('Erro ao criar async slavaTema -> ', error);
+ }
+}
+
+
+export async function VerificaTema()
+{
+  try {
+    const temaSalvo = await AsyncStorage.getItem('temaAtual');
+    
+    console.log('TEMA SALVO ----------->',temaSalvo)
+    temaSalvo === null ? '' : temaSalvo; //Null foi tirado para nao dar erro.
+
+    return temaSalvo; 
+  } catch (error) {
+    console.log('Não foi possivel verificar o tema -> ', error);
+    return error;
+  }
+}
 export const removerAsyncStorage = async () => {
     try {
       await AsyncStorage.clear()
