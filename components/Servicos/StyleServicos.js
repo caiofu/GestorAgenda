@@ -7,7 +7,12 @@ const styles = StyleSheet.create({
     
     },
 
-  
+    inputFormulario:
+    { 
+        marginBottom:20, 
+        backgroundColor: 'rgba(112, 120, 147, 0.3)',
+        
+    },
   
     btnContainer: {
         flexDirection: "row", // Alinha os filhos (ícone e texto) lado a lado

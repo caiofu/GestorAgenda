@@ -32,6 +32,11 @@ export default function SQLiteManager() {
         'CREATE TABLE IF NOT EXISTS servicos (idServico INTEGER PRIMARY KEY AUTOINCREMENT, idRamoAtividade INTEGER, nomeServico TEXT, descricao TEXT, favorito INTEGER, ativo INTEGER, criado INTEGER);'
       );
 
+     //SERVIÇOS CRIADOS PELO USUARIO
+     tx.executeSql(
+      'CREATE TABLE IF NOT EXISTS servicos_customizado (idServicoCustomizado INTEGER PRIMARY KEY AUTOINCREMENT,  nomeServico TEXT, descricao TEXT, favorito INTEGER, ativo INTEGER);'
+     );   
+
       //Inserindo dados iniciais ramo de atividade
       tx.executeSql('SELECT idRamoAtividade FROM ramoAtividade',
         [],
@@ -117,9 +122,9 @@ export default function SQLiteManager() {
       (_, { rows }) => {
         if (rows.length === 0) {
           const values = [
-            [1, 'Conteúdo escolar', 1, 0, 'Fornecemos materiais de estudo de alta qualidade para estudantes de todas as idades. Nossos tutores qualificados ajudam os alunos a obterem sucesso acadêmico.', 0],
-            [1, 'Idioma', 1, 0, 'Oferecemos aulas de idiomas personalizadas para atender às necessidades individuais de nossos alunos. Aprenda um novo idioma de forma eficaz e divertida.', 0],
-            [1, 'Reforço', 1, 0, 'Auxiliamos os estudantes em suas áreas de estudo que precisam de reforço. Nossa abordagem personalizada ajuda os alunos a superar desafios acadêmicos.', 0],
+            [1, 'Conteúdo escolar', 0, 0, 'Fornecemos materiais de estudo de alta qualidade para estudantes de todas as idades. Nossos tutores qualificados ajudam os alunos a obterem sucesso acadêmico.', 0],
+            [1, 'Idioma', 0, 0, 'Oferecemos aulas de idiomas personalizadas para atender às necessidades individuais de nossos alunos. Aprenda um novo idioma de forma eficaz e divertida.', 0],
+            [1, 'Reforço', 0, 0, 'Auxiliamos os estudantes em suas áreas de estudo que precisam de reforço. Nossa abordagem personalizada ajuda os alunos a superar desafios acadêmicos.', 0],
             [2, 'Barba', 0, 0, 'Oferecemos serviços de barbearia de alta qualidade para homens. Nossos barbeiros experientes garantem que você saia com um visual impecável.', 0],
             [2, 'Corte de cabelo', 0, 0, 'Corte e estilo de cabelo personalizado para atender às suas necessidades. Nossos cabeleireiros talentosos farão você se sentir renovado.', 0],
             [2, 'Depilação facial', 0, 0, 'Remova os pelos faciais de forma suave e eficaz com nossos serviços de depilação facial. Pele suave e refrescante.', 0],

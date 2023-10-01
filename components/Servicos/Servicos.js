@@ -4,7 +4,7 @@ import {  useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 
 //SQL
-import { GetServicosAtivo, GetServicosPorRamo } from "../SQLiteManager/SQLServicos";
+import { GetServicosAtivo, GetServicosPorRamo, GetServicosCustomizadosAtivos } from "../SQLiteManager/SQLServicos";
 
 //CONTEXT
 import { useAppState } from "../Contexts/AppStateContext";
@@ -12,10 +12,11 @@ import styles from "./StyleServicos";
 
 export default function Servicos()
 {
-    const {atulizaListaServico, setAtulizaListaServico} = useAppState();
+    const {atulizaListaServico, setAtualisaListaServico} = useAppState();
 
     const navigation = useNavigation();
     const [listaServicosVinculados, setListaServicosVinculados] = useState([]);
+    const [listaServicosCriados, setListaServicosCriados] = useState([]);
 
     const CriarNovoServico = () => {
         // Ação a ser executada quando o botão flutuante for pressionado
@@ -23,12 +24,12 @@ export default function Servicos()
         navigation.navigate('Novo Serviço'); 
       };
 
-      function FuncaoG(idServico)
+      function CarregaDetalhes(idServico, tipoServico)
       {
        
-        navigation.navigate('Detalhes serviço', { id: idServico }); 
+        navigation.navigate('Detalhes serviço', { id: idServico, tipoServico: tipoServico }); 
       }
-    //Busca lista
+    //BUSCA LISTA DE SERVIÇOS ATIVOS
     useEffect(() => {
         // GetServicosPorRamo(1,(servicos) => {
         //      console.log('teste ---------->', servicos)
@@ -40,18 +41,36 @@ export default function Servicos()
         //     }));
         //       setListaServicosVinculados(retorno);
         //     }); 
+       // if(atulizaListaServico) //Se carrega quando for verdadeiro
+      //  {
+            GetServicosAtivo((servicos) => {
+                console.log('teste ---------->', servicos)
+               const retorno = servicos.map((listaServico) => ({
+                   idServico: listaServico.idServico.toString(),
+                   idRamoAtividade: listaServico.idRamoAtividade,
+                   nomeServico: listaServico.nomeServico,
+                   descricao: listaServico.descricao,
+                   favorito: listaServico.favorito
+               }));
+                 setListaServicosVinculados(retorno);
+               }); 
+               setAtualisaListaServico(false);
+        //}
+         
+    }, [atulizaListaServico])
 
-         GetServicosAtivo((servicos) => {
-             console.log('teste ---------->', servicos)
+    //BUSTA LISTA DE SERVIÇOS CUSTOMIZADOS ATIVOS
+    useEffect(() =>{
+        GetServicosCustomizadosAtivos((servicos) => {
+            console.log('teste custom ---------->', servicos)
             const retorno = servicos.map((listaServico) => ({
-                idServico: listaServico.idServico.toString(),
-                idRamoAtividade: listaServico.idRamoAtividade,
+                idServicoCustomizado: listaServico.idServicoCustomizado.toString(),
                 nomeServico: listaServico.nomeServico,
                 descricao: listaServico.descricao,
                 favorito: listaServico.favorito
             }));
-              setListaServicosVinculados(retorno);
-            }); 
+            setListaServicosCriados(retorno);
+           }); 
     }, [atulizaListaServico])
 
     
@@ -73,7 +92,7 @@ export default function Servicos()
                         >
                         {listaServicosVinculados.map((servico) => (
                             
-                            <TouchableOpacity key={servico.idServico} onPress={() => FuncaoG(servico.idServico)} style={styles.itemServico}>
+                            <TouchableOpacity key={servico.idServico} onPress={() => CarregaDetalhes(servico.idServico, 'importado')} style={styles.itemServico}>
                                 {/* <Text  key={servico.idServico}>{servico.nomeServico} </Text> */}
                                 <List.Item key={servico.idServico}
                                             title={servico.nomeServico}
@@ -102,11 +121,11 @@ export default function Servicos()
                             
                            style={{backgroundColor:'#006699', borderRadius:3}}
                         >
-                        {listaServicosVinculados.map((servico) => (
+                        {listaServicosCriados.map((servico) => (
                             
-                            <TouchableOpacity key={servico.idServico} onPress={() => FuncaoG(servico.idServico)} style={styles.itemServico}>
+                            <TouchableOpacity key={servico.idServicoCustomizado} onPress={() => CarregaDetalhes(servico.idServicoCustomizado, 'criado')} style={styles.itemServico}>
                                 {/* <Text  key={servico.idServico}>{servico.nomeServico} </Text> */}
-                                <List.Item key={servico.idServico}
+                                <List.Item key={servico.idServicoCustomizado}
                                             title={servico.nomeServico}
                                             description={servico.descricao}
                                             titleStyle={styles.itemTitulo}
