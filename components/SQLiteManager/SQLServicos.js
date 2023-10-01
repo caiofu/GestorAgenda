@@ -36,7 +36,7 @@ export function GetServicosPorId(idServico, callback) {
       (tx, results) => {
         
         const len = results.rows.length;
-        servico = results.rows.item(0);
+        const servico = results.rows.item(0);
         callback(servico);
       },
       (error) => {
@@ -146,4 +146,129 @@ export function UpdateFavoritoServicoPorId (idServico, favorito) {
       }
     );
   });
+}
+
+export function CriaNovoServico(nomeServico, descricao, favorito, callback)
+{
+  db.transaction((tx) => {
+    tx.executeSql(
+      'INSERT INTO servicos_customizado (nomeServico, descricao, favorito, ativo) VALUES (?, ?, ?, 1)',
+      [nomeServico, descricao,favorito], 
+      (tx, results) => {
+        // Verificando se a inserção foi bem-sucedida
+        if (results.rowsAffected > 0) {
+          console.log('Inserção bem-sucedida');
+          // Recuperando o ID do novo registro
+          const novoID = results.insertId;
+          //Função de retorno (callback) com o resultado (novoID)
+          callback(novoID);
+        } else {
+          console.log('Falha ao inserir');
+          callback(null);
+        }
+      },
+      (error) => {
+        console.log('Erro ao executar consulta:', error);
+      }
+    );
+  });
+  
+}
+
+export function GetServicosCustomizadosAtivos(callback) {
+  db.transaction((tx) => {
+    tx.executeSql(
+      'SELECT * FROM servicos_customizado WHERE ativo = ?',
+      [1],
+      (tx, results) => {
+        console.log('Número de registros encontrados:', results.rows.length);
+
+        const servicos = [];
+
+        // Iterar sobre os resultados e adicionar cada registro ao array de serviços
+        for (let i = 0; i < results.rows.length; i++) {
+          const servico = results.rows.item(i);
+          servicos.push(servico);
+        }
+
+        callback(servicos); // Chamar a função de callback com o array de serviços
+      },
+      (error) => {
+        console.log('Erro ao extrair serviços customizados ativos: ' + error);
+        callback(null); // Trate o erro e chame a função de callback com null
+      }
+    );
+   
+  });
+}
+
+
+export function GetServicosCustomizadosPorId(idServico, callback) {
+  db.transaction((tx) => {
+    tx.executeSql(
+      'SELECT * FROM servicos_customizado where idServicoCustomizado = ?',
+      [idServico],
+      (tx, results) => {
+        
+        const len = results.rows.length;
+        const servico = results.rows.item(0);
+        callback(servico);
+      },
+      (error) => {
+        console.log('Erro ao extrair serviço customizado por ID (servicos):' + error + 'id: '+idServico);
+      }
+    );
+  });
+}
+
+export function UpdateAtivoServicoCustomizadoPorId (idServico, campoAtivo, callback) {
+  db.transaction((tx) => {
+    tx.executeSql(
+      'UPDATE servicos_customizado SET ativo = ? WHERE idServicoCustomizado = ?',
+      [campoAtivo, idServico],
+      (tx, results) => {
+        callback(true);
+       // console.log('Serviço atualizado com sucesso (UpdateAtivoServicoPorId)');
+      },
+      (error) => {
+        callback(false);
+        //console.log('Erro ao atualizar serviço (UpdateAtivoServicoPorId):' + error);
+      }
+    );
+  });
+}
+
+export function UpdateFavoritoServicoCustomizadoPorId (idServico, favorito) {
+  db.transaction((tx) => {
+    tx.executeSql(
+      'UPDATE servicos_customizado SET favorito = ? WHERE idServicoCustomizado = ?',
+      [favorito, idServico],
+      (tx, results) => {
+        console.log('Serviço atualizado com sucesso (UpdateFavoritoServicoPorId)');
+      },
+      (error) => {
+        console.log('Erro ao atualizar serviço (UpdateFavoritoServicoPorId):' + error);
+      }
+    );
+  });
+}
+
+export function UpdateServicoCustomizadoPorId (idServico, nome, descricao) {
+  db.transaction((tx) => {
+    tx.executeSql(
+      `
+      UPDATE servicos_customizado
+      SET nomeServico = ?, descricao = ?
+      WHERE idServicoCustomizado = ?
+      `,
+      [nome, descricao, idServico],
+      (tx, results) => {
+        console.log('Serviço atualizado com sucesso (Update nome e descrição)');
+      },
+      (error) => {
+        console.log('Erro ao atualizar serviço (Update nome e descrição):' + error);
+      }
+    );
+  });
+  
 }

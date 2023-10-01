@@ -1,14 +1,18 @@
-import { View, Text, SafeAreaView, TouchableOpacity, ScrollView } from "react-native";
-import { PaperProvider, Dialog, Portal, Button, TextInput } from "react-native-paper";
+import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, } from "react-native";
+import { PaperProvider, Dialog, Portal, Button, TextInput, HelperText } from "react-native-paper";
 import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
-import styles from "./StyleServicos";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SelectList, MultipleSelectList } from "react-native-dropdown-select-list";
 import {  useNavigation } from "@react-navigation/native";
 
+//STLE
+import styles from "./StyleServicos";
+import StyleDetalhesServicos from "./StyleDetalhesServicos";
+
 //SQLITE
 import { ConsultaRamoAtividade } from "../SQLiteManager/SQLRamoAtividade";
-import { GetServicosPorRamo, UpdateAtivoServico, UpdateAtivoServicoPorId, GetServicosAtivo } from "../SQLiteManager/SQLServicos";
+import { GetServicosPorRamo,  UpdateAtivoServicoPorId, CriaNovoServico, GetServicosCustomizadosAtivos } from "../SQLiteManager/SQLServicos";
+import {ListaTodasTabelas}from "../SQLiteManager/SQLiteManager";
 
 //CONTEXT
 import { useAppState } from "../Contexts/AppStateContext";
@@ -39,11 +43,33 @@ export default function NovoServico()
      const [btnNovo, setBtnNovo]            = useState(false);
      
      //DIALOGO IMPORTAR SERVIÇO
-     const [importMensagemVisible, setImportMensagemVisible] = useState(false);
+     //const [importMensagemVisible, setImportMensagemVisible] = useState(false);
+
+      //RESPONSAVEL PELAS MENSAGENS POS AÇÃO
+    const [msgAcaoVisivel, setMsgAcaoVisivel] = useState(false);
+    const EscondeMsgAcao = (tipoMensagem) => { 
+        setMsgAcaoVisivel(false);
+        setAtualisaListaServico (true)
+        //TipoMensagem: E=Erro / S=Sucesso
+        if(tipoMensagem === 'E')
+        {
+            setMsgAcaoVisivel(false);
+        }
+        else if(tipoMensagem === 'S')
+        {
+            navigation.navigate(dialogTelaRetorno);
+        }
+        
+       
+    };
+    const [dialogTitulo, setDialogTitulo]       = useState('');
+    const [dialogMensagem, setDialogMensagem]   = useState('');
+    const [dialogTipoMensagem, setDialogTipoMensagem]       = useState('');
+    const [dialogTelaRetorno, setDialogTelaRetorno]       = useState('Serviços');
 
     //  const showDialogImport = () => setVisible(true);
    
-     const hideDialogImport = () => { setImportMensagemVisible(false);   navigation.navigate('Serviços'); setAtualisaListaServico(true)};
+     //const hideDialogImport = () => { setImportMensagemVisible(false);   navigation.navigate('Serviços'); setAtualisaListaServico(true)};
 
      //CONTROLA O TEMA
       useEffect(()=>{
@@ -81,7 +107,6 @@ export default function NovoServico()
       }, [ramoAtividadeSelecionado, listaRamoAtividade]);
     
      //BUSCA A LISTA DE SERVIÇOS DE ACORDO COM RAMO ESCOLHIDO
-     console.log('idRamoAtividade --->', idRamoAtividade);
      useEffect(() => {
         if(idRamoAtividade != null)
         {
@@ -127,7 +152,14 @@ export default function NovoServico()
                     console.log('contador', chamadasBemSucedidas + 'toatal ',servicoSelecionado.length)
                 if(chamadasBemSucedidas === totalChamadas)
                 {
-                    setImportMensagemVisible(true);
+                    //setImportMensagemVisible(true);
+                    setDialogTitulo('Sucesso');
+                    setDialogMensagem('Serviço importado')
+                    setDialogTipoMensagem('S');
+                    setDialogTelaRetorno('Novo Serviço')
+                    setBtnImportar(false);
+                    setMsgAcaoVisivel(true)
+                    setAtualisaListaServico(true);
                     
                 }
               });
@@ -142,10 +174,55 @@ export default function NovoServico()
       }
    
     //NOVO SERVIÇO
+    const [novoNomeServico, setNovoNomeServico] = useState('');
+    const [novaDescricao, setNovaDescricao]     = useState('');
+    const [favorito, setFavorivo]               = useState(0);
+    const [helperNome, setHelperNome]           = useState(false);
+    const refNome = useRef(null);
     function NovoServico()
     {
         setBtnNovo(true);
-    }  
+    }
+    
+    function CriarServico()
+    {
+        //Validação
+        if(novoNomeServico === '')
+        {
+            setHelperNome(true);
+            refNome.current.focus(); //Responsavel por levar o focu ate o input nome
+        }
+        else
+        {
+            setHelperNome(false);
+       
+            CriaNovoServico(novoNomeServico, novaDescricao, favorito, (novoID) => {
+                if (novoID !== null) {
+                // A inserção foi bem-sucedida
+                console.log(`Inserção bem-sucedida. Novo ID: ${novoID}`);
+                setDialogTitulo('Sucesso');
+                setDialogMensagem('Serviço criado!')
+                setDialogTelaRetorno('Novo Serviço')
+                setDialogTipoMensagem('S');
+                setMsgAcaoVisivel(true);
+                setBtnNovo(false);
+                //setAtualisaListaServico(true); ATUALIZAR LISTA DE SERVIÇO CUSTOMIZADO
+                } else {
+                // A inserção falhou
+                console.log('Falha ao inserir');
+                setDialogTitulo('Atenção');
+                setDialogMensagem('Não foi possivel criar o serviço')
+                setDialogTipoMensagem('E');
+                setMsgAcaoVisivel(true)
+            
+                }
+            });
+        }
+        
+    }
+    ListaTodasTabelas();
+    console.log('nome ', novoNomeServico)
+
     
     return(
         <PaperProvider>
@@ -207,11 +284,38 @@ export default function NovoServico()
              (
                 <>
                     <View>
+                    <View>
+                        <TouchableOpacity onPress={() => setFavorivo(!favorito)}>
+                            <View style={StyleDetalhesServicos.viewFavoritos}>
+                                <FontAwesome name="star" size={22} color={favorito ? '#ffca00' : 'grey'}/>
+                                <Text style={[StyleDetalhesServicos.txtFavoritos, {color: favorito  ? '#ffca00' : 'grey'}]}> {favorito ? 'Remover dos favoritos': 'Marcar como favorito'} </Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                        {helperNome  ?  <HelperText style={{color:'red', fontStyle:'italic'}}>Nome não pode ser vazio</HelperText>:''}
                         <TextInput
+                            ref={refNome}
                           label="Nome Serviço"
+                          style={styles.inputFormulario}
+                          onChangeText={setNovoNomeServico}
+                         
                         >
 
                         </TextInput>
+                        <TextInput 
+                            label="Descrição" 
+                            style={styles.inputFormulario}
+                            onChangeText={setNovaDescricao}
+                            >
+
+                        </TextInput>
+
+                        <TouchableOpacity style={styles.btn} onPress={CriarServico}>
+                            <View style={styles.btnContainer}>
+                                <FontAwesome5 name="plus" size={28} color="#fff" />
+                                <Text style={styles.btnText}>Criar serviço</Text>
+                            </View>
+                        </TouchableOpacity>
                     </View>
                 </>
              )
@@ -240,7 +344,7 @@ export default function NovoServico()
 
             {/* Dialogo para quando for salvo com sucesso */}
           
-            <Portal>
+            {/* <Portal>
                 <Dialog visible={importMensagemVisible} dismissable={false}  style={{}}>
                     <Dialog.Title>Sucesso!</Dialog.Title>
                     <Dialog.Content>
@@ -250,8 +354,18 @@ export default function NovoServico()
                     <Button onPress={hideDialogImport}>Continuar</Button>
                     </Dialog.Actions>
                 </Dialog>
+            </Portal> */}
+           <Portal>
+                <Dialog visible={msgAcaoVisivel} dismissable={false}  style={{}}>
+                    <Dialog.Title>{dialogTitulo}</Dialog.Title>
+                    <Dialog.Content>
+                    <Text variant="bodyMedium">{dialogMensagem}</Text>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                    <Button onPress={() =>EscondeMsgAcao(dialogTipoMensagem)}>Continuar</Button>
+                    </Dialog.Actions>
+                </Dialog>
             </Portal>
-           
             </View>
             </ScrollView>               
         </SafeAreaView>

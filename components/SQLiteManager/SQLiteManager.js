@@ -29,7 +29,7 @@ export default function SQLiteManager() {
 
      //SERVIÇOS CRIADOS PELO USUARIO
      tx.executeSql(
-      'CREATE TABLE IF NOT EXISTS servicos_customizado (idServicoCustomizado INTEGER PRIMARY KEY AUTOINCREMENT,  nomeServico TEXT, descricao TEXT, favorito INTEGER, ativo INTEGER, criado INTEGER);'
+      'CREATE TABLE IF NOT EXISTS servicos_customizado (idServicoCustomizado INTEGER PRIMARY KEY AUTOINCREMENT,  nomeServico TEXT, descricao TEXT, favorito INTEGER, ativo INTEGER);'
      );   
 
       //Inserindo dados iniciais ramo de atividade
