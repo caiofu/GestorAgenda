@@ -59,64 +59,29 @@ export default function SQLiteManager() {
           }
         });
      
-      
+        //Inserindo 1° Colaborador - Proprietário
+        tx.executeSql('SELECT idColaborador FROM colaborador',
+        [],
+        (_, { rows }) => {
+          if (rows.length === 0) {
+            tx.executeSql(
+              'INSERT INTO colaborador (nomeColaborador) VALUES (?)',
+              ['Proprietário'],
 
-      //Inserindo dados iniciais: serviços por ramo de atividade
-      // tx.executeSql('SELECT idServico FROM servicos',
-      //   [],
-      //   (_, { rows }) => {
-      //     if (rows.length === 0) {
-      //       tx.executeSql(
-      //         'INSERT INTO servicos (idRamoAtividade, nomeServico, ativo, criado, descricao) VALUES (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?)',
+              (_, result) => {
+                console.log('Tabela criada com sucesso e valores inseridos - table Colaborador');
 
-      //         [
-      //           1, 'Conteúdo escolar', 0, 0,
-      //           1, 'Idioma', 0, 0,
-      //           1, 'Reforço', 0, 0,
-      //           2, 'Barba', 0, 0,
-      //           2, 'Corte de cabelo', 0, 0,
-      //           2, 'Depilação facial', 0, 0,
-      //           3, 'Limpeza de pele', 0, 0,
-      //           3, 'Drenagem linfática', 0, 0,
-      //           3, 'Peeling', 0, 0,
-      //           4, 'Relaxante', 0, 0,
-      //           4, 'Quick massage', 0, 0,
-      //           4, 'Pés', 0, 0,
-      //           5, 'Anamnese', 0, 0,
-      //           5, 'Elaboração de cardápio', 0, 0,
-      //           5, 'Bioimpedância', 0, 0,
-      //           6, 'Motor', 0, 0,
-      //           6, 'Rodas', 0, 0,
-      //           6, 'Funilaria', 0, 0,
-      //           7, 'Anamnese', 0, 0,
-      //           7, 'Elaboração de treinos', 0, 0,
-      //           7, 'Acompanhamento de treinos', 0, 0,
-      //           8, 'Anamnese', 0, 0,
-      //           8, 'Atendimento individual', 0, 0,
-      //           8, 'Atendimento coletivo', 0, 0,
-      //           9, 'Corte de cabelo', 0, 0,
-      //           9, 'Pintura de cabelo', 0, 0,
-      //           9, 'Manicure', 0, 0,
-      //           9, 'Escova', 0, 0,
-      //           9, 'Pedicure', 0, 0,
-      //           10, 'Limpeza', 0, 0,
-      //           10, 'Passar roupa', 0, 0,
-      //           10, 'Cozinhar', 0, 0
-      //         ],
+              },
+              (_, error) => {
+                console.error('Erro ao criar tabela e inserir valores - table Colaborador:', error);
+              }
+            )
+          }
+          else {
+            console.log('valores ja inseridos - table Colaborador');
+          }
+        });
 
-      //         (_, result) => {
-      //           console.log('Tabela criada com sucesso e valores inseridos (servicos)');
-      //         },
-
-      //         (_, error) => {
-      //           console.error('Erro ao criar tabela e inserir valores (servicos):', error);
-      //         }
-      //       )
-      //     }
-      //     else {
-      //       console.log('valores ja inseridos (servicos)');
-      //     }
-      //   });
       tx.executeSql('SELECT idServico FROM servicos',
       [],
       (_, { rows }) => {
