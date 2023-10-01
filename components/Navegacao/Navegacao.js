@@ -11,6 +11,7 @@ import Estabelecimento from "../Estabelecimento/Estabelecimento";
 import Colaboradores from "../Colaboradores/Colaboradores";
 import { useState, useEffect } from "react";
 import { useAppState } from "../Contexts/AppStateContext";
+import FormColaboradores from "../Colaboradores/FormColaboradores";
 
 
 const Stack = createNativeStackNavigator(); //Responsavel pela navegação Stack 
@@ -34,7 +35,8 @@ function StackTelas()
         <Stack.Screen name="Gestor Agenda" component={Home} />
         <Stack.Screen name="Estabelecimento" component={Estabelecimento}/>
         <Stack.Screen name="Colaboradores" component={Colaboradores}/>
-
+        <Stack.Screen name="FormColaboradores" component={FormColaboradores}/>
+        
         </Stack.Navigator>
     )
 }

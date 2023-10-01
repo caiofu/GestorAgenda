@@ -11,14 +11,16 @@ export function listarColaboradores(callback, errorCallback) {
       const rows = results.rows;
       const colaboradoresArray = [];
       
-      for (let i = 0; i <= rows.length; i++) {
+      for (let i = 0; i < rows.length; i++) {
         colaboradoresArray.push(rows.item(i));
       }
 
       if (colaboradoresArray.length > 0) {
         console.log("aquiiii");
+        console.log(colaboradoresArray);
         callback(colaboradoresArray);
       } else {
+        console.log('caindo aqui por isso o erro');
         errorCallback("Nenhum colaborador encontrado.");
       }
     },
