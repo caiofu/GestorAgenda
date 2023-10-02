@@ -138,10 +138,7 @@ export default function NovoServico()
     function BotaoSalvaImportacao() {
         let chamadasBemSucedidas = 0; 
         const totalChamadas = servicoSelecionado.length;
-       
-        // Crie uma matriz para armazenar os ids correspondentes aos nomes dos serviços selecionados
-        //const idsSelecionados = [];
-      
+  
         // Para cada serviço selecionado, encontre o id correspondente na listaServicos
         servicoSelecionado.forEach((servicoSelecionado) => {
           const servicoEncontrado = listaServicos.find((item) => item.value === servicoSelecionado);
