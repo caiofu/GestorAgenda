@@ -266,24 +266,27 @@ export default function Estabelecimento()
         )
           .then((inseridoComSucesso) => {
             //Insere serviços ao ramo de atividade
-            console.log('nome do ramo -----------> ', ramoAtividade)
-            ConsultaRetornaIdRamoAtividade(ramoAtividade, (idRamoAtividade) => {
-              if (idRamoAtividade !== null) {
-                // O ID do ramo de atividade foi encontrado com sucesso
-                console.log('ID do Ramo de Atividade:', idRamoAtividade);
-                //Ativa os serviços de acordo com o ramo de atividade
-                AtualizarServiçoAtivoPorIdRamoAtividade(idRamoAtividade, (error) =>{
-                  if (error) {
-                    console.error('Erro na atualização:', error);
-                  } else {
-                    console.log('Registros de serviço atualizados com sucesso.');
-                  }
-                })
-              } else {
-                // Ramo de atividade não encontrado ou ocorreu um erro
-                console.error('Ramo de atividade não encontrado ou erro na consulta.');
-              }
-            });
+            if(ramoAtividade !== null)
+            {
+              ConsultaRetornaIdRamoAtividade(ramoAtividade, (idRamoAtividade) => {
+                if (idRamoAtividade !== null) {
+                  // O ID do ramo de atividade foi encontrado com sucesso
+                  console.log('ID do Ramo de Atividade:', idRamoAtividade);
+                  //Ativa os serviços de acordo com o ramo de atividade
+                  AtualizarServiçoAtivoPorIdRamoAtividade(idRamoAtividade, (error) =>{
+                    if (error) {
+                      console.error('Erro na atualização:', error);
+                    } else {
+                      console.log('Registros de serviço atualizados com sucesso.');
+                    }
+                  })
+                } else {
+                  // Ramo de atividade não encontrado ou ocorreu um erro
+                  console.error('Ramo de atividade não encontrado ou erro na consulta.');
+                }
+              });
+            }
+            
             
             //Executando a animação
             setAnimacaoSalvando(true)

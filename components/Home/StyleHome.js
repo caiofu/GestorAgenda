@@ -6,15 +6,19 @@ const styles = StyleSheet.create({
         display:'flex',
         flexDirection:'row',
         flexWrap:'wrap',
+        gap:5,
+        marginTop:10,
+        marginLeft:5,
+        marginRight:5,
         justifyContent:'space-around',
     },
     boxBotao:
     {
       borderWidth:1,
       borderColor:'#707893',
-      width:100,
+      minWidth:100,
       height:70,
-      margin: 15,
+     
       borderRadius:5,
       backgroundColor:'#006699'
     },
