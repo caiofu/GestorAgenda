@@ -28,3 +28,29 @@ export function ConsultaRamoAtividade(callback)
       );
     });
   }
+
+  export function ConsultaRetornaIdRamoAtividade(nomeRamoAtividade, callback) {
+    db.transaction((tx) => {
+      tx.executeSql(
+        'SELECT idRamoAtividade FROM ramoAtividade WHERE nomeAtividade = ?',
+        [nomeRamoAtividade],
+        (tx, results) => {
+          if (results.rows.length > 0) {
+            const row = results.rows.item(0); // Pega apenas o primeiro resultado
+            const idRamoAtividade = row.idRamoAtividade;
+            // Chame a função de retorno (callback) com o ID do ramo de atividade
+            callback(idRamoAtividade);
+          } else {
+            // Se não houver resultados, chame o callback com null ou algum valor indicando que não foi encontrado
+            callback(null);
+          }
+        },
+        (error) => {
+          console.error('Erro ao executar consulta por rammo de atividade:', error);
+          // Chame o callback com erro, se desejar
+          callback(error);
+        }
+      );
+    });
+  }
+  

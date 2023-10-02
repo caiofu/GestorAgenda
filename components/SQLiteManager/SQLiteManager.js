@@ -27,7 +27,7 @@ export default function SQLiteManager() {
       tx.executeSql(
         'CREATE TABLE IF NOT EXISTS ramoAtividade (idRamoAtividade INTEGER PRIMARY KEY AUTOINCREMENT, nomeAtividade TEXT);'
       );
-      //Serviços - 'criado' = criado pelo usuário.
+      //Serviços 
       tx.executeSql(
         'CREATE TABLE IF NOT EXISTS servicos (idServico INTEGER PRIMARY KEY AUTOINCREMENT, idRamoAtividade INTEGER, nomeServico TEXT, descricao TEXT, favorito INTEGER, ativo INTEGER, criado INTEGER);'
       );
