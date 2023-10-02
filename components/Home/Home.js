@@ -25,7 +25,7 @@ export default function Home({ navigation }) {
   })
 
   return (
-    <SafeAreaView style={{ margin: 10, display:'flex', flexDirection:'row' , display: 'flex', flexDirection:'row'}}>
+    <SafeAreaView style={{  display: 'flex', flexDirection:'row'}}>
       <TouchableOpacity style={styles.homeContainer} onPress={() => navigation.navigate('Estabelecimento')}>
         <View style={styles.boxBotao}>
           <View style={styles.iconeBotao}>
