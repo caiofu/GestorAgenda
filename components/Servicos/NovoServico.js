@@ -328,9 +328,9 @@ export default function NovoServico()
                                         </TextInput>
 
                                         <TouchableOpacity style={styles.btn} onPress={CriarServico}>
-                                            <View style={styles.btnContainer}>
-                                                <FontAwesome5 name="plus" size={28} color="#fff" />
-                                                <Text style={styles.btnText}>Criar serviço</Text>
+                                            <View style={[styles.btnContainer, {alignSelf:'center'}]}>
+                                                {/* <FontAwesome5 name="plus" size={28} color="#fff" /> */}
+                                                <Text style={styles.btnTextNovoServico}>SALVAR </Text>
                                             </View>
                                         </TouchableOpacity>
                                     </View>

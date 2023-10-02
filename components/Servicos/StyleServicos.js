@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
     btnContainer: {
         flexDirection: "row", // Alinha os filhos (ícone e texto) lado a lado
         alignItems: "center", // Alinha verticalmente ao centro
+        
       },
 
     btn:
@@ -51,6 +52,16 @@ const styles = StyleSheet.create({
         marginLeft:10,
         fontSize:20,
         alignSelf:'center',
+        fontFamily:'Rubik_700Bold'
+
+    },
+
+    btnTextNovoServico:
+    {
+        color:'#ffff',
+        marginLeft:10,
+        fontSize:23,
+        
         fontFamily:'Rubik_700Bold'
 
     },
