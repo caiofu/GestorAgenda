@@ -78,7 +78,7 @@ export default function Servicos()
     }, [atulizaListaServico])
 
     
-  console.log('Retorno da lista -> ', listaServicosVinculados)
+//   console.log('Retorno da lista -> ', listaServicosVinculados)
     return(
         <PaperProvider>
             <SafeAreaView style={styles.container}>
