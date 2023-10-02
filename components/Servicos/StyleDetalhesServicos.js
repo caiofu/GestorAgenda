@@ -56,7 +56,8 @@ const StyleDetalhesServicos = StyleSheet.create({
     {
         flexDirection: 'row',
         alignItems: 'center',
-        alignSelf:'flex-end'
+        alignSelf:'flex-end',
+  
     },
 
     txtFavoritos:

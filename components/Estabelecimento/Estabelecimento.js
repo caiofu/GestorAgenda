@@ -21,7 +21,7 @@ import lightTheme from '../../Tema/lightTheme';
 
 //CONTEXT
 import { useAppState } from "../Contexts/AppStateContext";
-import { Colors } from "react-native/Libraries/NewAppScreen";
+
 
 
 export default function Estabelecimento()
@@ -351,7 +351,8 @@ export default function Estabelecimento()
             onChangeText={setNomeEstabelecimento}
             theme={{
               colors: { primary: msgNomeEstabelecimento ? 'red' : corTema, onSurfaceVariant:  msgNomeEstabelecimento ? 'red' : corTema   }
-            }} value={nomeEstabelecimento}
+            }}
+             value={nomeEstabelecimento}
             style={styles.inputFormulario}
           />
       

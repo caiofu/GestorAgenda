@@ -63,10 +63,15 @@ const styles = StyleSheet.create({
     },
 
    // ITEMS
+   tituloCabecalhoLista:
+   {
+        color:'#fff',
+        fontFamily:'Rubik_700Bold'
+   },
     itemServico:
     {
         borderWidth:0.8,
-        
+       
         margin:5, 
         borderRadius:10,
       
@@ -85,9 +90,28 @@ const styles = StyleSheet.create({
         fontStyle:'italic',
         color:'black',
         fontSize:12
-    }
+    },
   
+    //Botaão novo serviço
+    btnNovoServico:
+    {
+        position: 'absolute', 
+        margin: 16, 
+        right: 0, 
+        bottom: 0, 
+        backgroundColor:'#006699',
+        fontFamily: 'Rubik_700Bold',
+       
+    },
 
+    inputFormularioSelect:
+    {
+        marginLeft:15, 
+        marginRight:25, 
+       
+      
+        backgroundColor: 'rgba(112, 120, 147, 0.3)',
+    },
     
     
    

@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     {
         marginLeft:15, 
         marginRight:25, 
-        tintColor:'red',
+       
       
         backgroundColor: 'rgba(112, 120, 147, 0.3)',
     },
