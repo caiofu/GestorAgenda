@@ -31,20 +31,9 @@ export default function Servicos()
       }
     //BUSCA LISTA DE SERVIÇOS ATIVOS
     useEffect(() => {
-        // GetServicosPorRamo(1,(servicos) => {
-        //      console.log('teste ---------->', servicos)
-        //     const retorno = servicos.map((listaServico) => ({
-        //         idServico: listaServico.idServico.toString(),
-        //         idRamoAtividade: listaServico.idRamoAtividade,
-        //         nomeServico: listaServico.nomeServico,
-        //         descricao: listaServico.descricao
-        //     }));
-        //       setListaServicosVinculados(retorno);
-        //     }); 
-       // if(atulizaListaServico) //Se carrega quando for verdadeiro
-      //  {
+     
             GetServicosAtivo((servicos) => {
-                console.log('teste ---------->', servicos)
+                
                const retorno = servicos.map((listaServico) => ({
                    idServico: listaServico.idServico.toString(),
                    idRamoAtividade: listaServico.idRamoAtividade,
@@ -88,21 +77,22 @@ export default function Servicos()
                             
                             style={{backgroundColor:'#006699', borderRadius:3}}
                         >
-                        {listaServicosVinculados.map((servico) => (
-                            
-                            <TouchableOpacity key={servico.idServico} onPress={() => CarregaDetalhes(servico.idServico, 'importado')} style={styles.itemServico}>
-                                {/* <Text  key={servico.idServico}>{servico.nomeServico} </Text> */}
-                                <List.Item key={servico.idServico}
-                                            title={servico.nomeServico}
-                                            description={servico.descricao}
-                                            titleStyle={styles.itemTitulo}
-                                            descriptionStyle={styles.itemDescricao}
-                                            descriptionNumberOfLines={1}
-                                            right={servico.favorito === 1 ? props => <List.Icon {...props} color="#ffca00" icon="star" /> : ''} />
-                                </TouchableOpacity>
+                            { listaServicosVinculados.length === 0 ? <Text style={styles.txtListaVazia}> Nenhum serviço importado </Text> :
+                                listaServicosVinculados.map((servico) => (
+                                        <TouchableOpacity key={servico.idServico} onPress={() => CarregaDetalhes(servico.idServico, 'importado')} style={styles.itemServico}>
+                                            {/* <Text  key={servico.idServico}>{servico.nomeServico} </Text> */}
+                                            <List.Item key={servico.idServico}
+                                                        title={servico.nomeServico}
+                                                        description={servico.descricao}
+                                                        titleStyle={styles.itemTitulo}
+                                                        descriptionStyle={styles.itemDescricao}
+                                                        descriptionNumberOfLines={1}
+                                                        right={servico.favorito === 1 ? props => <List.Icon {...props} color="#ffca00" icon="star" /> : ''} />
+                                            </TouchableOpacity>
 
-                            
-                        ))}
+                                        
+                                    ))
+                            }
                         </List.Accordion>
 
                          
@@ -119,21 +109,23 @@ export default function Servicos()
                             
                            style={{backgroundColor:'#006699', borderRadius:3}}
                         >
-                        {listaServicosCriados.map((servico) => (
-                            
-                            <TouchableOpacity key={servico.idServicoCustomizado} onPress={() => CarregaDetalhes(servico.idServicoCustomizado, 'criado')} style={styles.itemServico}>
-                                {/* <Text  key={servico.idServico}>{servico.nomeServico} </Text> */}
-                                <List.Item key={servico.idServicoCustomizado}
-                                            title={servico.nomeServico}
-                                            description={servico.descricao}
-                                            titleStyle={styles.itemTitulo}
-                                            descriptionStyle={styles.itemDescricao}
-                                            descriptionNumberOfLines={1}
-                                            right={servico.favorito === 1 ? props => <List.Icon {...props} color="#ffca00" icon="star" /> : ''} />
-                                </TouchableOpacity>
+                        { listaServicosCriados.length === 0 ? <Text style={styles.txtListaVazia}> Nenhum serviço criado </Text> :    
+                            listaServicosCriados.map((servico) => (
+                                
+                                <TouchableOpacity key={servico.idServicoCustomizado} onPress={() => CarregaDetalhes(servico.idServicoCustomizado, 'criado')} style={styles.itemServico}>
+                                    {/* <Text  key={servico.idServico}>{servico.nomeServico} </Text> */}
+                                    <List.Item key={servico.idServicoCustomizado}
+                                                title={servico.nomeServico}
+                                                description={servico.descricao}
+                                                titleStyle={styles.itemTitulo}
+                                                descriptionStyle={styles.itemDescricao}
+                                                descriptionNumberOfLines={1}
+                                                right={servico.favorito === 1 ? props => <List.Icon {...props} color="#ffca00" icon="star" /> : ''} />
+                                    </TouchableOpacity>
 
-                            
-                        ))}
+                                
+                            ))
+                        }
                         </List.Accordion>
 
                          

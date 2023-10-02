@@ -55,6 +55,13 @@ const styles = StyleSheet.create({
 
     },
 
+    txtListaVazia:
+    {
+        alignSelf:'center',
+        padding:10,
+        fontFamily:'Rubik_400Regular'
+    },
+
    // ITEMS
     itemServico:
     {
