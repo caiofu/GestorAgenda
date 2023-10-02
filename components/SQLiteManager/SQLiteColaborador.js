@@ -60,16 +60,19 @@ export function CriaNovoColaborador(nomeColaborador, descricao, callback)
   
 }
 
-export function UpdateColaboradorPorId(){
+export function UpdateColaboradorPorId(idColaborador, nome, funcao, callback){
   db.transaction((tx) => {
     tx.executeSql(
-      'UPDATE servicos SET favorito = ? WHERE idServico = ?',
-      [favorito, idServico],
+      'UPDATE colaborador SET nomeColaborador = ?, descricao = ? WHERE idColaborador = ?',
+      [nome, funcao, idColaborador],
       (tx, results) => {
-        console.log('Serviço atualizado com sucesso (UpdateFavoritoServicoPorId)');
+        console.log('Serviço atualizado com sucesso (UpdateColaboradorporId)');
+        callback(true);
       },
       (error) => {
-        console.log('Erro ao atualizar serviço (UpdateFavoritoServicoPorId):' + error);
+        console.log('Erro ao atualizar serviço (UpdateColaboradorporId):' + error.message);
+        console.log(idColaborador, nome, funcao);
+        callback(false);
       }
     );
   });
