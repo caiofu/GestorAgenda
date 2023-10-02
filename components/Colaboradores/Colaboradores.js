@@ -9,48 +9,46 @@ import { listarColaboradores, ConsultaTeste } from '../SQLiteManager/SQLiteColab
 
 function Colaboradores() {
   const [colaboradores, setColaboradores] = useState([]);
-  const [erro, setErro] = useState(null); // Novo estado para armazenar erros
+  const [erro, setErro] = useState(null); //estado para armazenar erros
 
   const navigation = useNavigation();
-  // useEffect(() => {
-  //   listarColaboradores(
-  //     (colaboradoresArray) => {
-  //       setColaboradores(colaboradoresArray);
-  //       setErro(null); // Limpar erro, se houver
-  //     },
-  //     (error) => {
-  //       setErro(error);
-  //     }
-  //   );
-  // }, []);
+  useEffect(() => {
+    listarColaboradores(
+      (colaboradoresArray) => {
+        setColaboradores(colaboradoresArray);
+        setErro(null); // Limpar erro, se houver
+      },
+      (error) => {
+        setErro(error);
+      }
+    );
+  }, []);
 
-  // tive que usar isso pois devido a tela estar dentro de um navigation, ao entrar e sair do módulo o componente não estava renderizando.
-  // com useFocusEffect, força a renderização, pois ele verifica a entrada e saída do componente.
   useFocusEffect(
-      React.useCallback(() => {
-        console.log('caindo aqui');
+    React.useCallback(() => {
       listarColaboradores(
-            (colaboradoresArray) => {
-              setColaboradores(c => c = colaboradoresArray);
-              setErro(null); // Limpar erro, se houver
-            },
-            (error) => {
-              setErro(error);
-            }
-          );
+        (colaboradoresArray) => {
+          setColaboradores(colaboradoresArray);
+          setErro(null); // Limpar erro, se houver
+        },
+        (error) => {
+          setErro(error);
+        }
+      );
       return () => {
-        // Código de limpeza, se necessário
-        console.log('saiu da tela de colaboradores');
+        console.log('mudou tela');
+        // Código de limpeza, se necessário, quando a tela perde foco
       };
     }, [])
   );
+
 
   function itemColaborador(item){
     return (
       <List.Item
         style={{margin:10}} // alterar para colocar mais estilo nisso aqui, agr to sem ideia
         title={item.nomeColaborador}
-        description={'finge que tem um email aqui'}
+        description={item.descricao}
         left={() => <List.Icon icon="account-circle" />}
         onPress={() => {
           console.log('pressed')
@@ -67,7 +65,7 @@ function Colaboradores() {
       >
           <View>
               {erro ? (
-                  <Text>{error}</Text>
+                  <Text>{erro}</Text>
               ) : (
                   colaboradores.length === 0 ? (
                   <Text>Nenhum colaborador encontrado.</Text>
@@ -90,11 +88,12 @@ function Colaboradores() {
               )}
           </View>
           <FAB
-                style={styles.fab}
-                icon="plus"
-                onPress={() => {
-                  navigation.navigate('FormColaboradores'), {colaborador: null}}}
-              />
+            style={styles.fab}
+            label='Novo Colaborador'
+            icon="plus"
+            onPress={() => {
+              navigation.navigate('FormColaboradores')}}
+          />
       </SafeAreaView>
     </PaperProvider>
   );
@@ -115,7 +114,7 @@ const styles = StyleSheet.create({
     margin: 16,
     right:0,
     bottom:0,
-    backgroundColor: '#007bff', // Cor de fundo da bola
+    backgroundColor: '#006699', // Cor de fundo da bola
   },
 });
 

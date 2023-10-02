@@ -81,14 +81,12 @@ export default function Servicos()
                 <ScrollView>
                      {/* Lista de serviços importados */}
                     <View style={{borderWidth:1, margin:10, borderRadius:6 }}>
-                        
-                       
                         <List.Accordion 
                             title="Serviços importados"
                             id="servicosAccordion"
                             titleStyle={{color:'#fff'}}
                             
-                           style={{backgroundColor:'#006699', borderRadius:3}}
+                            style={{backgroundColor:'#006699', borderRadius:3}}
                         >
                         {listaServicosVinculados.map((servico) => (
                             

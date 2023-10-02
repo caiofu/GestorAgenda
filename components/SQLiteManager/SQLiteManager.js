@@ -20,7 +20,7 @@ export default function SQLiteManager() {
       );
 
       //Colaborador
-      tx.executeSql('CREATE TABLE IF NOT EXISTS colaborador (idColaborador INTEGER PRIMARY KEY AUTOINCREMENT, nomeColaborador TEXT);',
+      tx.executeSql('CREATE TABLE IF NOT EXISTS colaborador (idColaborador INTEGER PRIMARY KEY AUTOINCREMENT, nomeColaborador TEXT, descricao TEXT, ativo INTEGER);'
       );
 
       //Ramo Atividade
@@ -32,10 +32,15 @@ export default function SQLiteManager() {
         'CREATE TABLE IF NOT EXISTS servicos (idServico INTEGER PRIMARY KEY AUTOINCREMENT, idRamoAtividade INTEGER, nomeServico TEXT, descricao TEXT, favorito INTEGER, ativo INTEGER, criado INTEGER);'
       );
 
-     //SERVIÇOS CRIADOS PELO USUARIO
-     tx.executeSql(
-      'CREATE TABLE IF NOT EXISTS servicos_customizado (idServicoCustomizado INTEGER PRIMARY KEY AUTOINCREMENT,  nomeServico TEXT, descricao TEXT, favorito INTEGER, ativo INTEGER);'
-     );   
+      //SERVIÇOS CRIADOS PELO USUARIO
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS servicos_customizado (idServicoCustomizado INTEGER PRIMARY KEY AUTOINCREMENT,  nomeServico TEXT, descricao TEXT, favorito INTEGER, ativo INTEGER);'
+      );   
+
+      //SERVICO PREFERIDO COLABORADOR
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS servicoColaborador (id INTEGER PRIMARY KEY AUTOINCREMENT,  idColaborador INTEGER, idServico INTEGER, nomeServico TEXT);'
+      );
 
       //Inserindo dados iniciais ramo de atividade
       tx.executeSql('SELECT idRamoAtividade FROM ramoAtividade',
@@ -65,8 +70,8 @@ export default function SQLiteManager() {
         (_, { rows }) => {
           if (rows.length === 0) {
             tx.executeSql(
-              'INSERT INTO colaborador (nomeColaborador) VALUES (?)',
-              ['Proprietário'],
+              'INSERT INTO colaborador (nomeColaborador, descricao, ativo) VALUES (?, ?, ?)',
+              ['Usuário', 'Proprietário', 1],
 
               (_, result) => {
                 console.log('Tabela criada com sucesso e valores inseridos - table Colaborador');

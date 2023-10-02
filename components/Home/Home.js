@@ -49,7 +49,7 @@ export default function Home({ navigation }) {
         <View style={styles.boxBotao}>
           <View style={styles.iconeBotao}>
             <FontAwesome5 style={styles.iconeBotao} name="house-user" size={34} color='#ffffff' />
-            <Text style={styles.txtBotao}>Colab</Text>
+            <Text style={styles.txtBotao}>Colaboradores</Text>
           </View>
         </View>
       </TouchableOpacity>
