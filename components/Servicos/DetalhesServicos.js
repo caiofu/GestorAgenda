@@ -25,6 +25,7 @@ export default function DetalhesServicos(props) {
     // Acesse o valor do idServico por meio de props.route.params
     const idServico = props.route.params.id;
     const tipoServico = props.route.params.tipoServico;
+    
 
     const [servico, setServico] = useState({});
     const [iconeEstrela, setIconeEstrela] = useState('star-outline');
@@ -281,13 +282,13 @@ export default function DetalhesServicos(props) {
                             {/* Dialogo para quando serviço for removido */}
                     
                         <Portal>
-                            <Dialog visible={msgAcaoVisivel} dismissable={false}  style={{}}>
-                                <Dialog.Title>{dialogTitulo}</Dialog.Title>
+                            <Dialog visible={msgAcaoVisivel} dismissable={false}  style={tema === 'light' ? styles.dialogLight : styles.dialogDark}>
+                                <Dialog.Title style={[styles.dialogTitulo, {color: corTema}]}>{dialogTitulo}</Dialog.Title>
                                 <Dialog.Content>
-                                <Text variant="bodyMedium">{dialogMensagem}</Text>
+                                <Text variant="bodyMedium" style={[styles.dialogContent, {color: tema === 'light' ? 'black' : "#fff"}]}>{dialogMensagem}</Text>
                                 </Dialog.Content>
                                 <Dialog.Actions>
-                                <Button onPress={() =>EscondeMsgAcao(dialogTipoMensagem)}>Continuar</Button>
+                                <Button labelStyle={{fontFamily:'Rubik_700Bold', color: tema === 'light' ? '#006699' : '#fff'}} onPress={() =>EscondeMsgAcao(dialogTipoMensagem)}>Continuar</Button>
                                 </Dialog.Actions>
                             </Dialog>
                         </Portal>

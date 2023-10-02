@@ -113,8 +113,34 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(112, 120, 147, 0.3)',
     },
     
-    
+    btnDialog:
+    {
+        fontFamily: 'Rubik_700Bold',
+        color:'red'
+    },
    
+    dialogTitulo:
+    {
+        fontFamily: 'Rubik_700Bold',
+    },
+
+    dialogContent:
+    {
+        fontFamily:'Rubik_400Regular'
+    },
+    
+    //Tema dark
+    dialogDark:
+    {
+        borderWidth:1,
+        borderColor: '#fff',
+        backgroundColor:'black'
+    },
+
+    dialogLight:
+    {
+        backgroundColor:'#fff'
+    }
   
 
 });
