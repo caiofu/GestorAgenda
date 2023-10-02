@@ -167,11 +167,7 @@ export default function NovoServico()
          
           }
         });
-      
-     
-      
-        // Agora, 'idsSelecionados' contém os ids correspondentes aos nomes dos serviços selecionados
-        console.log('Ids dos serviços selecionados:', );
+  
       }
    
     //NOVO SERVIÇO
@@ -224,7 +220,6 @@ export default function NovoServico()
    
      // Função para fechar o teclado quando tocar fora do campo de entrada
      const dismissKeyboard = () => {
-        console.log('aaa?')
         Keyboard.dismiss();
     };
     
