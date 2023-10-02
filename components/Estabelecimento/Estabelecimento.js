@@ -326,7 +326,7 @@ export default function Estabelecimento()
       <SafeAreaView style={styles.container}>
         <KeyboardAvoidingView  behavior={Platform.OS === 'ios' ? 'padding' : null} enabled>
         <ScrollView>
-          <View style={styles.boxLogo}>
+          <View style={[styles.boxLogo, {borderColor: corTema}]}>
             {image != null && image != '' ? (
               <Image source={{ uri: image }} style={styles.imgLogo} />
             ) : (

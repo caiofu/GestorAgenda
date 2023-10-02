@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, TouchableOpacity, ScrollView,  TouchableWithoutFeedback, Keyboard, } from "react-native";
+import { View, Text, SafeAreaView, TouchableOpacity, ScrollView,  TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView } from "react-native";
 import { PaperProvider, Dialog, Portal, Button, TextInput, HelperText } from "react-native-paper";
 import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from "react";
@@ -234,155 +234,157 @@ export default function NovoServico()
     return(
         <PaperProvider >
         <SafeAreaView >
-        <TouchableWithoutFeedback onPress={dismissKeyboard}>
-            <ScrollView >
-          
-                    <View style={{display: 'flex', flexDirection: 'column', flexGrow:1, gap:20, margin:10, }} >
-                    {btnImportar ? 
-                    (  
-                        <>
-                            <SelectList
-                                placeholder="Selecione o ramo de atividade"
-                                searchPlaceholder=""
-
-                                fontFamily="Rubik_400Regular"
-                                boxStyles={styles.inputFormularioSelect}
-                                dropdownStyles={{ alignSelf: 'center', width: '89%' }}
-                                setSelected={(val) => { setRamoAtividadeSelecionado(val); } }
-                                data={listaRamoAtividade}
-                                dropdownTextStyles={{ color: corTema }}
-                                save="value"
-                                arrowicon={<FontAwesome5 name="chevron-down" size={17} color={corTema} />}
-                                searchicon={<FontAwesome5 name="search" size={17} color={corTema} />}
-                                closeicon={<FontAwesome name="close" size={24} color={corTema} />}
-                                // defaultOption={{key:idRamoAtividade,value:ramoAtividade}}
-                                inputStyles={{ color: corTema }} />
-
-                                <MultipleSelectList
-                                    placeholder= {ramoAtividadeSelecionado === ''? 'Nenhum ramo de atividade selecionado' : "Escolha o serviço"}
-                                    searchPlaceholder=""
-                                    fontFamily="Rubik_400Regular"
-                                     boxStyles={styles.inputFormularioSelect}
-                                     dropdownStyles={{ alignSelf: 'center', width: '89%' }}
-                                    dropdownTextStyles={{ color: corTema }}
-                                    arrowicon={<FontAwesome5 name="chevron-down" size={17} color={corTema} />}
-                                    searchicon={<FontAwesome5 name="search" size={17} color={corTema} />}
-                                    closeicon={<FontAwesome name="close" size={24} color={corTema} />}
-                                    inputStyles={{ color: corTema }}
-                                    notFoundText=""
-                                    data={listaServicos}
-                                    save="value"
-                                    //Para evitar erros quando usuario clica na lista vazia
-                                    setSelected={(val) => {
-                                        if (ramoAtividadeSelecionado !== '') {
-                                        setServicoSelecionado(val);
-                                        }
-                                    }}
-                                
-                                    
-                                />
-
-                            
-                                
-                                <TouchableOpacity style={servicoSelecionado.length === 0 ? styles.btnDesabilitado : styles.btn} disabled={servicoSelecionado.length === 0 ? true : false} onPress={BotaoSalvaImportacao}>
-                                    <View style={[styles.btnContainer, {alignSelf:'center'}]}>
-                                        <Text style={styles.btnText}>IMPORTAR</Text>
-                                    </View>
-                                </TouchableOpacity>
-
-                                {/* <TouchableOpacity style={styles.btnCancelar} >
-                                    <View style={[styles.btnContainer, {alignSelf:'center'}]}>
-                                        <Text style={styles.btnText}>CANCELAR</Text>
-                                    </View>
-                                </TouchableOpacity> */}
-                        </>
-                    )  
-                    : btnNovo ? //Botao novo serviço
-                    (
-                        <>
-                            <View>
-                            <View>
-                                <TouchableOpacity onPress={() => setFavorivo(!favorito)}  style={[StyleDetalhesServicos.viewFavoritos, {marginBottom:5,}]} disabled={novoNomeServico !== '' ? false : true}>
-                                
-                                        <FontAwesome name="star" size={22} color={favorito ? '#ffca00' : novoNomeServico !== '' ? 'grey' : '#80808069'}/>
-                                        <Text style={[StyleDetalhesServicos.txtFavoritos, {color: favorito  ? '#ffca00' : novoNomeServico !== '' ? 'grey' : '#80808069'}]}> {favorito ? 'Remover dos favoritos': 'Marcar como favorito'} </Text>
-                                    
-                                </TouchableOpacity>
-                            </View>
-                                {helperNome  ?  <HelperText style={{color:'red', fontStyle:'italic'}}>Nome não pode ser vazio</HelperText>:''}
-                                <TextInput
-                                    ref={refNome}
-                                label="Nome Serviço"
-                                style={styles.inputFormulario}
-                                theme={{
-                                    colors: { primary: helperNome ? 'red' : corTema, onSurfaceVariant:  helperNome ? 'red' : corTema   }
-                                  }}
-                                onChangeText={setNovoNomeServico}
-                                
-                                >
-
-                                </TextInput>
-                                <TextInput 
-                                    label="Descrição" 
-                                    style={styles.inputFormulario}
-                                    theme={{
-                                        colors: { primary:  corTema, onSurfaceVariant: corTema   }
-                                      }}
-                                    onChangeText={setNovaDescricao}
-                                    >
-
-                                </TextInput>
-
-                                <TouchableOpacity style={styles.btn} onPress={CriarServico}>
-                                    <View style={styles.btnContainer}>
-                                        <FontAwesome5 name="plus" size={28} color="#fff" />
-                                        <Text style={styles.btnText}>Criar serviço</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            </View>
-                        </>
-                    )
-                    :
-                    (
+            <KeyboardAvoidingView  behavior={Platform.OS === 'ios' ? 'padding' : null} enabled>
+                <ScrollView>
+                    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+                  
                 
-                        <>
-                            <TouchableOpacity style={styles.btn} onPress={ImportarServico}>
-                                    <View style={styles.btnContainer}>
-                                        <FontAwesome5 name="file-import" size={28} color="#fff" />
-                                        <Text style={styles.btnText}>importar serviço</Text>
-                                    </View>
-                                </TouchableOpacity>
-                                
-                                <TouchableOpacity style={styles.btn} onPress={NovoServico}>
-                                        <View style={styles.btnContainer}>
-                                            <FontAwesome name="plus" size={28} color="#fff" />
-                                            <Text style={styles.btnText}>Criar novo</Text>
-                                        </View>
-                                </TouchableOpacity>
+                            <View style={{display: 'flex', flexDirection: 'column', flexGrow:1, gap:20, margin:10, }} >
+                            {btnImportar ? 
+                            (  
+                                <>
+                                    <SelectList
+                                        placeholder="Selecione o ramo de atividade"
+                                        searchPlaceholder=""
 
-                            
-                        </>
+                                        fontFamily="Rubik_400Regular"
+                                        boxStyles={styles.inputFormularioSelect}
+                                        dropdownStyles={{ alignSelf: 'center', width: '89%' }}
+                                        setSelected={(val) => { setRamoAtividadeSelecionado(val); } }
+                                        data={listaRamoAtividade}
+                                        dropdownTextStyles={{ color: corTema }}
+                                        save="value"
+                                        arrowicon={<FontAwesome5 name="chevron-down" size={17} color={corTema} />}
+                                        searchicon={<FontAwesome5 name="search" size={17} color={corTema} />}
+                                        closeicon={<FontAwesome name="close" size={24} color={corTema} />}
+                                        // defaultOption={{key:idRamoAtividade,value:ramoAtividade}}
+                                        inputStyles={{ color: corTema }} />
+
+                                        <MultipleSelectList
+                                            placeholder= {ramoAtividadeSelecionado === ''? 'Nenhum ramo de atividade selecionado' : "Escolha o serviço"}
+                                            searchPlaceholder=""
+                                            fontFamily="Rubik_400Regular"
+                                            boxStyles={styles.inputFormularioSelect}
+                                            dropdownStyles={{ alignSelf: 'center', width: '89%' }}
+                                            dropdownTextStyles={{ color: corTema }}
+                                            arrowicon={<FontAwesome5 name="chevron-down" size={17} color={corTema} />}
+                                            searchicon={<FontAwesome5 name="search" size={17} color={corTema} />}
+                                            closeicon={<FontAwesome name="close" size={24} color={corTema} />}
+                                            inputStyles={{ color: corTema }}
+                                            notFoundText=""
+                                            data={listaServicos}
+                                            save="value"
+                                            //Para evitar erros quando usuario clica na lista vazia
+                                            setSelected={(val) => {
+                                                if (ramoAtividadeSelecionado !== '') {
+                                                setServicoSelecionado(val);
+                                                }
+                                            }}
+                                        
+                                            
+                                        />
+
+                                    
+                                        
+                                        <TouchableOpacity style={servicoSelecionado.length === 0 ? styles.btnDesabilitado : styles.btn} disabled={servicoSelecionado.length === 0 ? true : false} onPress={BotaoSalvaImportacao}>
+                                            <View style={[styles.btnContainer, {alignSelf:'center'}]}>
+                                                <Text style={styles.btnText}>IMPORTAR</Text>
+                                            </View>
+                                        </TouchableOpacity>
+
+                                        {/* <TouchableOpacity style={styles.btnCancelar} >
+                                            <View style={[styles.btnContainer, {alignSelf:'center'}]}>
+                                                <Text style={styles.btnText}>CANCELAR</Text>
+                                            </View>
+                                        </TouchableOpacity> */}
+                                </>
+                            )  
+                            : btnNovo ? //Botao novo serviço
+                            (
+                                <>
+                                    <View>
+                                    <View>
+                                        <TouchableOpacity onPress={() => setFavorivo(!favorito)}  style={[StyleDetalhesServicos.viewFavoritos, {marginBottom:5,}]} disabled={novoNomeServico !== '' ? false : true}>
+                                        
+                                                <FontAwesome name="star" size={22} color={favorito ? '#ffca00' : novoNomeServico !== '' ? 'grey' : '#80808069'}/>
+                                                <Text style={[StyleDetalhesServicos.txtFavoritos, {color: favorito  ? '#ffca00' : novoNomeServico !== '' ? 'grey' : '#80808069'}]}> {favorito ? 'Remover dos favoritos': 'Marcar como favorito'} </Text>
+                                            
+                                        </TouchableOpacity>
+                                    </View>
+                                        {helperNome  ?  <HelperText style={{color:'red', fontStyle:'italic'}}>Nome não pode ser vazio</HelperText>:''}
+                                        <TextInput
+                                            ref={refNome}
+                                        label="Nome Serviço"
+                                        style={styles.inputFormulario}
+                                        theme={{
+                                            colors: { primary: helperNome ? 'red' : corTema, onSurfaceVariant:  helperNome ? 'red' : corTema   }
+                                        }}
+                                        onChangeText={setNovoNomeServico}
+                                        
+                                        >
+
+                                        </TextInput>
+                                        <TextInput 
+                                            label="Descrição" 
+                                            style={styles.inputFormulario}
+                                            theme={{
+                                                colors: { primary:  corTema, onSurfaceVariant: corTema   }
+                                            }}
+                                            onChangeText={setNovaDescricao}
+                                            >
+
+                                        </TextInput>
+
+                                        <TouchableOpacity style={styles.btn} onPress={CriarServico}>
+                                            <View style={styles.btnContainer}>
+                                                <FontAwesome5 name="plus" size={28} color="#fff" />
+                                                <Text style={styles.btnText}>Criar serviço</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                </>
+                            )
+                            :
+                            (
                         
-                )}
+                                <>
+                                    <TouchableOpacity style={styles.btn} onPress={ImportarServico}>
+                                            <View style={styles.btnContainer}>
+                                                <FontAwesome5 name="file-import" size={28} color="#fff" />
+                                                <Text style={styles.btnText}>importar serviço</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                        
+                                        <TouchableOpacity style={styles.btn} onPress={NovoServico}>
+                                                <View style={styles.btnContainer}>
+                                                    <FontAwesome name="plus" size={28} color="#fff" />
+                                                    <Text style={styles.btnText}>Criar novo</Text>
+                                                </View>
+                                        </TouchableOpacity>
 
-                    {/* Dialogo para quando for salvo com sucesso */}
-                
-                   
-                <Portal>
-                        <Dialog visible={msgAcaoVisivel} dismissable={false}  style={{}}>
-                            <Dialog.Title>{dialogTitulo}</Dialog.Title>
-                            <Dialog.Content>
-                            <Text variant="bodyMedium">{dialogMensagem}</Text>
-                            </Dialog.Content>
-                            <Dialog.Actions>
-                            <Button onPress={() =>EscondeMsgAcao(dialogTipoMensagem)}>Continuar</Button>
-                            </Dialog.Actions>
-                        </Dialog>
-                    </Portal>
-                    </View>
-                
-            </ScrollView>    
-            </TouchableWithoutFeedback>           
+                                    
+                                </>
+                                
+                        )}
+
+                            {/* Dialogo para quando for salvo com sucesso */}
+                        
+                        
+                        <Portal>
+                                <Dialog visible={msgAcaoVisivel} dismissable={false}  style={{}}>
+                                    <Dialog.Title>{dialogTitulo}</Dialog.Title>
+                                    <Dialog.Content>
+                                    <Text variant="bodyMedium">{dialogMensagem}</Text>
+                                    </Dialog.Content>
+                                    <Dialog.Actions>
+                                    <Button onPress={() =>EscondeMsgAcao(dialogTipoMensagem)}>Continuar</Button>
+                                    </Dialog.Actions>
+                                </Dialog>
+                            </Portal>
+                            </View>          
+                    </TouchableWithoutFeedback>
+                </ScrollView>    
+            </KeyboardAvoidingView>           
         </SafeAreaView>
          </PaperProvider>
     )
