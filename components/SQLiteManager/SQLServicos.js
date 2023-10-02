@@ -272,3 +272,24 @@ export function UpdateServicoCustomizadoPorId (idServico, nome, descricao) {
   });
   
 }
+
+export function AtualizarServiçoAtivoPorIdRamoAtividade(idRamoAtividade, callback) {
+  db.transaction((tx) => {
+    tx.executeSql(
+      'UPDATE servicos SET ativo = 1 WHERE idRamoAtividade = ?',
+      [idRamoAtividade],
+      (tx, results) => {
+        console.log('Registros atualizados com sucesso.');
+        if (callback) {
+          callback(null); // Chama o callback sem erros
+        }
+      },
+      (error) => {
+        console.error('Erro ao executar a atualização:', error);
+        if (callback) {
+          callback(error); // Chama o callback com o erro
+        }
+      }
+    );
+  });
+}

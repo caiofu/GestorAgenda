@@ -11,7 +11,8 @@ import { DarkTheme, useNavigation } from "@react-navigation/native";
 
 //BANCO DE DADOS
 import {ConsultaEstabelecimento,  InserirEstabelecimento} from '../SQLiteManager/SQLEstabelecimento';  
-import { ConsultaRamoAtividade } from "../SQLiteManager/SQLRamoAtividade";
+import { ConsultaRamoAtividade, ConsultaRetornaIdRamoAtividade } from "../SQLiteManager/SQLRamoAtividade";
+import { AtualizarServiçoAtivoPorIdRamoAtividade } from "../SQLiteManager/SQLServicos";
 
 //ESTILO
 import styles from './StyleEstabelecimento';
@@ -76,7 +77,7 @@ export default function Estabelecimento()
     useEffect(() => {
       // Obtendo chave correspondente ao valor do ramo de atividade
       const chaveSelecionada = listaRamoAtividade.find(item => item.value === selected)?.key;
-      //console.log("Chave (key) correspondente ao valor de ramo de atividade:", chaveSelecionada);
+      console.log("Chave (key) correspondente ao valor de ramo de atividade:", chaveSelecionada);
       setIdRamoAtividade(chaveSelecionada);
     }, [selected, listaRamoAtividade]); //Esse trecho éa dependencia do useEffect estamos falando para o useEffect fica oberservando as mudanças nesse trecho para alteraças
     
@@ -264,8 +265,27 @@ export default function Estabelecimento()
           nomeEstabelecimento,cnpj,image,ramoAtividade,tipoAcao, idEstabelecimento
         )
           .then((inseridoComSucesso) => {
+            //Insere serviços ao ramo de atividade
+            console.log('nome do ramo -----------> ', ramoAtividade)
+            ConsultaRetornaIdRamoAtividade(ramoAtividade, (idRamoAtividade) => {
+              if (idRamoAtividade !== null) {
+                // O ID do ramo de atividade foi encontrado com sucesso
+                console.log('ID do Ramo de Atividade:', idRamoAtividade);
+                //Ativa os serviços de acordo com o ramo de atividade
+                AtualizarServiçoAtivoPorIdRamoAtividade(idRamoAtividade, (error) =>{
+                  if (error) {
+                    console.error('Erro na atualização:', error);
+                  } else {
+                    console.log('Registros de serviço atualizados com sucesso.');
+                  }
+                })
+              } else {
+                // Ramo de atividade não encontrado ou ocorreu um erro
+                console.error('Ramo de atividade não encontrado ou erro na consulta.');
+              }
+            });
+            
             //Executando a animação
-           
             setAnimacaoSalvando(true)
             if (inseridoComSucesso) {
               // Inserção bem-sucedida
