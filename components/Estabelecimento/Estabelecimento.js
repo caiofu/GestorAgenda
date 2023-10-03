@@ -21,7 +21,7 @@ import lightTheme from '../../Tema/lightTheme';
 
 //CONTEXT
 import { useAppState } from "../Contexts/AppStateContext";
-import { Colors } from "react-native/Libraries/NewAppScreen";
+
 
 
 export default function Estabelecimento()
@@ -266,24 +266,27 @@ export default function Estabelecimento()
         )
           .then((inseridoComSucesso) => {
             //Insere serviços ao ramo de atividade
-            console.log('nome do ramo -----------> ', ramoAtividade)
-            ConsultaRetornaIdRamoAtividade(ramoAtividade, (idRamoAtividade) => {
-              if (idRamoAtividade !== null) {
-                // O ID do ramo de atividade foi encontrado com sucesso
-                console.log('ID do Ramo de Atividade:', idRamoAtividade);
-                //Ativa os serviços de acordo com o ramo de atividade
-                AtualizarServiçoAtivoPorIdRamoAtividade(idRamoAtividade, (error) =>{
-                  if (error) {
-                    console.error('Erro na atualização:', error);
-                  } else {
-                    console.log('Registros de serviço atualizados com sucesso.');
-                  }
-                })
-              } else {
-                // Ramo de atividade não encontrado ou ocorreu um erro
-                console.error('Ramo de atividade não encontrado ou erro na consulta.');
-              }
-            });
+            if(ramoAtividade !== null)
+            {
+              ConsultaRetornaIdRamoAtividade(ramoAtividade, (idRamoAtividade) => {
+                if (idRamoAtividade !== null) {
+                  // O ID do ramo de atividade foi encontrado com sucesso
+                  console.log('ID do Ramo de Atividade:', idRamoAtividade);
+                  //Ativa os serviços de acordo com o ramo de atividade
+                  AtualizarServiçoAtivoPorIdRamoAtividade(idRamoAtividade, (error) =>{
+                    if (error) {
+                      console.error('Erro na atualização:', error);
+                    } else {
+                      console.log('Registros de serviço atualizados com sucesso.');
+                    }
+                  })
+                } else {
+                  // Ramo de atividade não encontrado ou ocorreu um erro
+                  console.error('Ramo de atividade não encontrado ou erro na consulta.');
+                }
+              });
+            }
+            
             
             //Executando a animação
             setAnimacaoSalvando(true)
@@ -323,7 +326,7 @@ export default function Estabelecimento()
       <SafeAreaView style={styles.container}>
         <KeyboardAvoidingView  behavior={Platform.OS === 'ios' ? 'padding' : null} enabled>
         <ScrollView>
-          <View style={styles.boxLogo}>
+          <View style={[styles.boxLogo, {borderColor: corTema}]}>
             {image != null && image != '' ? (
               <Image source={{ uri: image }} style={styles.imgLogo} />
             ) : (
@@ -348,7 +351,8 @@ export default function Estabelecimento()
             onChangeText={setNomeEstabelecimento}
             theme={{
               colors: { primary: msgNomeEstabelecimento ? 'red' : corTema, onSurfaceVariant:  msgNomeEstabelecimento ? 'red' : corTema   }
-            }} value={nomeEstabelecimento}
+            }}
+             value={nomeEstabelecimento}
             style={styles.inputFormulario}
           />
       

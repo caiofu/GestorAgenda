@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     {
         marginLeft:15, 
         marginRight:25, 
-        tintColor:'red',
+       
       
         backgroundColor: 'rgba(112, 120, 147, 0.3)',
     },
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     boxLogo:
     {
         borderWidth:1, 
-        width:"50%", 
+        
         marginBottom:15, 
         marginTop:15,
         paddingRight:6,
@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
         marginLeft:20,
         marginRight:20,
         marginTop:20,
+        marginBottom:20,
         padding:20,
         borderRadius:5
     },

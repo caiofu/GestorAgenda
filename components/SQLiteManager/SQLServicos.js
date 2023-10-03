@@ -194,7 +194,7 @@ export function GetServicosCustomizadosAtivos(callback) {
         callback(servicos); // Chamar a função de callback com o array de serviços
       },
       (error) => {
-        console.log('Erro ao extrair serviços customizados ativos: ' + error);
+        console.log('Erro ao extrair serviços customizados ativos: ');
         callback(null); // Trate o erro e chame a função de callback com null
       }
     );
@@ -215,7 +215,7 @@ export function GetServicosCustomizadosPorId(idServico, callback) {
         callback(servico);
       },
       (error) => {
-        console.log('Erro ao extrair serviço customizado por ID (servicos):' + error + 'id: '+idServico);
+        console.log('Erro ao extrair serviço customizado por ID (servicos):id: '+idServico);
       }
     );
   });
@@ -247,7 +247,7 @@ export function UpdateFavoritoServicoCustomizadoPorId (idServico, favorito) {
         console.log('Serviço atualizado com sucesso (UpdateFavoritoServicoPorId)');
       },
       (error) => {
-        console.log('Erro ao atualizar serviço (UpdateFavoritoServicoPorId):' + error);
+        console.log('Erro ao atualizar serviço (UpdateFavoritoServicoPorId):');
       }
     );
   });

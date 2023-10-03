@@ -1,9 +1,9 @@
-import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, } from "react-native";
+import { View, Text, SafeAreaView, TouchableOpacity, ScrollView,  TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView } from "react-native";
 import { PaperProvider, Dialog, Portal, Button, TextInput, HelperText } from "react-native-paper";
 import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from "react";
 import { SelectList, MultipleSelectList } from "react-native-dropdown-select-list";
-import {  useNavigation } from "@react-navigation/native";
+import { DarkTheme, useNavigation } from "@react-navigation/native";
 
 //STLE
 import styles from "./StyleServicos";
@@ -27,6 +27,10 @@ export default function NovoServico()
     
      //COR DO TEMA
      const [corTema, setCorTema] = useState('#006699');
+     useEffect(()=>{
+  
+        tema === 'light' ? setCorTema('#006699') : setCorTema(DarkTheme.colors.text);
+          },[tema])
 
      //RAMO DE ATIVIDADE
      const [ramoAtividadeSelecionado, setRamoAtividadeSelecionado]          = useState(""); //Usado para seleção da lista
@@ -72,10 +76,10 @@ export default function NovoServico()
      //const hideDialogImport = () => { setImportMensagemVisible(false);   navigation.navigate('Serviços'); setAtualisaListaServico(true)};
 
      //CONTROLA O TEMA
-      useEffect(()=>{
+    //   useEffect(()=>{
    
-       tema === 'light' ? setCorTema('#006699') : setCorTema(DarkTheme.colors.text);
-         },[tema])
+    //    tema === 'light' ? setCorTema('#006699') : setCorTema(DarkTheme.colors.text);
+    //      },[tema])
 
   //IMPORTAÇÃO
 
@@ -134,10 +138,7 @@ export default function NovoServico()
     function BotaoSalvaImportacao() {
         let chamadasBemSucedidas = 0; 
         const totalChamadas = servicoSelecionado.length;
-       
-        // Crie uma matriz para armazenar os ids correspondentes aos nomes dos serviços selecionados
-        //const idsSelecionados = [];
-      
+  
         // Para cada serviço selecionado, encontre o id correspondente na listaServicos
         servicoSelecionado.forEach((servicoSelecionado) => {
           const servicoEncontrado = listaServicos.find((item) => item.value === servicoSelecionado);
@@ -166,11 +167,7 @@ export default function NovoServico()
          
           }
         });
-      
-     
-      
-        // Agora, 'idsSelecionados' contém os ids correspondentes aos nomes dos serviços selecionados
-        console.log('Ids dos serviços selecionados:', );
+  
       }
    
     //NOVO SERVIÇO
@@ -220,154 +217,166 @@ export default function NovoServico()
         }
         
     }
-    ListaTodasTabelas();
-    console.log('nome ', novoNomeServico)
-
+   
+     // Função para fechar o teclado quando tocar fora do campo de entrada
+     const dismissKeyboard = () => {
+        Keyboard.dismiss();
+    };
     
     return(
-        <PaperProvider>
-        <SafeAreaView>
-        <ScrollView>
-            <View style={{display: 'flex', flexDirection: 'column', flexGrow:1, gap:20, margin:10}} >
-             {btnImportar ? 
-             (  
-                <>
-                    <SelectList
-                        placeholder="Selecione o ramo de atividade"
-                        searchPlaceholder=""
-
-                        fontFamily="Rubik_400Regular"
-                        boxStyles={styles.inputFormularioSelect}
-                        dropdownStyles={{ alignSelf: 'center', width: '89%' }}
-                        setSelected={(val) => { setRamoAtividadeSelecionado(val); } }
-                        data={listaRamoAtividade}
-                        dropdownTextStyles={{ color: corTema }}
-                        save="value"
-                        arrowicon={<FontAwesome5 name="chevron-down" size={17} color={corTema} />}
-                        searchicon={<FontAwesome5 name="search" size={17} color={corTema} />}
-                        closeicon={<FontAwesome name="close" size={24} color={corTema} />}
-                        // defaultOption={{key:idRamoAtividade,value:ramoAtividade}}
-                        inputStyles={{ color: corTema }} />
-
-                        <MultipleSelectList
-                            placeholder= {ramoAtividadeSelecionado === ''? 'Nenhum ramo de atividade selecionado' : "Escolha o serviço"}
-                            searchPlaceholder=""
-                            
-                            data={listaServicos}
-                            save="value"
-                            //Para evitar erros quando usuario clica na lista vazia
-                            setSelected={(val) => {
-                                if (ramoAtividadeSelecionado !== '') {
-                                  setServicoSelecionado(val);
-                                }
-                              }}
-                           
-                            
-                        />
-
-                       
-                        
-                        <TouchableOpacity style={servicoSelecionado.length === 0 ? styles.btnDesabilitado : styles.btn} disabled={servicoSelecionado.length === 0 ? true : false} onPress={BotaoSalvaImportacao}>
-                            <View style={[styles.btnContainer, {alignSelf:'center'}]}>
-                                <Text style={styles.btnText}>IMPORTAR</Text>
-                            </View>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.btnCancelar} disabled={true}>
-                            <View style={[styles.btnContainer, {alignSelf:'center'}]}>
-                                <Text style={styles.btnText}>CANCELAR</Text>
-                            </View>
-                        </TouchableOpacity>
-                </>
-             )  
-             : btnNovo ? //Botao novo serviço
-             (
-                <>
-                    <View>
-                    <View>
-                        <TouchableOpacity onPress={() => setFavorivo(!favorito)}>
-                            <View style={StyleDetalhesServicos.viewFavoritos}>
-                                <FontAwesome name="star" size={22} color={favorito ? '#ffca00' : 'grey'}/>
-                                <Text style={[StyleDetalhesServicos.txtFavoritos, {color: favorito  ? '#ffca00' : 'grey'}]}> {favorito ? 'Remover dos favoritos': 'Marcar como favorito'} </Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                        {helperNome  ?  <HelperText style={{color:'red', fontStyle:'italic'}}>Nome não pode ser vazio</HelperText>:''}
-                        <TextInput
-                            ref={refNome}
-                          label="Nome Serviço"
-                          style={styles.inputFormulario}
-                          onChangeText={setNovoNomeServico}
-                         
-                        >
-
-                        </TextInput>
-                        <TextInput 
-                            label="Descrição" 
-                            style={styles.inputFormulario}
-                            onChangeText={setNovaDescricao}
-                            >
-
-                        </TextInput>
-
-                        <TouchableOpacity style={styles.btn} onPress={CriarServico}>
-                            <View style={styles.btnContainer}>
-                                <FontAwesome5 name="plus" size={28} color="#fff" />
-                                <Text style={styles.btnText}>Criar serviço</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                </>
-             )
-             :
-             (
-           
-                <>
-                    <TouchableOpacity style={styles.btn} onPress={ImportarServico}>
-                            <View style={styles.btnContainer}>
-                                <FontAwesome5 name="file-import" size={28} color="#fff" />
-                                <Text style={styles.btnText}>importar serviço</Text>
-                            </View>
-                        </TouchableOpacity>
-                        
-                        <TouchableOpacity style={styles.btn} onPress={NovoServico}>
-                                <View style={styles.btnContainer}>
-                                    <FontAwesome name="plus" size={28} color="#fff" />
-                                    <Text style={styles.btnText}>Criar novo</Text>
-                                </View>
-                        </TouchableOpacity>
-
-                       
-                </>
+        <PaperProvider >
+        <SafeAreaView >
+            <KeyboardAvoidingView  behavior={Platform.OS === 'ios' ? 'padding' : null} enabled>
+                <ScrollView>
+                    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+                  
                 
-           )}
+                            <View style={{display: 'flex', flexDirection: 'column', flexGrow:1, gap:20, margin:10, }} >
+                            {btnImportar ? 
+                            (  
+                                <>
+                                    <SelectList
+                                        placeholder="Selecione o ramo de atividade"
+                                        searchPlaceholder=""
 
-            {/* Dialogo para quando for salvo com sucesso */}
-          
-            {/* <Portal>
-                <Dialog visible={importMensagemVisible} dismissable={false}  style={{}}>
-                    <Dialog.Title>Sucesso!</Dialog.Title>
-                    <Dialog.Content>
-                    <Text variant="bodyMedium">Serviço importado</Text>
-                    </Dialog.Content>
-                    <Dialog.Actions>
-                    <Button onPress={hideDialogImport}>Continuar</Button>
-                    </Dialog.Actions>
-                </Dialog>
-            </Portal> */}
-           <Portal>
-                <Dialog visible={msgAcaoVisivel} dismissable={false}  style={{}}>
-                    <Dialog.Title>{dialogTitulo}</Dialog.Title>
-                    <Dialog.Content>
-                    <Text variant="bodyMedium">{dialogMensagem}</Text>
-                    </Dialog.Content>
-                    <Dialog.Actions>
-                    <Button onPress={() =>EscondeMsgAcao(dialogTipoMensagem)}>Continuar</Button>
-                    </Dialog.Actions>
-                </Dialog>
-            </Portal>
-            </View>
-            </ScrollView>               
+                                        fontFamily="Rubik_400Regular"
+                                        boxStyles={styles.inputFormularioSelect}
+                                        dropdownStyles={{ alignSelf: 'center', width: '89%' }}
+                                        setSelected={(val) => { setRamoAtividadeSelecionado(val); } }
+                                        data={listaRamoAtividade}
+                                        dropdownTextStyles={{ color: corTema }}
+                                        save="value"
+                                        arrowicon={<FontAwesome5 name="chevron-down" size={17} color={corTema} />}
+                                        searchicon={<FontAwesome5 name="search" size={17} color={corTema} />}
+                                        closeicon={<FontAwesome name="close" size={24} color={corTema} />}
+                                        // defaultOption={{key:idRamoAtividade,value:ramoAtividade}}
+                                        inputStyles={{ color: corTema }} />
+
+                                        <MultipleSelectList
+                                            placeholder= {ramoAtividadeSelecionado === ''? 'Nenhum ramo de atividade selecionado' : "Escolha o serviço"}
+                                            searchPlaceholder=""
+                                            fontFamily="Rubik_400Regular"
+                                            boxStyles={styles.inputFormularioSelect}
+                                            dropdownStyles={{ alignSelf: 'center', width: '89%' }}
+                                            dropdownTextStyles={{ color: corTema }}
+                                            arrowicon={<FontAwesome5 name="chevron-down" size={17} color={corTema} />}
+                                            searchicon={<FontAwesome5 name="search" size={17} color={corTema} />}
+                                            closeicon={<FontAwesome name="close" size={24} color={corTema} />}
+                                            inputStyles={{ color: corTema }}
+                                            notFoundText=""
+                                            data={listaServicos}
+                                            save="value"
+                                            //Para evitar erros quando usuario clica na lista vazia
+                                            setSelected={(val) => {
+                                                if (ramoAtividadeSelecionado !== '') {
+                                                setServicoSelecionado(val);
+                                                }
+                                            }}
+                                        
+                                            
+                                        />
+
+                                    
+                                        
+                                        <TouchableOpacity style={servicoSelecionado.length === 0 ? styles.btnDesabilitado : styles.btn} disabled={servicoSelecionado.length === 0 ? true : false} onPress={BotaoSalvaImportacao}>
+                                            <View style={[styles.btnContainer, {alignSelf:'center'}]}>
+                                                <Text style={styles.btnText}>IMPORTAR</Text>
+                                            </View>
+                                        </TouchableOpacity>
+
+                                        {/* <TouchableOpacity style={styles.btnCancelar} >
+                                            <View style={[styles.btnContainer, {alignSelf:'center'}]}>
+                                                <Text style={styles.btnText}>CANCELAR</Text>
+                                            </View>
+                                        </TouchableOpacity> */}
+                                </>
+                            )  
+                            : btnNovo ? //Botao novo serviço
+                            (
+                                <>
+                                    <View>
+                                    <View>
+                                        <TouchableOpacity onPress={() => setFavorivo(!favorito)}  style={[StyleDetalhesServicos.viewFavoritos, {marginBottom:5,}]} disabled={novoNomeServico !== '' ? false : true}>
+                                        
+                                                <FontAwesome name="star" size={22} color={favorito ? '#ffca00' : novoNomeServico !== '' ? 'grey' : '#80808069'}/>
+                                                <Text style={[StyleDetalhesServicos.txtFavoritos, {color: favorito  ? '#ffca00' : novoNomeServico !== '' ? 'grey' : '#80808069'}]}> {favorito ? 'Remover dos favoritos': 'Marcar como favorito'} </Text>
+                                            
+                                        </TouchableOpacity>
+                                    </View>
+                                        {helperNome  ?  <HelperText style={{color:'red', fontStyle:'italic'}}>Nome não pode ser vazio</HelperText>:''}
+                                        <TextInput
+                                            ref={refNome}
+                                        label="Nome Serviço"
+                                        style={styles.inputFormulario}
+                                        theme={{
+                                            colors: { primary: helperNome ? 'red' : corTema, onSurfaceVariant:  helperNome ? 'red' : corTema   }
+                                        }}
+                                        onChangeText={setNovoNomeServico}
+                                        
+                                        >
+
+                                        </TextInput>
+                                        <TextInput 
+                                            label="Descrição" 
+                                            style={styles.inputFormulario}
+                                            theme={{
+                                                colors: { primary:  corTema, onSurfaceVariant: corTema   }
+                                            }}
+                                            onChangeText={setNovaDescricao}
+                                            >
+
+                                        </TextInput>
+
+                                        <TouchableOpacity style={styles.btn} onPress={CriarServico}>
+                                            <View style={[styles.btnContainer, {alignSelf:'center'}]}>
+                                                {/* <FontAwesome5 name="plus" size={28} color="#fff" /> */}
+                                                <Text style={styles.btnTextNovoServico}>SALVAR </Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                </>
+                            )
+                            :
+                            (
+                        
+                                <>
+                                    <TouchableOpacity style={styles.btn} onPress={ImportarServico}>
+                                            <View style={styles.btnContainer}>
+                                                <FontAwesome5 name="file-import" size={28} color="#fff" />
+                                                <Text style={styles.btnText}>importar serviço</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                        
+                                        <TouchableOpacity style={styles.btn} onPress={NovoServico}>
+                                                <View style={styles.btnContainer}>
+                                                    <FontAwesome name="plus" size={28} color="#fff" />
+                                                    <Text style={styles.btnText}>Criar novo</Text>
+                                                </View>
+                                        </TouchableOpacity>
+
+                                    
+                                </>
+                                
+                        )}
+
+                            {/* Dialogo para quando for salvo com sucesso */}
+                        
+                        
+                        <Portal>
+                                <Dialog visible={msgAcaoVisivel} dismissable={false}  style={tema === 'light' ? styles.dialogLight : styles.dialogDark}>
+                                    <Dialog.Title style={[styles.dialogTitulo, {color: corTema}]}>{dialogTitulo}</Dialog.Title>
+                                    <Dialog.Content >
+                                    <Text variant="bodyMedium" style={[styles.dialogContent, {color: tema === 'light' ? 'black' : "#fff"}]}>{dialogMensagem}</Text>
+                                    </Dialog.Content>
+                                    <Dialog.Actions>
+                                    <Button labelStyle={{fontFamily:'Rubik_700Bold', color: tema === 'light' ? '#006699' : '#fff'}} onPress={() =>EscondeMsgAcao(dialogTipoMensagem)}>Continuar</Button>
+                                    </Dialog.Actions>
+                                </Dialog>
+                            </Portal>
+                            </View>          
+                    </TouchableWithoutFeedback>
+                </ScrollView>    
+            </KeyboardAvoidingView>           
         </SafeAreaView>
          </PaperProvider>
     )

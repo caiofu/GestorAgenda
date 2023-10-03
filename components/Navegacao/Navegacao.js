@@ -71,17 +71,23 @@ function PrimeiroCadastroEstabelecimento() {
 export default function Navegacao()
 {
  
-    const {navegacaoEstabelecimento, setNavegacaoEstabelecimento, tema, setTema} = useAppState();
+    const {navegacaoEstabelecimento, setNavegacaoEstabelecimento, tema, setTema ,temaPadraoSistema, setTemaPadraoSistema} = useAppState();
     const temaSistema = useColorScheme();
     //Tema (Provavel que tenha validar antes no boas vindas e no wizard caso seja o primeiro uso)
     
          // Use useEffect para executar as operações de tema uma vez após a renderização.
-  useEffect(() => {  
-    // Chame suas funções relacionadas ao tema aqui, após a renderização.
-    SalvaTema(tema === null ? temaSistema : tema);
- 
-   
-  }, [tema]);
+  //VERIFICA SE TEMA PADRAO DO SISTEMA TA AVIDO
+  
+    useEffect(() => {  
+        if(!temaPadraoSistema)
+        {
+            // Chame suas funções relacionadas ao tema aqui, após a renderização.
+            SalvaTema(tema === null ? temaSistema : tema);
+        }
+       
+      }, [tema]);
+      
+  
         
    
     return(

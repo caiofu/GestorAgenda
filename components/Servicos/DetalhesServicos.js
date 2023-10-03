@@ -1,5 +1,5 @@
-import { SafeAreaView, TouchableOpacity, View } from "react-native";
-import { Text, Button, TextInput,PaperProvider, Portal, Dialog, Tooltip } from 'react-native-paper';
+import { SafeAreaView, TouchableOpacity, View, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, ScrollView } from "react-native";
+import { Text, Button, TextInput,PaperProvider, Portal, Dialog } from 'react-native-paper';
 
 import { StatusBar } from "expo-status-bar";
 import { GetServicosPorRamo, GetServicosPorId, UpdateAtivoServicoPorId, UpdateServicoPorId, UpdateFavoritoServicoPorId, GetServicosCustomizadosPorId,UpdateServicoCustomizadoPorId , UpdateAtivoServicoCustomizadoPorId, UpdateFavoritoServicoCustomizadoPorId } from "../SQLiteManager/SQLServicos";
@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import StyleDetalhesServicos from './StyleDetalhesServicos';
 import styles from "./StyleServicos";
-import {  useNavigation } from "@react-navigation/native";
+import { DarkTheme, useNavigation } from "@react-navigation/native";
 //CONTEXT
 import { useAppState } from "../Contexts/AppStateContext";
 
@@ -25,6 +25,7 @@ export default function DetalhesServicos(props) {
     // Acesse o valor do idServico por meio de props.route.params
     const idServico = props.route.params.id;
     const tipoServico = props.route.params.tipoServico;
+    
 
     const [servico, setServico] = useState({});
     const [iconeEstrela, setIconeEstrela] = useState('star-outline');
@@ -54,10 +55,20 @@ export default function DetalhesServicos(props) {
 
     //TEMA
     const [corTema, setCorTema] = useState('#006699');
+    const [corTemaTexto, setCorTemaTexto]  = useState('#595a67')
 
     useEffect(()=>{
- 
-     tema === 'light' ? setCorTema('#006699') : setCorTema(DarkTheme.colors.text);
+        if( tema === 'light')
+        {   
+            setCorTema('#006699');
+            setCorTemaTexto('#595a67');
+        }
+        else
+        {
+            setCorTema(DarkTheme.colors.text);
+            setCorTemaTexto(DarkTheme.colors.text);
+        }
+   
        },[tema])
 
     //MENSAGEM INPUT (RESPONSAVEL POR DEIXAR VERMELHO CASO O CAMPO NAO PASSAR PELA VALIDAÇÃO)
@@ -86,7 +97,7 @@ export default function DetalhesServicos(props) {
     }, [atulizaListaServico])
 
     function atualizarServicoState(dado) {
-        console.log('Dado: ' + dado.descricao);
+   
         setServico(dado);
     }
 
@@ -209,71 +220,81 @@ export default function DetalhesServicos(props) {
       
     }
 
+      // Função para fechar o teclado quando tocar fora do campo de entrada
+        const dismissKeyboard = () => {
+            Keyboard.dismiss();
+        };
     return (
         <PaperProvider>
             <SafeAreaView style={StyleDetalhesServicos.container}>
-                <View style={StyleDetalhesServicos.dadosDiv}>
-                    <View>
-                        <TouchableOpacity onPress={atualizarFavoritoBanco}>
-                            <View style={StyleDetalhesServicos.viewFavoritos}>
-                                <FontAwesome name="star" size={22} color={servico.favorito  === 1 ? '#ffca00' : 'grey'}/>
-                                <Text style={[StyleDetalhesServicos.txtFavoritos, {color: servico.favorito === 1 ? '#ffca00' : 'grey'}]}> {servico.favorito === 1 ? 'Remover dos favoritos': 'Marcar como favorito'} </Text>
+                <ScrollView>
+                    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+                        <KeyboardAvoidingView  behavior={Platform.OS === 'ios' ? 'padding' : null} enabled>
+                            <View style={StyleDetalhesServicos.dadosDiv}>
+                                <View>
+
+                                        <TouchableOpacity onPress={atualizarFavoritoBanco} style={StyleDetalhesServicos.viewFavoritos} disabled={servico.nomeServico !== '' ? false : true}>
+                                            <FontAwesome name="star" size={22} color={servico.favorito  === 1 ? '#ffca00' : servico.nomeServico !== '' ? 'grey' : '#80808069' }/>
+                                            <Text style={[StyleDetalhesServicos.txtFavoritos, {color: servico.favorito === 1 ? '#ffca00' : servico.nomeServico !== '' ? 'grey' : '#80808069' }]}> {servico.favorito === 1 ? 'Remover dos favoritos': 'Marcar como favorito'} </Text>
+                                            </TouchableOpacity>
+                                </View>
+                                {/* <Text variant="titleLarge" style={{ color: 'gray' }}>Nome:</Text> */}
+                                <TextInput
+                                    label="Nome"
+                                    value={servico.nomeServico}
+                                    style={styles.inputFormulario}
+                                    textColor={corTemaTexto}
+                                    theme={{
+                                        colors: { primary: msgNomeServico ? 'red' : corTema, onSurfaceVariant:  msgNomeServico ? 'red' : corTema   }
+                                    }}
+                                    onChangeText={(text) => atualizarServicoState({ ...servico, nomeServico: text })}
+                                />
+                                {/* <Text variant="titleLarge" style={{ color: 'gray' }}>Descrição:</Text> */}
+                                <TextInput
+                                    label="Descrição"
+                                    value={servico.descricao}
+                                    style={styles.inputFormulario}
+                                    textColor={corTemaTexto}
+                                    theme={{
+                                        colors: { primary: corTema, onSurfaceVariant:  corTema   },
+                                    
+                                    }}
+                                    onChangeText={(text) => atualizarServicoState({ ...servico, descricao: text })}
+                                    multiline={true}
+                                />
                             </View>
-                        </TouchableOpacity>
-                    </View>
-                    {/* <Text variant="titleLarge" style={{ color: 'gray' }}>Nome:</Text> */}
-                    <TextInput
-                        label="Nome"
-                        value={servico.nomeServico}
-                        style={styles.inputFormulario}
-                        theme={{
-                            colors: { primary: msgNomeServico ? 'red' : corTema, onSurfaceVariant:  msgNomeServico ? 'red' : corTema   }
-                          }}
-                        onChangeText={(text) => atualizarServicoState({ ...servico, nomeServico: text })}
-                    />
-                    {/* <Text variant="titleLarge" style={{ color: 'gray' }}>Descrição:</Text> */}
-                    <TextInput
-                        label="Descrição"
-                        value={servico.descricao}
-                        style={styles.inputFormulario}
-                        textColor="#595a67"
-                        theme={{
-                            colors: {  corTema, onSurfaceVariant:  corTema   },
-                         
-                          }}
-                        onChangeText={(text) => atualizarServicoState({ ...servico, descricao: text })}
-                        multiline={true}
-                    />
-                </View>
 
-                <View style={StyleDetalhesServicos.viewBotoesAcao}>
-                    {/* <Button buttonColor="red" mode="contained"  >
-                        
-                    </Button> */}
-                    <TouchableOpacity onPress={inativarServico} style={[StyleDetalhesServicos.btnAcao,{backgroundColor:'red'}]}>
-                        <Text style={StyleDetalhesServicos.btnAcaoText}>Remover serviço</Text>
-                    </TouchableOpacity>
+                            <View style={StyleDetalhesServicos.viewBotoesAcao}>
+                                {/* <Button buttonColor="red" mode="contained"  >
+                                    
+                                </Button> */}
+                                <TouchableOpacity onPress={inativarServico} style={[StyleDetalhesServicos.btnAcao,{backgroundColor:'red'}]}>
+                                    <Text style={StyleDetalhesServicos.btnAcaoText}>Remover serviço</Text>
+                                </TouchableOpacity>
 
-                    <TouchableOpacity onPress={atualizarServicoBanco} style={StyleDetalhesServicos.btnAcao}>
-                        <Text style={StyleDetalhesServicos.btnAcaoText}>Salvar</Text>
-                    </TouchableOpacity>
+                                <TouchableOpacity onPress={atualizarServicoBanco} style={StyleDetalhesServicos.btnAcao}>
+                                    <Text style={StyleDetalhesServicos.btnAcaoText}>Salvar</Text>
+                                </TouchableOpacity>
 
+                                
+                            </View>
+
+                            {/* Dialogo para quando serviço for removido */}
                     
-                </View>
-
-                  {/* Dialogo para quando serviço for removido */}
-          
-            <Portal>
-                <Dialog visible={msgAcaoVisivel} dismissable={false}  style={{}}>
-                    <Dialog.Title>{dialogTitulo}</Dialog.Title>
-                    <Dialog.Content>
-                    <Text variant="bodyMedium">{dialogMensagem}</Text>
-                    </Dialog.Content>
-                    <Dialog.Actions>
-                    <Button onPress={() =>EscondeMsgAcao(dialogTipoMensagem)}>Continuar</Button>
-                    </Dialog.Actions>
-                </Dialog>
-            </Portal>
+                        <Portal>
+                            <Dialog visible={msgAcaoVisivel} dismissable={false}  style={tema === 'light' ? styles.dialogLight : styles.dialogDark}>
+                                <Dialog.Title style={[styles.dialogTitulo, {color: corTema}]}>{dialogTitulo}</Dialog.Title>
+                                <Dialog.Content>
+                                <Text variant="bodyMedium" style={[styles.dialogContent, {color: tema === 'light' ? 'black' : "#fff"}]}>{dialogMensagem}</Text>
+                                </Dialog.Content>
+                                <Dialog.Actions>
+                                <Button labelStyle={{fontFamily:'Rubik_700Bold', color: tema === 'light' ? '#006699' : '#fff'}} onPress={() =>EscondeMsgAcao(dialogTipoMensagem)}>Continuar</Button>
+                                </Dialog.Actions>
+                            </Dialog>
+                        </Portal>
+                        </KeyboardAvoidingView>
+                    </TouchableWithoutFeedback>
+                </ScrollView>
             </SafeAreaView>
         </PaperProvider>
     )

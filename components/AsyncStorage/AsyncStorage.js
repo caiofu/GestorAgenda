@@ -92,6 +92,17 @@ export async function VerificaTema()
     return error;
   }
 }
+
+export async function RemoveTemaAsync() {
+  try {
+    await AsyncStorage.removeItem('temaAtual');
+    console.log('Valor do temaAtual removido com sucesso.');
+  } catch (error) {
+    console.log('Erro ao remover valor do temaAtual:', error);
+  }
+}
+
+
 export const removerAsyncStorage = async () => {
     try {
       await AsyncStorage.clear()

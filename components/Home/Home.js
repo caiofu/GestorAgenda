@@ -25,8 +25,10 @@ export default function Home({ navigation }) {
   })
 
   return (
-    <SafeAreaView style={{ margin: 10, display:'flex', flexDirection:'row' , display: 'flex', flexDirection:'row'}}>
-      <TouchableOpacity style={styles.homeContainer} onPress={() => navigation.navigate('Estabelecimento')}>
+    <SafeAreaView  style={styles.homeContainer}>
+
+      {/* ESTABELECIMENTO */}
+      <TouchableOpacity onPress={() => navigation.navigate('Estabelecimento')}>
         <View style={styles.boxBotao}>
           <View style={styles.iconeBotao}>
             <FontAwesome5 style={styles.iconeBotao} name="store" size={34} color='#ffffff' />
@@ -34,18 +36,20 @@ export default function Home({ navigation }) {
           </View>
         </View>
       </TouchableOpacity>
+      
 
-      <TouchableOpacity style={styles.homeContainer} onPress={() => navigation.navigate('Serviços')}>
+      {/* SERVIÇO */}
+      <TouchableOpacity  onPress={() => navigation.navigate('Serviços')}>
         <View style={styles.boxBotao}>
           <View style={styles.iconeBotao}>
-            <FontAwesome5 style={styles.iconeBotao} name="store" size={34} color='#ffffff' />
+            <FontAwesome5 style={styles.iconeBotao} name="clipboard-list" size={34} color='#ffffff'/>
             <Text style={styles.txtBotao}>Serviços</Text>
           </View>
         </View>
       </TouchableOpacity>
 
-
-      <TouchableOpacity style={styles.homeContainer} onPress={() => navigation.navigate('Colaboradores')}>
+        {/* COLABORADORES */}
+      <TouchableOpacity onPress={() => navigation.navigate('Colaboradores')}>
         <View style={styles.boxBotao}>
           <View style={styles.iconeBotao}>
             <FontAwesome5 style={styles.iconeBotao} name="house-user" size={34} color='#ffffff' />
