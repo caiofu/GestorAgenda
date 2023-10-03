@@ -4,8 +4,10 @@ const styles = StyleSheet.create({
     switchContainer: {
         flexDirection: "row",
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
+        
       },
+      
       switch: {
         marginLeft: 10,
       
@@ -13,6 +15,14 @@ const styles = StyleSheet.create({
       txtSwitchTema:
       {
         fontFamily:'Rubik_700Bold'
+      },
+
+      CheckboxContainer:
+      {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+       
       }
 });
 export default styles;

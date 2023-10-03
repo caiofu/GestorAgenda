@@ -15,7 +15,7 @@ export default function BoasVindas({atualizaBoasVindas}) {
 
     //CARREGANDO O TEMA A PRIMEIRA VEZ.
     const { tema, setTema} = useAppState();
-    console.log('tema boas vindas ---->', tema)
+   
     const temaSistema = useColorScheme();
     
     useEffect(() => {

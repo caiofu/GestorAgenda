@@ -15,6 +15,7 @@ export const AppStateProvider = ({ children }) => {
   //RESPONSAVEL PELO TEMA
   const [tema, setTema] = useState(null);
   const temaSistema  = useColorScheme();
+  const [temaPadraoSistema, setTemaPadraoSistema] = useState(false);
 
   useEffect(() => {
     async function carregaTema(){ //Usamos dentro de uma função async para poder espera o resultado de VerificaTema
@@ -40,7 +41,7 @@ export const AppStateProvider = ({ children }) => {
   //RESPONSAVEL PELO FAVORITOS DE SERVIÇOS
   const [atualizaFavoritos, setAtulizaFavoritos] = useState(false);
   return (
-    <AppStateContext.Provider value={{ navegacaoEstabelecimento, setNavegacaoEstabelecimento, tema, MudarTema, setTema, atulizaListaServico, setAtualisaListaServico, atualizaFavoritos, setAtulizaFavoritos}}>
+    <AppStateContext.Provider value={{ navegacaoEstabelecimento, setNavegacaoEstabelecimento, tema, MudarTema, setTema, atulizaListaServico, setAtualisaListaServico, atualizaFavoritos, setAtulizaFavoritos, temaPadraoSistema, setTemaPadraoSistema}}>
       {children}
     </AppStateContext.Provider>
    );
