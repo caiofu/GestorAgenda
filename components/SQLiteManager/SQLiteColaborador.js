@@ -66,7 +66,7 @@ export function UpdateColaboradorPorId(idColaborador, nome, funcao, callback){
       'UPDATE colaborador SET nomeColaborador = ?, descricao = ? WHERE idColaborador = ?',
       [nome, funcao, idColaborador],
       (tx, results) => {
-        console.log('Serviço atualizado com sucesso (UpdateColaboradorporId)');
+        console.log('Colaborador atualizado com sucesso (UpdateColaboradorporId)');
         callback(true);
       },
       (error) => {

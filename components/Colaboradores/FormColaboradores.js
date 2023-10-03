@@ -3,7 +3,7 @@ import { Text, View, SafeAreaView, FlatList, StyleSheet, TouchableOpacity } from
 import { TextInput, List } from 'react-native-paper'
 import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
 import { MultipleSelectList } from "react-native-dropdown-select-list";
-import { GetServicosEstabelecimento } from '../SQLiteManager/SQLServicoColaborador';
+import { GetServicosEstabelecimento, GetServicosColaborador, FavoritarServicoColaborador } from '../SQLiteManager/SQLServicoColaborador';
 import { CriaNovoColaborador, UpdateColaboradorPorId } from '../SQLiteManager/SQLiteColaborador';
 
 
@@ -28,6 +28,9 @@ export default function FormColaboradores(props) {
                 setNome(colaborador.nomeColaborador);
                 setFuncao(colaborador.descricao);
                 setEdicaoCadastro(true);
+                GetServicosColaborador(idColaborador, (servicosColaboradorArray)=>{
+                    setListaServicosPreferidos(servicosColaboradorArray);
+                })  
             }
             else {
                 setNome('');
@@ -40,6 +43,7 @@ export default function FormColaboradores(props) {
     //BUSCA SERVIÇOS VINCULADOS AO ESTABELECIMENTO
     useEffect(() => {
         GetServicosEstabelecimento(
+          props.route.params.colaborador ? props.route.params.colaborador.idColaborador : null,
           (servicosArray) => {
             setListaServicosEstabelecimento(servicosArray);
             setErro(null); // Limpar erro, se houver
@@ -101,11 +105,48 @@ export default function FormColaboradores(props) {
         else
         {
              // setHelperNome(false);
-       
+             
+             
              UpdateColaboradorPorId(idColaborador, nome, funcao, (sucesso) => {
                 if (sucesso) {
                 // A inserção foi bem-sucedida
-                console.log('Atualização bem sucedida');
+                console.log('Atualização bem sucedida - dados mestre');
+                console.log(listaServicosSelecionados);
+
+                let chamadasBemSucedidas = 0;
+                const totalChamadas = listaServicosSelecionados.length;
+
+                listaServicosSelecionados.forEach((servicoSelecionado) => {
+                    const servico = listaServicosEstabelecimento.find((item)=>item.value === servicoSelecionado);
+                if(servico){
+                    console.log("Informações do servico:");
+                    console.log(servico);
+                    FavoritarServicoColaborador(idColaborador, servico.key, servico.value, (sucesso)=>{
+                        console.log('entrou nessa misera');
+                        if(sucesso){
+                            console.log(chamadasBemSucedidas);
+                            chamadasBemSucedidas++;
+                        }
+                        else{
+                            console.log("arrombado");
+                        }
+                        console.log('contador', chamadasBemSucedidas + 'total ', listaServicosSelecionados.length)
+                        if(chamadasBemSucedidas === totalChamadas){
+                            console.log('serviço favoritado!');
+                        }
+                    }
+                    )
+                }
+                   
+                });
+                // FavoritarServicosColaborador(idColaborador, listaServicosSelecionados, (sucesso) => {
+                //     if(sucesso){
+                //         console.log("Serviços favoritados");
+                //     }
+                //     else{
+                //         console.log('Falha ao vincular serviços');
+                //     }
+                // });
                 // setDialogTitulo('Sucesso');
                 // setDialogMensagem('Serviço criado!')
                 // setDialogTelaRetorno('Novo Serviço')
@@ -126,6 +167,14 @@ export default function FormColaboradores(props) {
         }
     }
 
+    function ServicoColaboradorItem(item){
+        return (
+            <List.Item
+              style={{margin:10}} // alterar para colocar mais estilo nisso aqui, agr to sem ideia
+              title={item.value}
+            />
+          )
+    }
 
     return(
         <SafeAreaView>
@@ -173,9 +222,9 @@ export default function FormColaboradores(props) {
                         : 
                         <FlatList
                             data={listaServicosPreferidos}
-                            keyExtractor={(item) => item.idServico.toString()}
+                            keyExtractor={(item) => item.key.toString()}
                             renderItem={({ item }) => (
-                            <Text>teste</Text>
+                                ServicoColaboradorItem(item)
                             )}
                         /> }
                         
@@ -189,6 +238,7 @@ export default function FormColaboradores(props) {
 
                 {/* PERMITIR VINCULAR MAIS SERVIÇOS QUE ESTEJAM ASSOCIADOS AO ESTABELECIMENTO */}
                 {/* --------------------------------------------------- */}
+                
                 <MultipleSelectList
                     placeholder= {listaServicosEstabelecimento.length === 0 ? "Sem serviços para favoritar": "Favoritar serviços ao colaborador" }
                     searchPlaceholder=""
@@ -205,6 +255,7 @@ export default function FormColaboradores(props) {
                         }
                       }}
                 />
+                
                 {/* --------------------------------------------------- */}
 
                 {/* BOTAO DE EDICAO/CADASTRO */}
