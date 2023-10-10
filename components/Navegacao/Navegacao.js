@@ -6,6 +6,7 @@ import {FontAwesome5, FontAwesome} from '@expo/vector-icons';
 
 import { ConsultaEstabelecimento } from '../SQLiteManager/SQLEstabelecimento';
 //Componentes (telas para navegação)
+import Agendamento from "../Agendamento/Agendamento";
 import Home from '../Home/Home';
 import Configuracoes from "../Configuracoes/Configuracoes";
 import Estabelecimento from "../Estabelecimento/Estabelecimento";
@@ -34,6 +35,7 @@ function Tabs()
     //AQUI É ONDE FICA A BARRA NA PARTE INFERIOR COM OS BOTOES DE NAVEGAÇÃO
     return(
         <Tab.Navigator screenOptions={{headerShown: false, tabBarActiveTintColor:'#006699',}}>
+            <Tab.Screen name="Ações" component={Home} initialParams={{tema1:tema}} options={{tabBarIcon: ({color, size}) => (<FontAwesome5 name="archive" size={size} color={color} />), headerShown:true}} ></Tab.Screen>
             <Tab.Screen name="Tela Inicial" component={StackTelas} initialParams={{tema1:tema}} options={{tabBarIcon: ({color, size}) => (<FontAwesome5 name="home" size={size} color={color} />),}} ></Tab.Screen>
             <Tab.Screen name="Configuracoes"  component={Configuracoes}   options={{tabBarIcon: ({color, size}) => (<FontAwesome name="gear" size={size} color={color} />),headerShown:true, headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text, title:'Configurações'}   }></Tab.Screen>
         </Tab.Navigator>
@@ -44,7 +46,8 @@ function StackTelas() {
     const { tema} = useAppState();
     return (
         <Stack.Navigator  >
-            <Stack.Screen name="Gestor Agenda" component={Home} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}} />
+             <Stack.Screen name="Gestor Agenda" component={Agendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}} />
+            <Stack.Screen name="Ações" component={Home} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}} />
             {/* <Stack.Screen name="Serviços" component={Servicos} options={{ headerLeft: null, headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text }} /> */}
             <Stack.Screen name="Serviços" component={Servicos} options={{ headerLeft: null, headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text }} />
             <Stack.Screen name="Novo Serviço" component={NovoServico} options={{ headerLeft: null, headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text }} />
