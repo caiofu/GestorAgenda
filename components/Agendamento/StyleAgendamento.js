@@ -23,7 +23,34 @@ const styles = StyleSheet.create({
         marginLeft:5, 
         color: '#006699', 
         fontFamily:'Rubik_700Bold'
-    }
+    },
+    btn:
+    {
+        backgroundColor:'#006699',
+        marginLeft:20,
+        marginRight:20,
+        padding:20,
+        borderRadius:5
+    },
+
+    btnText:
+    {
+        color:'#ffff',
+        marginLeft:10,
+        fontSize:20,
+        alignSelf:'center',
+        fontFamily:'Rubik_700Bold'
+
+    },
+
+    inputFormularioSelect:
+    {
+        marginLeft:15, 
+        marginRight:25, 
+       borderRadius:5,
+      
+        backgroundColor: 'rgba(112, 120, 147, 0.3)',
+    },
 
 
 });
