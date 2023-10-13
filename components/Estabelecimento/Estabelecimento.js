@@ -336,9 +336,7 @@ export default function Estabelecimento()
               <Text style={styles.btnLogoText}>SELECIONAR LOGO</Text>
             </TouchableOpacity>
           </View>
-          <View>
-
-          </View>
+    
           {msgNomeEstabelecimento == true ? (
             <HelperText style={styles.msgHelper}>Este campo é obrigatório</HelperText>
           ) : (
