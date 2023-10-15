@@ -79,6 +79,7 @@ console.log('TESTe --->', useColorScheme())
     setBoasVindasAtivo(novoValor);
   };
   //CONSULTA NO BANCO SE JA TEM ESTABELECIMENTO CADASTRADO
+ 
   ConsultaEstabelecimento((resultado) => {
     if (resultado === null) {
       setEstabelecimentoCadastro(true);

@@ -15,8 +15,8 @@ export default function Wizard({ atualizarWizardAtivo }) {
     const [wizardAtivo, setWizardAtivo] = useState(null);
     const [passo, setPasso] = useState(1);
 
-    //Tema
-    const { tema, MudarTema } = useAppState();
+    
+    const { tema} = useAppState();
     
     let totalPassos = 2;
 

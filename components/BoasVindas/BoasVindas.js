@@ -13,9 +13,10 @@ import { useAppState } from "../Contexts/AppStateContext";
 
 export default function BoasVindas({atualizaBoasVindas}) {
 
-    //CARREGANDO O TEMA A PRIMEIRA VEZ.
+ 
     const { tema, setTema} = useAppState();
    
+   //CARREGANDO O TEMA A PRIMEIRA VEZ.
     const temaSistema = useColorScheme();
     
     useEffect(() => {

@@ -52,6 +52,19 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(112, 120, 147, 0.3)',
     },
 
+    btnDataTime:
+    {
+        borderWidth:1,   
+        marginLeft:15, 
+        marginRight:25, 
+        marginBottom:20, 
+        flexDirection: 'row',
+        padding:4,
+        backgroundColor: 'rgba(112, 120, 147, 0.3)',
+        borderColor:'#006699',
+        borderRadius:3
+    }
+
 
 });
 

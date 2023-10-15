@@ -28,7 +28,7 @@ export default function Estabelecimento()
 {
  
 
-    //BUSCA O RAMO DE ATIVIDADE (Usamos o useEffect para carregar somente na criaçao do componente)
+   
     const [listaRamoAtividade, setListaRamoAtividade] = useState([]);
     useEffect(() => {
        
@@ -60,7 +60,7 @@ export default function Estabelecimento()
          // setDadosCarregados(true);
         });
 
-         // Chame a função de consulta diretamente
+         //BUSCA O RAMO DE ATIVIDADE
          ConsultaRamoAtividade((ramoAtividades) => {
           const retorno = ramoAtividades.map((atividade) => ({
               key: atividade.idRamoAtividade.toString(),

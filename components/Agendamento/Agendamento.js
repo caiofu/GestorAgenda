@@ -6,10 +6,28 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 import {  DarkTheme, useNavigation } from "@react-navigation/native";
 
-
+import { useAppState } from "../Contexts/AppStateContext";
+import { ConsultaEstabelecimento } from "../SQLiteManager/SQLEstabelecimento";
 
 export default function Agendamento()
 {
+
+
+    const { navegacaoEstabelecimento, setNavegacaoEstabelecimento } = useAppState();
+
+    //VERIFICA SE TEM CADASTRO DE ESTABELECIMENTO APRA DEFINIR QUAL PRIMEIRA TELA APARECERA
+    ConsultaEstabelecimento((resultado) => {
+      if(resultado === null)
+      {
+        setNavegacaoEstabelecimento(true);
+      }
+      else
+      {
+        setNavegacaoEstabelecimento(false);
+      }
+    })
+
+    //
     const navigation = useNavigation();
     
     const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';

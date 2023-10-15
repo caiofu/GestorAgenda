@@ -34,6 +34,7 @@ function Tabs()
 
     const { tema} = useAppState();
     //AQUI É ONDE FICA A BARRA NA PARTE INFERIOR COM OS BOTOES DE NAVEGAÇÃO
+    console.log('caiu nesse por que ?')
     return(
         <Tab.Navigator screenOptions={{headerShown: false, tabBarActiveTintColor:'#006699',}}>
             <Tab.Screen name="Tela Inicial" component={OpTelaInicial} initialParams={{tema1:tema}} options={{tabBarIcon: ({color, size}) => (<FontAwesome5 name="home" size={size} color={color} />),}} ></Tab.Screen>
@@ -84,6 +85,7 @@ function OpConfiguracoes() {
 }
 
 function PrimeiroCadastroEstabelecimento() {
+    console.log('PRIMEIRO CADASTRO ESTA')
     return (
         <Stack.Navigator>
             <Stack.Screen name="Estabelecimento" component={Estabelecimento} />
@@ -113,7 +115,7 @@ export default function Navegacao()
        
       }, [tema]);
       
-  
+      console.log('estabelecimento nave ',navegacaoEstabelecimento)
         
    
     return(
