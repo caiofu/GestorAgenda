@@ -1,9 +1,11 @@
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { HelperText, TextInput } from "react-native-paper";
+import { HelperText, TextInput, ProgressBar,  Dialog, Portal, PaperProvider, Button } from "react-native-paper";
 import { FontAwesome, FontAwesome5 , MaterialIcons} from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {  MultipleSelectList } from "react-native-dropdown-select-list";
+
+import {  DarkTheme, useNavigation } from "@react-navigation/native";
 
 import styles from "./StyleAgendamento";
 import { useEffect, useState } from "react";
@@ -17,6 +19,9 @@ import { CriaNovoAgendamento, ConsultaAgendamentoPorHorarioData, SalvarServicoAg
 
 export default function NovoAgendamento()
 {
+     //NAVIGATION
+     const navigation = useNavigation();
+
     //CONTEXT TEMA
     const {tema } = useAppState();
     //COR DO TEMA
@@ -100,10 +105,7 @@ export default function NovoAgendamento()
    //LEMBRAR QUE PRIMEIRO VAMOS CRIAR O AGENDAMENTO E RETORNAR O ID CRIADO AI 
    //SALVAR O SERVIÇO COM ID DO AGENDAMENTO, OU SEJA SE AGEDAMENTO FALHAR NAO CRIA NADA.
     const [helperTextCampos, setHelperTextCampos] = useState(false);
-    if(servicoSelecionado.length === 0)
-    {
-        console.log('nenhum serviço selecionadaoooo');
-    }
+    
    function AgendarServico()
    {
 
@@ -139,17 +141,24 @@ export default function NovoAgendamento()
                     console.log('serviço selecionado para salvar  -->', servicoSelecionado)
                     //Precisa pega o id do serviço ou nome do serviço ? ?
                     SalvarServicoAgendamento(idAgendamento, servicoSelecionado, (idServicoAgendamento) => {
-
-                        if(idServicoAgendamento !== null)
+                        console.log('idAgendamentoSer ', idServicoAgendamento)
+                        if(idServicoAgendamento !== null )
                         {
-                            insercaoBemSucedida++;
+                            console.log('caiu aquiiiii')
+                            insercaoBemSucedida = insercaoBemSucedida +1;
+                            console.log(insercaoBemSucedida)
+                             //Verifica se inseriu todas
+             
+                                if(insercaoBemSucedida === totalInsercoes)
+                                {
+                                    console.log('sucedidade ', insercaoBemSucedida+' total ', totalInsercoes)
+                                    //Chama a caixa de dialogo
+                                    BoxDialog();
+                                    console.log('todos as '+totalInsercoes+ 'forma inseridas com sucesso');
+                                }
                         }
                     } );
-                    //Verifica se inseriu todas
-                    if(insercaoBemSucedida === totalInsercoes)
-                    {
-                        console.log('todos as '+totalInsercoes+ 'forma inseridas com sucesso');
-                    }
+                   
 
                 });
               //  SalvarServicoAgendamento(idAgendamento,)
@@ -182,10 +191,38 @@ export default function NovoAgendamento()
    }
 
  
-console.log('data atual', dataAtual)
-    
+    //BOX DIALOG
+    const [boxVisivel, setBoxVisivel] = useState(false);
+    const [barraProgresso , setBarraProgresso] = useState(0)
+    function BoxDialog()
+    {
+        console.log('fo iclica?')
+        setBoxVisivel(true);
+        let novoProgresso = 0;
+       const intervalo =   setInterval(() =>{
+            novoProgresso += 0.1;
+            if(novoProgresso >=1)
+            {
+                clearInterval(intervalo);
+                setBoxVisivel(false)
+                setBarraProgresso(0);
+                navigation.navigate('Gestor Agenda');
+                console.log('acabou')
+            }
+            else
+            {
+                setBarraProgresso(novoProgresso);
+            }
+           
+        }, 200);
+
+  
+       
+    }
+    console.log('barra ', barraProgresso)
     return(
-        
+      
+          <PaperProvider>
           <SafeAreaView style={styles.container}>
             <ScrollView>
                 <View>
@@ -276,10 +313,21 @@ console.log('data atual', dataAtual)
                                                 <Text style={styles.btnText}>AGENDAR</Text>
                                             </View>
                   </TouchableOpacity>
+                 
+                 
+                  <Portal>
+                    <Dialog visible={boxVisivel} style={{backgroundColor:'#fff'}}>
+                        <Dialog.Content>
+                        <Text style={styles.txtDialog} variant="bodyMedium">Agendamento criado com sucesso!</Text>
+                        <ProgressBar progress={barraProgresso} style={{height:10,  backgroundColor: 'rgba(112, 120, 147, 0.3)' }}  color='#006699' />
+                        </Dialog.Content>
+                    </Dialog>
+                    </Portal>
                     </View>
                 </View>
             </ScrollView>
           </SafeAreaView>
-     
+          </PaperProvider>  
+        
     );
 }

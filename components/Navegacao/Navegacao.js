@@ -4,6 +4,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {FontAwesome5, FontAwesome} from '@expo/vector-icons';
 
+
+
 import { ConsultaEstabelecimento } from '../SQLiteManager/SQLEstabelecimento';
 //Componentes (telas para navegação)
 import Agendamento from "../Agendamento/Agendamento";

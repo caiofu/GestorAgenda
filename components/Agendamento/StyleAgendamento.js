@@ -63,6 +63,13 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(112, 120, 147, 0.3)',
         borderColor:'#006699',
         borderRadius:3
+    },
+
+    txtDialog:
+    {
+        alignSelf:'center',
+        fontFamily:'Rubik_700Bold',
+        marginBottom:10
     }
 
 
