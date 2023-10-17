@@ -1,19 +1,24 @@
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import {FAB, PaperProvider, List } from 'react-native-paper';
 import { FontAwesome5, Ionicons, FontAwesome } from '@expo/vector-icons';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import {  DarkTheme, useNavigation } from "@react-navigation/native";
 
 import { useAppState } from "../Contexts/AppStateContext";
+
+//SQL
 import { ConsultaEstabelecimento } from "../SQLiteManager/SQLEstabelecimento";
+import { ConsultaAgendamentoPorData, ConsultaAgendamentoGeral } from "../SQLiteManager/SQLAgendamento";
+
+
 
 export default function Agendamento()
 {
 
-
-    const { navegacaoEstabelecimento, setNavegacaoEstabelecimento } = useAppState();
+    //CONTEXT
+    const { navegacaoEstabelecimento, setNavegacaoEstabelecimento, atualizaAgendamentos } = useAppState();
 
     //VERIFICA SE TEM CADASTRO DE ESTABELECIMENTO APRA DEFINIR QUAL PRIMEIRA TELA APARECERA
     ConsultaEstabelecimento((resultado) => {
@@ -32,7 +37,7 @@ export default function Agendamento()
     
     const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
     const [date, setDate] = useState(new Date());
-    const [dataFormatada, setDataFormatada] = useState({dia: date.getDate(), mes: date.getMonth()+1, ano: date.getFullYear()});
+    const [dataFormatada, setDataFormatada] = useState((date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear()).toString());
 
     const [abriDataPicker, setAbrirDataPicker] = useState(false);
 
@@ -40,7 +45,7 @@ export default function Agendamento()
     
     const onChangeDataPicker = (event, dataSelecionada) => {
         setDate(dataSelecionada);
-        setDataFormatada({dia: date.getDate(), mes: date.getMonth()+1, ano: date.getFullYear()})
+        setDataFormatada((date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear()).toString())
         setAbrirDataPicker(false); // Fecha o DatePicker quando a data é selecionada
     }
 
@@ -54,19 +59,60 @@ export default function Agendamento()
       
         navigation.navigate('Novo Agendamento'); 
       };
- console.log(date)
+
+      //BUSCA AGENDAMENTOS
+      const [listaAgendamentos, setListaAgendamentos] = useState([]);
+      useEffect(() =>{
+        console.log('açaoooooooooooooooooooooo !!!')
+            ConsultaAgendamentoPorData(dataFormatada, (agendamentos) =>{
+                //console.log('aged ==' ,agendamentos)
+                 const retorno = agendamentos.map((listaAgendamentos) => ({
+                    idAgendamento: listaAgendamentos.idAgendamento.toString(),
+                    nomeCliente: listaAgendamentos.nomeCliente,
+                    telefone: listaAgendamentos.telefone,
+                    data: listaAgendamentos.data,
+                    horario: listaAgendamentos.horario
+                        
+                 }));
+                setListaAgendamentos(retorno); 
+            });
+      },[atualizaAgendamentos, dataFormatada]);
+     
+      ConsultaAgendamentoGeral((geral) => {
+        console.log('GERAL ---> ', geral)
+      })
     return (
         <PaperProvider>
             <View style={{flex: 1, padding: 10, flexDirection: 'column'}}>
                 <TouchableOpacity style={{borderWidth: 1, flexDirection: 'row', padding: 4, backgroundColor:'#fff', borderColor:'#006699', borderRadius:4}} onPress={showDatePicker}>
                     <FontAwesome name="calendar" size={24} color='#006699' />
-                    <Text style={{alignSelf:'center', marginLeft:5, color: '#006699', fontFamily:'Rubik_700Bold'}}>{dataFormatada.dia + '/' + dataFormatada.mes + '/' + dataFormatada.ano}</Text>
+                    <Text style={{alignSelf:'center', marginLeft:5, color: '#006699', fontFamily:'Rubik_700Bold'}}>{dataFormatada}</Text>
                 </TouchableOpacity>
                 {abriDataPicker ? (
                     <DateTimePicker value={date} mode='date' onChange={onChangeDataPicker} />
                 ) : null}
             <View style={{borderWidth:1, flex:1,marginBottom:70, marginTop:2, borderRadius:4, borderColor:'#006699'}}>
                 <ScrollView>
+
+                    {/* LISTA*/}
+                    { listaAgendamentos.map((agendamento) => (
+                                        <TouchableOpacity 
+                                             key={agendamento.idAgendamento}
+                                            //  onPress={() => CarregaDetalhes(servico.idServico, 'importado')} 
+                                            style={{borderWidth:0.7, margin:4, borderRadius:10}}
+                                        >
+                                            {/* <Text  key={servico.idServico}>{servico.nomeServico} </Text> */}
+                                            <List.Item key={agendamento.idAgendamento}
+                                                        title='A definir'
+                                                        description={agendamento.nomeCliente}
+                                                        titleStyle={{color:'black', fontSize:12}}
+                                                        descriptionStyle={{color:'gray', fontSize:10}}
+                                                        descriptionNumberOfLines={1}
+                                                        right={props => <Text>Horário: {agendamento.horario}</Text>} />
+                                            </TouchableOpacity>
+
+                                        
+                                    ))}
                     <TouchableOpacity style={{borderWidth:0.7, margin:4, borderRadius:10}}>
                         <List.Item
                         title="Barba"

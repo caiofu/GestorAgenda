@@ -28,7 +28,7 @@ export default function SQLiteManager() {
       );
 
        //AGENDAMENTO_SERVIÇO
-       tx.executeSql('CREATE TABLE IF NOT EXISTS agendamento_serviços (idAgendamentoServico INTEGER PRIMARY KEY AUTOINCREMENT, idAgendamento INTEGER, nomeServico TEXT);'
+       tx.executeSql('CREATE TABLE IF NOT EXISTS agendamento_servicos (idAgendamentoServico INTEGER PRIMARY KEY AUTOINCREMENT, idAgendamento INTEGER, nomeServico TEXT);'
        );
 
       //RAMO DE ATIVIDADE

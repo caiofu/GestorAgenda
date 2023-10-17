@@ -22,15 +22,16 @@ export default function NovoAgendamento()
      //NAVIGATION
      const navigation = useNavigation();
 
-    //CONTEXT TEMA
-    const {tema } = useAppState();
+    //CONTEXT
+    const {tema,  setAtualizaAgendamentos } = useAppState();
+
     //COR DO TEMA
      const [corTema, setCorTema] = useState('#006699');
      useEffect(()=>{
-      
+
             tema === 'light' ? setCorTema('#006699') : setCorTema(DarkTheme.colors.text);
               },[tema])
-         
+
     //DATA
     const [dataAtual, setDataAtual] = useState(new Date());
     const [horaAtual, setHoraAtual] = useState(new Date());
@@ -40,7 +41,7 @@ export default function NovoAgendamento()
 
     const onChangeDataPicker = (event, dataSelecionada) => {
         setDate(dataSelecionada);
-        setDataFormatada((date.getDate()+'/'+date.getMonth()+1+'/'+date.getFullYear()).toString())
+        setDataFormatada((date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear()).toString())
         setAbrirDataPicker(false); // Fecha o DatePicker quando a data é selecionada
     }
 
@@ -55,27 +56,25 @@ export default function NovoAgendamento()
         setAbrirTimePicker(false);
     }
 
-    console.log('horario -> ', horario)
-    console.log('horario form ', horarioFormatado)
 
-    
+
     //NOME E TELEFONE
     const [nome, setNome]           = useState(null);
-    const [telefone, setTelefone]   = useState(null); 
+    const [telefone, setTelefone]   = useState(null);
 
     //LISTA DE SERVIÇOS
     const [listaServicos, setListaServicos]             = useState([]);
     const [servicoSelecionado, setServicoSelecionado]   = useState([]);
-  
+
     useEffect(() =>{
-   
+
 
           RetornaServicosEstabelecimento(function(resultados) {
             const resultadosTratados = resultados.map((item, index) => ({
               key: index + 1, // Identificador único crescente
               value: item,     // Nome do serviço
             }));
-          
+
             setListaServicos(resultadosTratados)
           });
     }, [])
@@ -95,18 +94,18 @@ export default function NovoAgendamento()
 
     //Usando o useEffect para garantir a limpeza do campo ao mudar o date.
     useEffect(() =>{
-        
+
         setDataFormatada((date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear()).toString())
     },[date])
 
-  
 
- 
+
+
     const [helperTextCampos, setHelperTextCampos] = useState(false);
-    
+
    function AgendarServico()
    {
-   
+
     //VALIDAR SE TODOS OS DADOS OBRIGATORIOS FORAM PREENCHIDOS
     if(nome === null || telefone === null ||  horarioFormatado === null || servicoSelecionado.length === 0)
     {
@@ -120,9 +119,11 @@ export default function NovoAgendamento()
             if (agendamento) {
               // A consulta foi bem-sucedida, você pode acessar os dados do agendamento aqui
               console.log('Agendamento encontrado:', agendamento);
+              setBoxDialogSucesso((att) => false);
               setTExtoBoxDialog("Já existe um agendamento para essa data e horario!");
+
                BoxDialog();
-          
+
             } else {
               // Não foi encontrado nenhum agendamento com o horário especificado
               console.log('Nenhum agendamento encontrado para o horário:', );
@@ -134,7 +135,7 @@ export default function NovoAgendamento()
                 //INSERE SERVIÇOS COM ID DO AGENDAMENTO
 
                 //Loop para caso conter mais de um serviço selecionado
-                let insercaoBemSucedida = 0; 
+                let insercaoBemSucedida = 0;
                 let totalInsercoes = servicoSelecionado.length;
 
                 servicoSelecionado.forEach((servicoSelecionado) => {
@@ -148,37 +149,38 @@ export default function NovoAgendamento()
                             insercaoBemSucedida = insercaoBemSucedida +1;
                             console.log(insercaoBemSucedida)
                              //Verifica se inseriu todas
-             
+
                                 if(insercaoBemSucedida === totalInsercoes)
                                 {
                                     console.log('sucedidade ', insercaoBemSucedida+' total ', totalInsercoes)
                                     //Chama a caixa de dialogo
+                                    setAtualizaAgendamentos(true);
                                     setTExtoBoxDialog("Agendamento criado com sucesso!");
-                                    setBoxDialogSucesso(true);
-                                    BoxDialog();
+                                    setBoxDialogSucesso(true); //Chama o box de mensagem pela mudança de estado
+                                 
                                     console.log('todos as '+totalInsercoes+ 'forma inseridas com sucesso');
                                 }
                         }
                     } );
-                   
+
 
                 });
               //  SalvarServicoAgendamento(idAgendamento,)
-                
+
                 } else {
                 console.log('Falha ao inserir o agendamento');
                 }
             });
             }
           });
-        
+
 
     }
-    
+
     //   });
    }
 
- 
+
     //BOX DIALOG
     const [boxVisivel, setBoxVisivel] = useState(false);
     const [barraProgresso , setBarraProgresso] = useState(0)
@@ -187,7 +189,7 @@ export default function NovoAgendamento()
 
     function BoxDialog()
     {
- 
+
         setBoxVisivel(true);
         let novoProgresso = 0;
        const intervalo =   setInterval(() =>{
@@ -195,33 +197,44 @@ export default function NovoAgendamento()
             if(novoProgresso >=1) //Para finalizar o intervalo
             {
                 clearInterval(intervalo);
-                setBoxVisivel(false)
+                boxDialogSucesso ? navigation.navigate('Gestor Agenda') : '';
+                setBoxVisivel(false);
                 setBarraProgresso(0);
-                if(boxDialogSucesso)
-                {
-                    navigation.navigate('Gestor Agenda');
-                }
-                
-              
+                console.log('box dialogo sucesso, ',boxDialogSucesso)
+                // if(boxDialogSucesso === true)
+                // {
+                //     console.log('tedentro do if')
+                //     navigation.navigate('Gestor Agenda');
+                // }
+
+
             }
             else
             {
                 setBarraProgresso(novoProgresso);
             }
-           
+
         }, 200);
 
-  
-       
+
+
     }
-    console.log('barra ', barraProgresso)
+
+    useEffect(() =>{
+        if(boxDialogSucesso !== null)
+        {
+            BoxDialog();
+           
+        }
+    }, [boxDialogSucesso])
+    
     return(
-      
+
           <PaperProvider>
           <SafeAreaView style={styles.container}>
             <ScrollView>
                 <View>
-                   {helperTextCampos ? <HelperText style={styles.txtHelper}>Todos os campos são obrigatórios!</HelperText> : ''} 
+                   {helperTextCampos ? <HelperText style={styles.txtHelper}>Todos os campos são obrigatórios!</HelperText> : ''}
                     <View style={{flexDirection:'row'}}>
                         <TouchableOpacity style={[styles.btnDataTime, {borderColor:corTema}]} onPress={() => setAbrirDataPicker(true)} >
                         <FontAwesome name="calendar" size={24} color={corTema} />
@@ -240,8 +253,8 @@ export default function NovoAgendamento()
                             ) : null}
 
                     </View>
-                   
-                    <TextInput 
+
+                    <TextInput
                         style={styles.inputFormulario}
                         label="Nome"
                         onChangeText={(text) => setNome(text)}
@@ -253,7 +266,7 @@ export default function NovoAgendamento()
 
                     </TextInput >
 
-                    <TextInput    
+                    <TextInput
                         style={styles.inputFormulario}
                         label="Telefone"
                         keyboardType="numeric"
@@ -263,7 +276,7 @@ export default function NovoAgendamento()
                             colors: { primary: telefone === null && helperTextCampos === true ? 'red' : corTema, onSurfaceVariant: telefone === null && helperTextCampos === true ? 'red' : corTema  },
                           }}
                         >
-                        
+
 
                     </TextInput>
 
@@ -282,17 +295,17 @@ export default function NovoAgendamento()
                             notFoundText=""
                             key={limparLista}
                             data={listaServicos}
-                            
+
                             save="value"
                             // Para evitar erros quando usuario clica na lista vazia
-                           
+
                             setSelected={(val) => {
-                                if (servicoSelecionado !== '') 
+                                if (servicoSelecionado !== '')
                                 {
                                     console.log('valllll ????',val)
                                      setServicoSelecionado(val);
                                 }
-                            }}               
+                            }}
                         />
                     </View>
                     <View>
@@ -308,8 +321,8 @@ export default function NovoAgendamento()
                                                 <Text style={styles.btnText}>AGENDAR</Text>
                                             </View>
                   </TouchableOpacity>
-                 
-                 
+
+
                   <Portal>
                     <Dialog visible={boxVisivel} style={{backgroundColor:'#fff'}}>
                         <Dialog.Content>
@@ -322,7 +335,7 @@ export default function NovoAgendamento()
                 </View>
             </ScrollView>
           </SafeAreaView>
-          </PaperProvider>  
-        
+          </PaperProvider>
+
     );
 }

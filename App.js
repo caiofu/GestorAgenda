@@ -89,9 +89,9 @@ export default function App() {
   })
 
   //TRECHO QUE RESETA TUDO PARA TESTES
-   //removerAsyncStorage();
-   //guardaWizardAtivo('true');
-   //ExcluirBancoDeDados();
+  //  removerAsyncStorage();
+  //  guardaWizardAtivo('true');
+  //  ExcluirBancoDeDados();
   //--------------------------------
 
   return (

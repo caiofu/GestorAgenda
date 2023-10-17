@@ -51,13 +51,58 @@ export function ConsultaAgendamentoPorHorarioData(horario, data, callback)
       });
 }
 
+
+export function ConsultaAgendamentoPorData(data, callback) {
+  db.transaction((tx) => {
+    tx.executeSql(
+      'SELECT * FROM agendamento WHERE data = ?',
+      [data],
+      (tx, results) => {
+        const len = results.rows.length;
+        const agendamentos = [];
+
+        for (let i = 0; i < len; i++) {
+          agendamentos.push(results.rows.item(i));
+        }
+
+        callback(agendamentos);
+      },
+      (error) => {
+        console.log('Erro ao extrair agendamentos por data:', error);
+      }
+    );
+  });
+}
+
+
+export function ConsultaAgendamentoGeral( callback) {
+  db.transaction((tx) => {
+    tx.executeSql(
+      'SELECT * FROM agendamento ',
+      [],
+      (tx, results) => {
+        const len = results.rows.length;
+        const agendamentos = [];
+
+        for (let i = 0; i < len; i++) {
+          agendamentos.push(results.rows.item(i));
+        }
+
+        callback(agendamentos);
+      },
+      (error) => {
+        console.log('Erro ao extrair agendamentos por data:', error);
+      }
+    );
+  });
+}
 export function SalvarServicoAgendamento (idAgendamento, nomeServico , callback)
 {
   console.log('idAg ',idAgendamento +' nomeSer ',nomeServico)
     //CREATE TABLE IF NOT EXISTS agendamento_serviços (idAgendamentoServico INTEGER PRIMARY KEY AUTOINCREMENT, idAgendamento INTEGER, idServiço INTEGER
     db.transaction((tx) => {
         tx.executeSql(
-            'INSERT INTO agendamento_serviços  (idAgendamento, nomeServico ) VALUES (?, ? )',
+            'INSERT INTO agendamento_servicos  (idAgendamento, nomeServico ) VALUES (?, ? )',
             [idAgendamento, nomeServico], 
             (tx, results) => {
               // Verificando se a inserção foi bem-sucedida
