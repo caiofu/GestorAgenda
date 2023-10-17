@@ -33,6 +33,7 @@ export default function NovoAgendamento()
          
     //DATA
     const [dataAtual, setDataAtual] = useState(new Date());
+    const [horaAtual, setHoraAtual] = useState(new Date());
     const [date, setDate] = useState(new Date());
     const [dataFormatada, setDataFormatada] = useState((date.getDate()+'/'+date.getMonth()+1+'/'+date.getFullYear()).toString());
     const [abriDataPicker, setAbrirDataPicker] = useState(false);
@@ -75,8 +76,6 @@ export default function NovoAgendamento()
               value: item,     // Nome do serviço
             }));
           
-            // Agora resultadosTratados contém os resultados com identificadores únicos crescentes
-            // e nomes de serviços correspondentes
             setListaServicos(resultadosTratados)
           });
     }, [])
@@ -102,13 +101,12 @@ export default function NovoAgendamento()
 
   
 
-   //LEMBRAR QUE PRIMEIRO VAMOS CRIAR O AGENDAMENTO E RETORNAR O ID CRIADO AI 
-   //SALVAR O SERVIÇO COM ID DO AGENDAMENTO, OU SEJA SE AGEDAMENTO FALHAR NAO CRIA NADA.
+ 
     const [helperTextCampos, setHelperTextCampos] = useState(false);
     
    function AgendarServico()
    {
-
+   
     //VALIDAR SE TODOS OS DADOS OBRIGATORIOS FORAM PREENCHIDOS
     if(nome === null || telefone === null ||  horarioFormatado === null || servicoSelecionado.length === 0)
     {
@@ -122,6 +120,8 @@ export default function NovoAgendamento()
             if (agendamento) {
               // A consulta foi bem-sucedida, você pode acessar os dados do agendamento aqui
               console.log('Agendamento encontrado:', agendamento);
+              setTExtoBoxDialog("Já existe um agendamento para essa data e horario!");
+               BoxDialog();
           
             } else {
               // Não foi encontrado nenhum agendamento com o horário especificado
@@ -153,6 +153,8 @@ export default function NovoAgendamento()
                                 {
                                     console.log('sucedidade ', insercaoBemSucedida+' total ', totalInsercoes)
                                     //Chama a caixa de dialogo
+                                    setTExtoBoxDialog("Agendamento criado com sucesso!");
+                                    setBoxDialogSucesso(true);
                                     BoxDialog();
                                     console.log('todos as '+totalInsercoes+ 'forma inseridas com sucesso');
                                 }
@@ -169,24 +171,10 @@ export default function NovoAgendamento()
             });
             }
           });
-        //CRIAR AGENDAMENTO E RETORNAR ID PARA SABER SE PODE GRAVAR SERVIÇO (EM UMA NOVA TABELA POIS É MAIS DE UM SERVIÇO QUE PODE SER GRAVADO)
-      
-       
-       
-       // console.log('idagendamento ===== ',idAgendamento)
         
 
     }
-    //VALIDAR SE JA EXISTE AGENDAMENTO MARCADO NO MESMO HORARIO
-
-    //CRIAR AGENDAMENTO E RETORNAR ID PARA SABER SE PODE GRAVAR SERVIÇO (EM UMA NOVA TABELA POIS É MAIS DE UM SERVIÇO QUE PODE SER GRAVADO)
-    // CriaNovoAgendamento('20/09/2024', '13:10', 'Caio Furegati', 'telefone', (novoID) => {
-    //     if (novoID !== null) {
-    //       console.log(`Novo ID do agendamento inserido: ${novoID}`);
-    //       // Faça algo com o novo ID, se necessário
-    //     } else {
-    //       console.log('Falha ao inserir o agendamento');
-    //     }
+    
     //   });
    }
 
@@ -194,20 +182,27 @@ export default function NovoAgendamento()
     //BOX DIALOG
     const [boxVisivel, setBoxVisivel] = useState(false);
     const [barraProgresso , setBarraProgresso] = useState(0)
+    const [textoBoxDialog, setTExtoBoxDialog] = useState("")
+    const [boxDialogSucesso, setBoxDialogSucesso] = useState(null);
+
     function BoxDialog()
     {
-        console.log('fo iclica?')
+ 
         setBoxVisivel(true);
         let novoProgresso = 0;
        const intervalo =   setInterval(() =>{
             novoProgresso += 0.1;
-            if(novoProgresso >=1)
+            if(novoProgresso >=1) //Para finalizar o intervalo
             {
                 clearInterval(intervalo);
                 setBoxVisivel(false)
                 setBarraProgresso(0);
-                navigation.navigate('Gestor Agenda');
-                console.log('acabou')
+                if(boxDialogSucesso)
+                {
+                    navigation.navigate('Gestor Agenda');
+                }
+                
+              
             }
             else
             {
@@ -226,11 +221,11 @@ export default function NovoAgendamento()
           <SafeAreaView style={styles.container}>
             <ScrollView>
                 <View>
-                    <HelperText>Todos os campos são obrigatórios!</HelperText>
+                   {helperTextCampos ? <HelperText style={styles.txtHelper}>Todos os campos são obrigatórios!</HelperText> : ''} 
                     <View style={{flexDirection:'row'}}>
-                        <TouchableOpacity style={styles.btnDataTime} onPress={() => setAbrirDataPicker(true)} >
-                        <FontAwesome name="calendar" size={24} color='#006699' />
-                            <Text style={styles.txtInput}>{dataFormatada}</Text>
+                        <TouchableOpacity style={[styles.btnDataTime, {borderColor:corTema}]} onPress={() => setAbrirDataPicker(true)} >
+                        <FontAwesome name="calendar" size={24} color={corTema} />
+                            <Text style={[styles.txtInput, {color:corTema}]}>{dataFormatada}</Text>
                         </TouchableOpacity>
                         {abriDataPicker ? (
                                 <DateTimePicker value={date} mode='date' minimumDate={dataAtual} onChange={onChangeDataPicker} />
@@ -318,7 +313,7 @@ export default function NovoAgendamento()
                   <Portal>
                     <Dialog visible={boxVisivel} style={{backgroundColor:'#fff'}}>
                         <Dialog.Content>
-                        <Text style={styles.txtDialog} variant="bodyMedium">Agendamento criado com sucesso!</Text>
+                        <Text style={[styles.txtDialog, {color: boxDialogSucesso ? "#006699" : 'red'}]} variant="bodyMedium">{textoBoxDialog}</Text>
                         <ProgressBar progress={barraProgresso} style={{height:10,  backgroundColor: 'rgba(112, 120, 147, 0.3)' }}  color='#006699' />
                         </Dialog.Content>
                     </Dialog>

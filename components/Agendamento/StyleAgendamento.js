@@ -70,6 +70,12 @@ const styles = StyleSheet.create({
         alignSelf:'center',
         fontFamily:'Rubik_700Bold',
         marginBottom:10
+    },
+    txtHelper:
+    {
+        color:'red',
+        fontFamily:'Rubik_700Bold',
+        marginBottom:5
     }
 
 
