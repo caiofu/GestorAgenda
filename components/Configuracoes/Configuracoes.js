@@ -33,7 +33,7 @@ export default function Configuracoes()
  
     function MudaTemaSitema()
     {
-        console.log('asdasd')
+      
         
        if(temaSistema === 'checked')
        {
@@ -52,7 +52,7 @@ export default function Configuracoes()
         RemoveTemaAsync();
        }
     }
-    console.log('tema sistema --->',temaSistema)
+   
     return(
         <SafeAreaView>
             <ScrollView>
