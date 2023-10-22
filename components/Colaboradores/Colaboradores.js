@@ -12,17 +12,17 @@ function Colaboradores() {
   const [erro, setErro] = useState(null); //estado para armazenar erros
 
   const navigation = useNavigation();
-  useEffect(() => {
-    listarColaboradores(
-      (colaboradoresArray) => {
-        setColaboradores(colaboradoresArray);
-        setErro(null); // Limpar erro, se houver
-      },
-      (error) => {
-        setErro(error);
-      }
-    );
-  }, []);
+  // useEffect(() => {
+  //   listarColaboradores(
+  //     (colaboradoresArray) => {
+  //       setColaboradores(colaboradoresArray);
+  //       setErro(null); // Limpar erro, se houver
+  //     },
+  //     (error) => {
+  //       setErro(error);
+  //     }
+  //   );
+  // }, []);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -36,7 +36,7 @@ function Colaboradores() {
         }
       );
       return () => {
-        console.log('mudou tela');
+        console.log('Tela Colaboradores perdeu o foco');
         // Código de limpeza, se necessário, quando a tela perde foco
       };
     }, [])
@@ -52,7 +52,7 @@ function Colaboradores() {
         left={() => <List.Icon icon="account-circle" />}
         onPress={() => {
           console.log('pressed')
-          navigation.navigate('FormColaboradores', {colaborador: item});
+          navigation.navigate('Formulário Colaborador', {colaborador: item});
         }}
       />
     )
@@ -92,7 +92,7 @@ function Colaboradores() {
             label='Novo Colaborador'
             icon="plus"
             onPress={() => {
-              navigation.navigate('FormColaboradores')}}
+              navigation.navigate('Formulário Colaborador', {colaborador: null})}}
           />
       </SafeAreaView>
     </PaperProvider>

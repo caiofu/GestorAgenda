@@ -51,7 +51,7 @@ function StackTelas() {
             <Stack.Screen name="Detalhes serviço" component={DetalhesServicos} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}} />
             <Stack.Screen name="Estabelecimento" component={Estabelecimento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}} />
             <Stack.Screen name="Colaboradores" component={Colaboradores}/>
-            <Stack.Screen name="FormColaboradores" component={FormColaboradores}/>
+            <Stack.Screen name="Formulário Colaborador" component={FormColaboradores}/>
         
         </Stack.Navigator>
     )

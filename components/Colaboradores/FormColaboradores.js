@@ -2,62 +2,78 @@ import { useEffect, useState } from 'react'
 import { Text, View, SafeAreaView, FlatList, StyleSheet, TouchableOpacity } from 'react-native'
 import { TextInput, List } from 'react-native-paper'
 import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
-import { MultipleSelectList } from "react-native-dropdown-select-list";
+import { MultipleSelectList } from "react-native-dropdown-select-list"; //a aposentar
+import DropDownPicker from 'react-native-dropdown-picker'; //novo componente para renderizar serviços favoritos
+import { widthPercentageToDP, heightPercentageToDP } from 'react-native-responsive-screen';
 import { GetServicosEstabelecimento, GetServicosColaborador, FavoritarServicoColaborador } from '../SQLiteManager/SQLServicoColaborador';
 import { CriaNovoColaborador, UpdateColaboradorPorId } from '../SQLiteManager/SQLiteColaborador';
 
 
-export default function FormColaboradores(props) {
+export default function FormColaboradores({route}) {
+    //console.log(route); //verificar os parâmetro fornecidos à tela de formulário.
+    //estados do colaborador
     const [idColaborador, setIdColaborador] = useState(null);
     const [nome, setNome] = useState('');
     const [funcao, setFuncao] = useState('');
     const [edicaoCadastro, setEdicaoCadastro] = useState(null);
+
+    //estados das listas de serviços
     const [listaServicosEstabelecimento, setListaServicosEstabelecimento] = useState([]);
     const [listaServicosSelecionados, setListaServicosSelecionados] = useState([]);
     const [listaServicosPreferidos, setListaServicosPreferidos] = useState([]);
     const [erro, setErro] = useState(null); //estado para armazenar erros
+    const [isOpen, setIsOpen] = useState(false); //para que o MultipleSelectList venha sempre aberto
+    const [max, setMax] = useState(1);
 
-    if(props.route.params !== undefined){
-        const colaborador = props.route.params.colaborador;
-        useEffect(() => {
-            // console.log(route.params);
-            // console.log(route.params.colaborador)
-            //usado para editar o cadastro
-            if(colaborador){
-                setIdColaborador(colaborador.idColaborador);
-                setNome(colaborador.nomeColaborador);
-                setFuncao(colaborador.descricao);
-                setEdicaoCadastro(true);
-                GetServicosColaborador(idColaborador, (servicosColaboradorArray)=>{
-                    setListaServicosPreferidos(servicosColaboradorArray);
-                })  
-            }
-            else {
-                setNome('');
-                setFuncao('');
-                setEdicaoCadastro(false);
-            }
-        }, [edicaoCadastro]);
-    }
+    //responsividade
+    const maxHeight = heightPercentageToDP('40%'); // Define a altura máxima do DropDownPicker como 70% da altura da tela
 
-    //BUSCA SERVIÇOS VINCULADOS AO ESTABELECIMENTO
+    // if(route.params !== undefined){
+    const colaborador = route.params.colaborador;
+    useEffect(() => {
+        // console.log(route.params);
+        // console.log(route.params.colaborador)
+        //usado para editar o cadastro
+        if(colaborador){
+            setIdColaborador(colaborador.idColaborador);
+            setNome(colaborador.nomeColaborador);
+            setFuncao(colaborador.descricao);
+            setEdicaoCadastro(true);
+            console.log(route.params.colaborador.idColaborador);
+            GetServicosColaborador(colaborador.idColaborador, (servicosColaboradorArray)=>{
+                console.log("Serviços sendo inseridos em setListaServicosPreferidos");
+                setListaServicosPreferidos(servicosColaboradorArray);
+            })  
+        }
+        else {
+            setNome('');
+            setFuncao('');
+            setEdicaoCadastro(false);
+        }
+    }, [edicaoCadastro]);
+    // }
+    
+    //BUSCA SERVIÇOS VINCULADOS AO ESTABELECIMENTO e ALTERA O ESTADO ISDROPDOWNOPEN PARA TRAZER O MULTIPLESELECTLIST ABERTO POR PADRÃO
     useEffect(() => {
         GetServicosEstabelecimento(
-          props.route.params.colaborador ? props.route.params.colaborador.idColaborador : null,
+        //   route.params.colaborador ? route.params.colaborador.idColaborador : null,
           (servicosArray) => {
             setListaServicosEstabelecimento(servicosArray);
+            setMax(servicosArray.length);
+            setIsOpen(true);
             setErro(null); // Limpar erro, se houver
           },
           (error) => {
             setErro(error);
+            console.log('[LOGS] - ', error)
           }
         );
-      }, []);
+        
+      }, [listaServicosPreferidos]);
 
     //FINALIZAÇÃO DO PROCESSO DE CADASTRO OU EDIÇÃO DE COLABORADOR
     //Cadastro de novo colaborador
     function CriarColaborador(){
-        console.log('implementar SalvarColaborador');
         //Validação
         if(nome === '' || funcao === '')
         {
@@ -68,18 +84,32 @@ export default function FormColaboradores(props) {
         else
         {
             // setHelperNome(false);
-       
             CriaNovoColaborador(nome, funcao, (novoID) => {
                 if (novoID !== null) {
-                // A inserção foi bem-sucedida
-                console.log(`Inserção bem-sucedida. Novo ID: ${novoID}`);
-                // setDialogTitulo('Sucesso');
-                // setDialogMensagem('Serviço criado!')
-                // setDialogTelaRetorno('Novo Serviço')
-                // setDialogTipoMensagem('S');
-                // setMsgAcaoVisivel(true);
-                // setBtnNovo(false);
-                //setAtualisaListaServico(true); ATUALIZAR LISTA DE SERVIÇO CUSTOMIZADO
+                    // A inserção foi bem-sucedida
+                    console.log('[LOGS] - Inserção bem-sucedida em CriaNovoColaborador. Novo ID: ${novoID}');
+                    //Etapa de vínculo do novo colaborador com serviços favoritos(caso selecionado algum)
+                    const totalChamadas = listaServicosSelecionados.length;
+                    if(totalChamadas != 0){
+                        FavoritarServicos(novoID, totalChamadas, (sucesso)=>{
+                            if(sucesso){
+                                console.log("inserir dialog informando sucesso da função CriarColaborador linha 86");
+                            }
+                            else{
+                                console.log("inserir dialog informando sucesso na criação e falha no vínculo de serviços, linha 89");
+                            }
+                        });
+                    }
+                    else{
+                        console.log("[LOGS] - Sem serviços a serem favoritados.");
+                    }
+                    // setDialogTitulo('Sucesso');
+                    // setDialogMensagem('Serviço criado!')
+                    // setDialogTelaRetorno('Novo Serviço')
+                    // setDialogTipoMensagem('S');
+                    // setMsgAcaoVisivel(true);
+                    // setBtnNovo(false);
+                    //setAtualisaListaServico(true); ATUALIZAR LISTA DE SERVIÇO CUSTOMIZADO
                 } else {
                 // A inserção falhou
                 console.log('Falha ao inserir');
@@ -110,7 +140,7 @@ export default function FormColaboradores(props) {
              UpdateColaboradorPorId(idColaborador, nome, funcao, (sucesso) => {
                 if (sucesso) {
                 // A inserção foi bem-sucedida
-                console.log('Atualização bem sucedida - dados mestre');
+                console.log('Edição bem sucedida - dados colaborador');
                 console.log(listaServicosSelecionados);
 
                 let chamadasBemSucedidas = 0;
@@ -119,16 +149,15 @@ export default function FormColaboradores(props) {
                 listaServicosSelecionados.forEach((servicoSelecionado) => {
                     const servico = listaServicosEstabelecimento.find((item)=>item.value === servicoSelecionado);
                 if(servico){
-                    console.log("Informações do servico:");
-                    console.log(servico);
+                    console.log("Informações do serviço: " + {servico});
+                    // console.log(servico);
                     FavoritarServicoColaborador(idColaborador, servico.key, servico.value, (sucesso)=>{
-                        console.log('entrou nessa misera');
                         if(sucesso){
                             console.log(chamadasBemSucedidas);
                             chamadasBemSucedidas++;
                         }
                         else{
-                            console.log("arrombado");
+                            console.log("else favoritarServicoColaborador line 131");
                         }
                         console.log('contador', chamadasBemSucedidas + 'total ', listaServicosSelecionados.length)
                         if(chamadasBemSucedidas === totalChamadas){
@@ -167,6 +196,37 @@ export default function FormColaboradores(props) {
         }
     }
 
+    function FavoritarServicos(idColaborador, totalChamadas, callback){
+        let chamadasBemSucedidas = 0;
+        //antes da chamada desta função, foi validado se o tamanho de listaServicoSelecionado é diferente de 0
+        //a partir disso é possível iterar a lista.
+        listaServicosSelecionados.forEach((servicoSelecionado) => {
+            const servico = listaServicosEstabelecimento.find((item)=>item.value === servicoSelecionado);
+        if(servico){
+            console.log("[LOGS] Informações do serviço: " + {servico});
+            // console.log(servico);
+            FavoritarServicoColaborador(idColaborador, servico.key, servico.value, (sucesso)=>{
+                if(sucesso){
+                    console.log(chamadasBemSucedidas);
+                    chamadasBemSucedidas++;
+                    console.log('Serviço', chamadasBemSucedidas + ' de ', listaServicosSelecionados.length + "favoritado!")
+                }
+                else{
+                    console.log("[LOGS] - Erro em FavoritarServicoColaborador. Serviço que deu problema: " + {servico});
+                    callback(false);
+                }
+                console.log('Serviço', chamadasBemSucedidas + 'total ', listaServicosSelecionados.length)
+                if(chamadasBemSucedidas === totalChamadas){
+                    console.log('[LOGS] - Sucesso JOB FavoritarServicos!');
+                    callback(true);
+                }
+            }
+            )
+        }
+           
+        });
+    }
+
     function ServicoColaboradorItem(item){
         return (
             <List.Item
@@ -177,8 +237,8 @@ export default function FormColaboradores(props) {
     }
 
     return(
-        <SafeAreaView>
-            <View>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.inputContainer}>
                 {/* NOME COLABORADOR */}
                 <TextInput
                     label='Nome Colaborador'
@@ -202,8 +262,8 @@ export default function FormColaboradores(props) {
                 />
 
                 {/*LISTA DE SERVIÇOS PREFERIDOS DO COLABORADOR*/}
-                {/* --------------------------------------------------- */}
-                {edicaoCadastro ?
+                {/* -----------------------A inativar este bloco de código---------------------------- */}
+                {/* {edicaoCadastro ?
                 (
                     <View>
                         <List.Accordion 
@@ -233,61 +293,83 @@ export default function FormColaboradores(props) {
                 )
                 :
                 console.log("Edição de um cadastro")
-                }   
+                }    */}
                 {/* --------------------------------------------------- */}
 
-                {/* PERMITIR VINCULAR MAIS SERVIÇOS QUE ESTEJAM ASSOCIADOS AO ESTABELECIMENTO */}
+                {/* PERMITIR VINCULAR(FAVORITAR) AO COLABORADOR SERVIÇOS QUE ESTEJAM ASSOCIADOS AO ESTABELECIMENTO */}
                 {/* --------------------------------------------------- */}
-                
-                <MultipleSelectList
+                {console.log(isOpen + ' Is Open')}
+
+
+                {/* <MultipleSelectList
                     placeholder= {listaServicosEstabelecimento.length === 0 ? "Sem serviços para favoritar": "Favoritar serviços ao colaborador" }
-                    searchPlaceholder=""
+                    //searchPlaceholder="Favoritar Serviços ao Colaborador"
                     
                     //valores já estão sendo trazidos no GetServicosEstabelecimento os valores idServico as key e nomeServico as value
                     data={listaServicosEstabelecimento} 
+                    value={listaServicosEstabelecimento} 
                     
                     save="value"//chave para associar item selecionado com o serviço em si
-                    
+                    maxHeight={280}
+                    dropdownShown={isOpen}
                     // onChange={(selectedItems) => setListaServicosSelecionados(selectedItems)}  //tava funcionando essa bagaça aqui não
                     setSelected={(val) => {
                         if (listaServicosEstabelecimento.length !== 0) {
                           setListaServicosSelecionados(val);
                         }
-                      }}
+                    }}
+                /> */}
+                {console.log("Servicos do colaborador", listaServicosPreferidos)}
+                <DropDownPicker
+                    items={listaServicosEstabelecimento}
+                    open={isOpen}
+                    setOpen={() => setIsOpen(!isOpen)}
+                    value={listaServicosSelecionados}
+                    setValue={(val) => {
+                        if (listaServicosEstabelecimento.length !== 0) {
+                          setListaServicosSelecionados(val);
+                        }}
+                    }
+                    maxHeight={maxHeight}
+                    autoScroll
+                    dropDownDirection='BOTTOM'
+                    //define que pode selecionar multiplos serviços.
+                    multiple={true}
+                    min={0}
+                    max={{max}} 
+                    
                 />
+
+
+                
                 
                 {/* --------------------------------------------------- */}
 
                 {/* BOTAO DE EDICAO/CADASTRO */}
-                   
-                {edicaoCadastro 
-                ? 
-                    <TouchableOpacity style={styles.btn} onPress={SalvarEdicao}>
+                
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.btn} onPress={edicaoCadastro ? SalvarEdicao : CriarColaborador}>
                         <View style={styles.btnContainer}>
-                        <FontAwesome5 name="save" size={28} color="#fff" />
-                        <Text style={styles.btnText}>Salvar Edição</Text> 
+                            {/* <FontAwesome5 name="plus" size={28} color="#fff" /> */}
+                            <Text style={styles.btnText}>{edicaoCadastro ? 'Salvar Edição' : 'Criar Colaborador'}</Text> 
                         </View>
                     </TouchableOpacity>
-                 : 
-                    <TouchableOpacity style={styles.btn} onPress={CriarColaborador}>
-                        <View style={styles.btnContainer}>
-                        <FontAwesome5 name="plus" size={28} color="#fff" />
-                        <Text style={styles.btnText}>Criar Colaborador</Text> 
-                        </View> 
-                    </TouchableOpacity>
+                </View>
                 
-                }
-                
-            </View>
+            </View> 
         </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        display:'flex',
-        flexDirection:'column',
-        justifyContent:'center',
+        flex: 1,
+        justifyContent: 'space-between',
+      },
+    inputContainer: {
+        flex: 1,
+        padding: 20,
+        //paddingBottom: 80, // Ajuste o valor conforme necessário
     },
     inputFormulario: {
         marginTop:20,
@@ -296,23 +378,34 @@ const styles = StyleSheet.create({
         marginBottom:20, 
         backgroundColor: 'rgba(112, 120, 147, 0.3)',
     },
+    buttonContainer: {
+        position: 'absolute',
+        bottom: 20,
+        left: 20,
+        right: 20,
+        backgroundColor: '#006699',
+       // padding: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5
+      },
     btnContainer: {
         flexDirection: "row", // Alinha os filhos (ícone e texto) lado a lado
         alignItems: "center", // Alinha verticalmente ao centro
       },
+    
     btn:
     {
         backgroundColor:'#006699',
-        marginTop:20,
-        marginLeft:20,
-        marginRight:20,
-        padding:20,
+        marginTop:5,
+        marginLeft:10,
+        marginRight:10,
+        padding:10,
         borderRadius:5
     },
     btnText:
     {
         color:'#ffff',
-        marginLeft:10,
         fontSize:20,
         alignSelf:'center',
         fontFamily:'Rubik_700Bold'
