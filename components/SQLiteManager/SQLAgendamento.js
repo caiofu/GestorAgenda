@@ -52,6 +52,28 @@ export function ConsultaAgendamentoPorHorarioData(horario, data, callback)
 }
 
 
+// export function ConsultaAgendamentoPorData(data, callback) {
+//   db.transaction((tx) => {
+//     tx.executeSql(
+//       'SELECT * FROM agendamento WHERE data = ? ORDER BY horario ASC',
+//       [data],
+//       (tx, results) => {
+//         const len = results.rows.length;
+//         const agendamentos = [];
+
+//         for (let i = 0; i < len; i++) {
+//           agendamentos.push(results.rows.item(i));
+//         }
+
+//         callback(agendamentos);
+//       },
+//       (error) => {
+//         console.log('Erro ao extrair agendamentos por data:', error);
+//       }
+//     );
+//   });
+// }
+
 export function ConsultaAgendamentoPorData(data, callback) {
   db.transaction((tx) => {
     tx.executeSql(
@@ -64,6 +86,22 @@ export function ConsultaAgendamentoPorData(data, callback) {
         for (let i = 0; i < len; i++) {
           agendamentos.push(results.rows.item(i));
         }
+
+        // Converter as strings de horário em objetos de data JavaScript
+        agendamentos.forEach((agendamento) => {
+          const [hours, minutes] = agendamento.horario.split(':');
+          agendamento.horarioDate = new Date();
+          agendamento.horarioDate.setHours(hours);
+          agendamento.horarioDate.setMinutes(minutes);
+        });
+
+        // Ordenar os objetos de data por horário
+        agendamentos.sort((a, b) => a.horarioDate - b.horarioDate);
+
+        // Remover a propriedade temporária "horarioDate"
+        agendamentos.forEach((agendamento) => {
+          delete agendamento.horarioDate;
+        });
 
         callback(agendamentos);
       },

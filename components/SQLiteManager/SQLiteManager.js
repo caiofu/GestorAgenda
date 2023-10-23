@@ -24,7 +24,7 @@ export default function SQLiteManager() {
       );
 
       //AGENDAMENTO
-      tx.executeSql('CREATE TABLE IF NOT EXISTS agendamento (idAgendamento INTEGER PRIMARY KEY AUTOINCREMENT, nomeCliente TEXT, telefone TEXT, data TEXT, horario TEXT);'
+      tx.executeSql('CREATE TABLE IF NOT EXISTS agendamento (idAgendamento INTEGER PRIMARY KEY AUTOINCREMENT, nomeCliente TEXT, telefone TEXT, data TEXT, horario TIME);'
       );
 
        //AGENDAMENTO_SERVIÇO

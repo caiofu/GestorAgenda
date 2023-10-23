@@ -52,7 +52,7 @@ export default function NovoAgendamento()
     const [horarioFormatado, setHorarioFormatado] = useState(null);
     const onChangeTimePicker = (event, horarioSelecionado) => {
         setHorario(horarioSelecionado);
-        setHorarioFormatado((horario.getHours().toString()+':'+horario.getMinutes().toString()).toString())
+        setHorarioFormatado((horario.getHours().toString()+':'+horario.getMinutes().toString().padStart(2,'0')).toString())
         setAbrirTimePicker(false);
     }
 

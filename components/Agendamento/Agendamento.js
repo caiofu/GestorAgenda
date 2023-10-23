@@ -76,11 +76,19 @@ export default function Agendamento()
                  }));
                 setListaAgendamentos(retorno); 
             });
-      },[atualizaAgendamentos, dataFormatada]);
+      },[atualizaAgendamentos, dataFormatada, date]);
      
-      ConsultaAgendamentoGeral((geral) => {
-        console.log('GERAL ---> ', geral)
+    //   ConsultaAgendamentoGeral((geral) => {
+    //     console.log('GERAL ---> ', geral)
+    //   })
+      ConsultaAgendamentoPorData(dataFormatada, (agendamentos) =>{
+        console.log('Por data ====> ',agendamentos)
       })
+
+      function CarregaDetalhesAgendamento(idAgendamento)
+      {
+        navigation.navigate('Detalhes Agendamento', { id: idAgendamento }); 
+      }
     return (
         <PaperProvider>
             <View style={{flex: 1, padding: 10, flexDirection: 'column'}}>
@@ -98,22 +106,22 @@ export default function Agendamento()
                     { listaAgendamentos.map((agendamento) => (
                                         <TouchableOpacity 
                                              key={agendamento.idAgendamento}
-                                            //  onPress={() => CarregaDetalhes(servico.idServico, 'importado')} 
+                                             onPress={() => CarregaDetalhesAgendamento(agendamento.idAgendamento)} 
                                             style={{borderWidth:0.7, margin:4, borderRadius:10}}
                                         >
                                             {/* <Text  key={servico.idServico}>{servico.nomeServico} </Text> */}
                                             <List.Item key={agendamento.idAgendamento}
-                                                        title='A definir'
+                                                        title={ <FontAwesome name="calendar" size={24} color='#006699' />}
                                                         description={agendamento.nomeCliente}
                                                         titleStyle={{color:'black', fontSize:12}}
                                                         descriptionStyle={{color:'gray', fontSize:10}}
                                                         descriptionNumberOfLines={1}
-                                                        right={props => <Text>Horário: {agendamento.horario}</Text>} />
+                                                        right={props =>  <><FontAwesome5 name="clock" size={18} color='#006699' /><Text style={{marginLeft:5, fontFamily:'Rubik_700Bold', color:'#006699'}}>{agendamento.horario}</Text></>} />
                                             </TouchableOpacity>
 
                                         
                                     ))}
-                    <TouchableOpacity style={{borderWidth:0.7, margin:4, borderRadius:10}}>
+                    {/* <TouchableOpacity style={{borderWidth:0.7, margin:4, borderRadius:10}}>
                         <List.Item
                         title="Barba"
                         description="Caio Furegati"
@@ -123,19 +131,9 @@ export default function Agendamento()
                         right={props => <Text>Horário: 8:50</Text>}
 
                     />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
 
-                    <TouchableOpacity style={{borderWidth:0.7, margin:4, borderRadius:10}}>
-                        <List.Item
-                        title="Barba"
-                        description="Caio Furegati"
-                       
-                        titleStyle={{color:'black', fontSize:12}}
-                        descriptionStyle={{color:'gray', fontSize:10}}
-                        right={props => <Text>Horário: 8:50</Text>}
-
-                    />
-                    </TouchableOpacity>
+                    
                
                 </ScrollView>
             </View>

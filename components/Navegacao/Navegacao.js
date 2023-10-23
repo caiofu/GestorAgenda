@@ -16,6 +16,7 @@ import Servicos from "../Servicos/Servicos";
 import NovoServico from "../Servicos/NovoServico";
 import DetalhesServicos from "../Servicos/DetalhesServicos";
 import NovoAgendamento from "../Agendamento/NovoAgendamento";
+import DetalhesAgendamento from "../Agendamento/DetalhesAgendamento";
 
 
 import Colaboradores from "../Colaboradores/Colaboradores";
@@ -71,6 +72,7 @@ function OpTelaInicial() {
         <Stack.Navigator   >
              <Stack.Screen name="Gestor Agenda" component={Agendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}} />
              <Stack.Screen name="Novo Agendamento" component={NovoAgendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}}></Stack.Screen>
+             <Stack.Screen name="Detalhes Agendamento" component={DetalhesAgendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}}></Stack.Screen>
            
         </Stack.Navigator>
     )
