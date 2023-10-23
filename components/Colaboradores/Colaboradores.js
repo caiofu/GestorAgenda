@@ -3,7 +3,7 @@ import  FormColaboradores from './FormColaboradores'
 import { List, FAB, PaperProvider } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ScrollView } from 'react-native';
 import { listarColaboradores, ConsultaTeste } from '../SQLiteManager/SQLiteColaborador'
 //import { listarColaboradores } from './SQLiteColaborador';
 
@@ -45,6 +45,7 @@ function Colaboradores() {
 
   function itemColaborador(item){
     return (
+      // console.log(item),
       <List.Item
         style={{margin:10}} // alterar para colocar mais estilo nisso aqui, agr to sem ideia
         title={item.nomeColaborador}
@@ -63,37 +64,39 @@ function Colaboradores() {
       <SafeAreaView
         style={styles.container}
       >
-          <View>
-              {erro ? (
-                  <Text>{erro}</Text>
-              ) : (
-                  colaboradores.length === 0 ? (
-                  <Text>Nenhum colaborador encontrado.</Text>
-                  ) : (
-                  <List.Section>
-                    <View style={{alignContent: 'center', alignItems: 'center'}}>
-                      <List.Subheader style={styles.subHeader}>Lista de Colaboradores</List.Subheader>
-                    </View>
-                      <FlatList
-                          data={colaboradores}
-                          keyExtractor={(item) => item.idColaborador.toString()}
-                          renderItem={({ item }) => (
-                            itemColaborador(item)
-                            //a performance de uma lista melhora com o uso de flatlist e passando uma função ao renderItem
-                            //ao invés de criar diretamente nele
-                          )}
-                      />
-                  </List.Section>
-                  )
-              )}
-          </View>
-          <FAB
-            style={styles.fab}
-            label='Novo Colaborador'
-            icon="plus"
-            onPress={() => {
-              navigation.navigate('Formulário Colaborador', {colaborador: null})}}
-          />
+        {/* <ScrollView> */}
+            <View>
+                {erro ? (
+                    <Text>{erro}</Text>
+                ) : (
+                    colaboradores.length === 0 ? (
+                    <Text>Nenhum colaborador encontrado.</Text>
+                    ) : (
+                    <List.Section>
+                        <FlatList
+                            ListHeaderComponent={<View style={{alignContent: 'center', alignItems: 'center'}}>
+                                                    <List.Subheader style={styles.subHeader}>Lista de Colaboradores</List.Subheader>
+                                                 </View>}
+                            data={colaboradores}
+                            keyExtractor={(item) => item.idColaborador.toString()}
+                            renderItem={({ item }) => (
+                              itemColaborador(item)
+                              //a performance de uma lista melhora com o uso de flatlist e passando uma função ao renderItem
+                              //ao invés de criar diretamente nele
+                            )}
+                        />
+                     </List.Section>
+                    )
+                )}
+            </View>
+        {/* </ScrollView> */}
+        <FAB
+          style={styles.fab}
+          label='Novo Colaborador'
+          icon="plus"
+          onPress={() => {
+            navigation.navigate('Formulário Colaborador', {colaborador: null})}}
+        />
       </SafeAreaView>
     </PaperProvider>
   );

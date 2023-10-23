@@ -7,7 +7,6 @@ export function listarColaboradores(callback, errorCallback) {
   db.transaction((tx) => {
     tx.executeSql('SELECT * FROM colaborador', [], (tx, results) => 
     {
-        console.log("execute -->colab")
       const rows = results.rows;
       const colaboradoresArray = [];
       
@@ -16,11 +15,8 @@ export function listarColaboradores(callback, errorCallback) {
       }
 
       if (colaboradoresArray.length > 0) {
-        console.log("aquiiii");
-        console.log(colaboradoresArray);
         callback(colaboradoresArray);
       } else {
-        console.log('caindo aqui por isso o erro');
         errorCallback("Nenhum colaborador encontrado.");
       }
     },
@@ -42,7 +38,6 @@ export function CriaNovoColaborador(nomeColaborador, descricao, callback)
       (tx, results) => {
         // Verificando se a inserção foi bem-sucedida
         if (results.rowsAffected > 0) {
-          console.log('Inserção bem-sucedida');
           // Recuperando o ID do novo registro
           const novoID = results.insertId;
           //Função de retorno (callback) com o resultado (novoID)

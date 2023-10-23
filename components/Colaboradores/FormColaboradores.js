@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Text, View, SafeAreaView, FlatList, StyleSheet, TouchableOpacity } from 'react-native'
+import { Text, View, SafeAreaView, FlatList, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import { TextInput, List } from 'react-native-paper'
 import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
 import { MultipleSelectList } from "react-native-dropdown-select-list"; //a aposentar
@@ -31,6 +31,20 @@ export default function FormColaboradores({route}) {
     // if(route.params !== undefined){
     const colaborador = route.params.colaborador;
     useEffect(() => {
+        //BUSCA SERVIÇOS VINCULADOS AO ESTABELECIMENTO e ALTERA O ESTADO ISOPEN PARA TRAZER O DROPDOWNPICKER ABERTO POR PADRÃO
+        GetServicosEstabelecimento(
+            //   route.params.colaborador ? route.params.colaborador.idColaborador : null,
+              (servicosArray) => {
+                setListaServicosEstabelecimento(servicosArray);
+                setMax(servicosArray.length);
+                setIsOpen(true);
+                setErro(null); // Limpar erro, se houver
+              },
+              (error) => {
+                setErro(error);
+                console.log('[LOGS] - Erro GetServicosEstabelecimento: ', error)
+              }
+            );
         // console.log(route.params);
         // console.log(route.params.colaborador)
         //usado para editar o cadastro
@@ -41,8 +55,10 @@ export default function FormColaboradores({route}) {
             setEdicaoCadastro(true);
             console.log(route.params.colaborador.idColaborador);
             GetServicosColaborador(colaborador.idColaborador, (servicosColaboradorArray)=>{
-                console.log("Serviços sendo inseridos em setListaServicosPreferidos");
-                setListaServicosPreferidos(servicosColaboradorArray);
+                // console.log("Serviços sendo inseridos em setListaServicosSelecionados");
+                const ValuesServicosColaborador = servicosColaboradorArray.map((servico)=>servico.value);
+                setListaServicosSelecionados(ValuesServicosColaborador);
+                // console.log("ValuesServicosColaborador: ", ValuesServicosColaborador);
             })  
         }
         else {
@@ -50,26 +66,26 @@ export default function FormColaboradores({route}) {
             setFuncao('');
             setEdicaoCadastro(false);
         }
-    }, [edicaoCadastro]);
+    }, []);
     // }
     
     //BUSCA SERVIÇOS VINCULADOS AO ESTABELECIMENTO e ALTERA O ESTADO ISDROPDOWNOPEN PARA TRAZER O MULTIPLESELECTLIST ABERTO POR PADRÃO
-    useEffect(() => {
-        GetServicosEstabelecimento(
-        //   route.params.colaborador ? route.params.colaborador.idColaborador : null,
-          (servicosArray) => {
-            setListaServicosEstabelecimento(servicosArray);
-            setMax(servicosArray.length);
-            setIsOpen(true);
-            setErro(null); // Limpar erro, se houver
-          },
-          (error) => {
-            setErro(error);
-            console.log('[LOGS] - ', error)
-          }
-        );
+    // useEffect(() => {
+    //     GetServicosEstabelecimento(
+    //     //   route.params.colaborador ? route.params.colaborador.idColaborador : null,
+    //       (servicosArray) => {
+    //         setListaServicosEstabelecimento(servicosArray);
+    //         setMax(servicosArray.length);
+    //         setIsOpen(true);
+    //         setErro(null); // Limpar erro, se houver
+    //       },
+    //       (error) => {
+    //         setErro(error);
+    //         console.log('[LOGS] - Erro GetServicosEstabelecimento: ', error)
+    //       }
+    //     );
         
-      }, [listaServicosPreferidos]);
+    //   }, []);
 
     //FINALIZAÇÃO DO PROCESSO DE CADASTRO OU EDIÇÃO DE COLABORADOR
     //Cadastro de novo colaborador
@@ -149,9 +165,9 @@ export default function FormColaboradores({route}) {
                 listaServicosSelecionados.forEach((servicoSelecionado) => {
                     const servico = listaServicosEstabelecimento.find((item)=>item.value === servicoSelecionado);
                 if(servico){
-                    console.log("Informações do serviço: " + {servico});
+                    // console.log("Informações do serviço: " + {servico});
                     // console.log(servico);
-                    FavoritarServicoColaborador(idColaborador, servico.key, servico.value, (sucesso)=>{
+                    FavoritarServicoColaborador(idColaborador, servico.value, servico.label, (sucesso)=>{
                         if(sucesso){
                             console.log(chamadasBemSucedidas);
                             chamadasBemSucedidas++;
@@ -202,14 +218,18 @@ export default function FormColaboradores({route}) {
         //a partir disso é possível iterar a lista.
         listaServicosSelecionados.forEach((servicoSelecionado) => {
             const servico = listaServicosEstabelecimento.find((item)=>item.value === servicoSelecionado);
+            // console.log('servico:', servico);
+            // console.log("servico.label", servico.label);
+            // console.log("servico.value", servico.value);
+            
         if(servico){
             console.log("[LOGS] Informações do serviço: " + {servico});
             // console.log(servico);
-            FavoritarServicoColaborador(idColaborador, servico.key, servico.value, (sucesso)=>{
+            FavoritarServicoColaborador(idColaborador, servico.value, servico.label, (sucesso)=>{
                 if(sucesso){
                     console.log(chamadasBemSucedidas);
                     chamadasBemSucedidas++;
-                    console.log('Serviço', chamadasBemSucedidas + ' de ', listaServicosSelecionados.length + "favoritado!")
+                    console.log('[LOGS] - Serviço', chamadasBemSucedidas + ' de ', listaServicosSelecionados.length + "favoritado!")
                 }
                 else{
                     console.log("[LOGS] - Erro em FavoritarServicoColaborador. Serviço que deu problema: " + {servico});
@@ -262,7 +282,7 @@ export default function FormColaboradores({route}) {
                 />
 
                 {/*LISTA DE SERVIÇOS PREFERIDOS DO COLABORADOR*/}
-                {/* -----------------------A inativar este bloco de código---------------------------- */}
+                {/* -----------------------bloco de código aposentado---------------------------- */}
                 {/* {edicaoCadastro ?
                 (
                     <View>
@@ -297,11 +317,10 @@ export default function FormColaboradores({route}) {
                 {/* --------------------------------------------------- */}
 
                 {/* PERMITIR VINCULAR(FAVORITAR) AO COLABORADOR SERVIÇOS QUE ESTEJAM ASSOCIADOS AO ESTABELECIMENTO */}
-                {/* --------------------------------------------------- */}
-                {console.log(isOpen + ' Is Open')}
-
-
-                {/* <MultipleSelectList
+                {/* --------------------------------------------------- */}                
+                {/*
+                COMPONENTE APOSENTADO
+                <MultipleSelectList
                     placeholder= {listaServicosEstabelecimento.length === 0 ? "Sem serviços para favoritar": "Favoritar serviços ao colaborador" }
                     //searchPlaceholder="Favoritar Serviços ao Colaborador"
                     
@@ -315,19 +334,29 @@ export default function FormColaboradores({route}) {
                     // onChange={(selectedItems) => setListaServicosSelecionados(selectedItems)}  //tava funcionando essa bagaça aqui não
                     setSelected={(val) => {
                         if (listaServicosEstabelecimento.length !== 0) {
-                          setListaServicosSelecionados(val);
+                        setListaServicosSelecionados(val);
                         }
                     }}
                 /> */}
-                {console.log("Servicos do colaborador", listaServicosPreferidos)}
+                
+                {/*
+                BLOCO DE DEBUG */}
+                {/* {console.log("Servicos do colaborador - listaServicosSelecionados", listaServicosSelecionados)} */}
+                {/* {console.log("Servicos do colaborador - listaServicosPreferidos individual", listaServicosPreferidos.map((servico)=>servico.label))} */}
+                {/* {console.log("Servicos do colaborador - listaServicosSelecionados", listaServicosSelecionados)}  */}
+
+                {/* Componente utilizado para trazer o serviços, tanto os preferidos quanto os não preferidos */}
                 <DropDownPicker
+                    // disabled={true}
+                    placeholder='Serviços Preferidos do Colaborador'
                     items={listaServicosEstabelecimento}
                     open={isOpen}
                     setOpen={() => setIsOpen(!isOpen)}
+                    // value={listaServicosPreferidos.map((servico)=>servico.value)}
                     value={listaServicosSelecionados}
                     setValue={(val) => {
                         if (listaServicosEstabelecimento.length !== 0) {
-                          setListaServicosSelecionados(val);
+                            setListaServicosSelecionados(val);
                         }}
                     }
                     maxHeight={maxHeight}
@@ -336,7 +365,8 @@ export default function FormColaboradores({route}) {
                     //define que pode selecionar multiplos serviços.
                     multiple={true}
                     min={0}
-                    max={{max}} 
+                    max={{max}}
+                    mode='BADGE'
                     
                 />
 
@@ -355,7 +385,6 @@ export default function FormColaboradores({route}) {
                         </View>
                     </TouchableOpacity>
                 </View>
-                
             </View> 
         </SafeAreaView>
     )
