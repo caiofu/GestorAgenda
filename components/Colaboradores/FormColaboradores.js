@@ -1,32 +1,53 @@
-import { useEffect, useState } from 'react'
+//FRONT
+import { useEffect, useRef, useState } from 'react'
 import { Text, View, SafeAreaView, FlatList, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
-import { TextInput, List } from 'react-native-paper'
+import { TextInput, List, HelperText } from 'react-native-paper'
 import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
 import { MultipleSelectList } from "react-native-dropdown-select-list"; //a aposentar
+
+//LISTAGEM DOS SERVIÇOS
 import DropDownPicker from 'react-native-dropdown-picker'; //novo componente para renderizar serviços favoritos
 import { widthPercentageToDP, heightPercentageToDP } from 'react-native-responsive-screen';
+
+//BANCO DE DADOS
 import { GetServicosEstabelecimento, GetServicosColaborador, FavoritarServicoColaborador } from '../SQLiteManager/SQLServicoColaborador';
 import { CriaNovoColaborador, UpdateColaboradorPorId } from '../SQLiteManager/SQLiteColaborador';
-
+//CONTEXT
+import { useAppState } from "../Contexts/AppStateContext";
 
 export default function FormColaboradores({route}) {
+    //CONTEXT
+    const {tema, atulizaListaServico, setAtualisaListaServico } = useAppState();
+
+    //COR DO TEMA
+    const [corTema, setCorTema] = useState('#006699');
+    useEffect(()=>{
+ 
+       tema === 'light' ? setCorTema('#006699') : setCorTema(DarkTheme.colors.text);
+         },[tema])
+
     //console.log(route); //verificar os parâmetro fornecidos à tela de formulário.
-    //estados do colaborador
+    //Dados colaborador
     const [idColaborador, setIdColaborador] = useState(null);
     const [nome, setNome] = useState('');
     const [funcao, setFuncao] = useState('');
     const [edicaoCadastro, setEdicaoCadastro] = useState(null);
+    const [helperNome, setHelperNome] = useState(false);
+    const refNome = useRef(null);
 
-    //estados das listas de serviços
+    //Listas
+    const [desabilitaLista, setDesabilitaLista] = useState(true);
     const [listaServicosEstabelecimento, setListaServicosEstabelecimento] = useState([]);
     const [listaServicosSelecionados, setListaServicosSelecionados] = useState([]);
-    const [listaServicosPreferidos, setListaServicosPreferidos] = useState([]);
-    const [erro, setErro] = useState(null); //estado para armazenar erros
-    const [isOpen, setIsOpen] = useState(false); //para que o MultipleSelectList venha sempre aberto
-    const [max, setMax] = useState(1);
+    // const [listaServicosPreferidos, setListaServicosPreferidos] = useState([]);
 
-    //responsividade
-    const maxHeight = heightPercentageToDP('40%'); // Define a altura máxima do DropDownPicker como 70% da altura da tela
+    //Erros
+    const [erro, setErro] = useState(null); //estado para armazenar erros
+
+    //DropDownPicker
+    const [isOpen, setIsOpen] = useState(false); //para que o MultipleSelectList venha sempre aberto
+    const [max, setMax] = useState(null);
+    const maxHeight = heightPercentageToDP('40%'); // Define a altura máxima do DropDownPicker como 40% da altura da tela
 
     // if(route.params !== undefined){
     const colaborador = route.params.colaborador;
@@ -53,6 +74,7 @@ export default function FormColaboradores({route}) {
             setNome(colaborador.nomeColaborador);
             setFuncao(colaborador.descricao);
             setEdicaoCadastro(true);
+            setDesabilitaLista(false);
             console.log(route.params.colaborador.idColaborador);
             GetServicosColaborador(colaborador.idColaborador, (servicosColaboradorArray)=>{
                 // console.log("Serviços sendo inseridos em setListaServicosSelecionados");
@@ -91,15 +113,14 @@ export default function FormColaboradores({route}) {
     //Cadastro de novo colaborador
     function CriarColaborador(){
         //Validação
-        if(nome === '' || funcao === '')
+        if(nome === '')
         {
-            // setHelperNome(true);
-            // refNome.current.focus(); //Responsavel por levar o focu ate o input nome
-            console.log('Campos vazios, tratar para não permitir');
+            setHelperNome(true);
+            refNome.current.focus(); //Responsável por levar o foco ate o input nome
         }
         else
         {
-            // setHelperNome(false);
+            setHelperNome(false);
             CriaNovoColaborador(nome, funcao, (novoID) => {
                 if (novoID !== null) {
                     // A inserção foi bem-sucedida
@@ -141,16 +162,14 @@ export default function FormColaboradores({route}) {
 
     //Edição de colaborador
     function SalvarEdicao(){
-        console.log('implementar SalvarEdicao');
-        if(nome === '' || funcao === '')
+        if(nome === '')
         {
-            // setHelperNome(true);
-            // refNome.current.focus(); //Responsavel por levar o focu ate o input nome
-            console.log('Campos vazios, tratar para não permitir');
+            setHelperNome(true);
+            refNome.current.focus(); //Responsavel por levar o focu ate o input nome
         }
         else
         {
-             // setHelperNome(false);
+             setHelperNome(false);
              
              
              UpdateColaboradorPorId(idColaborador, nome, funcao, (sucesso) => {
@@ -247,36 +266,45 @@ export default function FormColaboradores({route}) {
         });
     }
 
-    function ServicoColaboradorItem(item){
-        return (
-            <List.Item
-              style={{margin:10}} // alterar para colocar mais estilo nisso aqui, agr to sem ideia
-              title={item.value}
-            />
-          )
-    }
+    //aposentado
+    // function ServicoColaboradorItem(item){
+    //     return (
+    //         <List.Item
+    //           style={{margin:10}} // alterar para colocar mais estilo nisso aqui, agr to sem ideia
+    //           title={item.value}
+    //         />
+    //       )
+    // }
 
     return(
         <SafeAreaView style={styles.container}>
             <View style={styles.inputContainer}>
                 {/* NOME COLABORADOR */}
+                {helperNome  ?  <HelperText style={{color:'red', fontStyle:'italic'}}>Nome não pode ser vazio</HelperText>:''}
                 <TextInput
+                    ref={refNome}
                     label='Nome Colaborador'
                     value={nome} 
-                    onChangeText={setNome} 
+                    onChangeText={(entrada)=>{
+                        console.log(entrada)
+                        console.log(desabilitaLista)
+                        entrada === '' ? setDesabilitaLista(true) : setDesabilitaLista(false)
+                        setNome(entrada)
+                    }} 
                     theme={{
-                        colors:'#006699',
+                        colors: { primary: helperNome ? 'red' : corTema, onSurfaceVariant:  helperNome ? 'red' : corTema   }
                     }}
                     style={styles.inputFormulario}
                 />
 
                 {/* DESCRICAO COLABORADOR */}
+                {/* Não obrigatório */}
                 <TextInput
                     label='Função'
                     value={funcao} 
                     onChangeText={setFuncao} 
                     theme={{
-                        colors:'#006699',
+                        colors: { primary: corTema, onSurfaceVariant: corTema   }
                     }}
                     style={styles.inputFormulario}
                 />
@@ -346,11 +374,12 @@ export default function FormColaboradores({route}) {
                 {/* {console.log("Servicos do colaborador - listaServicosSelecionados", listaServicosSelecionados)}  */}
 
                 {/* Componente utilizado para trazer o serviços, tanto os preferidos quanto os não preferidos */}
+                {console.log(desabilitaLista)}
                 <DropDownPicker
-                    // disabled={true}
+                    disabled={desabilitaLista}
                     placeholder='Serviços Preferidos do Colaborador'
                     items={listaServicosEstabelecimento}
-                    open={isOpen}
+                    open={desabilitaLista ? !isOpen : isOpen}
                     setOpen={() => setIsOpen(!isOpen)}
                     // value={listaServicosPreferidos.map((servico)=>servico.value)}
                     value={listaServicosSelecionados}
