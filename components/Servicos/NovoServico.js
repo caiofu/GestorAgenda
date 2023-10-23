@@ -224,7 +224,7 @@ export default function NovoServico()
     };
     
     return(
-        <PaperProvider >
+        <PaperProvider  >
         <SafeAreaView >
             <KeyboardAvoidingView  behavior={Platform.OS === 'ios' ? 'padding' : null} enabled>
                 <ScrollView>

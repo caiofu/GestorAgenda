@@ -28,7 +28,7 @@ export default function Estabelecimento()
 {
  
 
-    //BUSCA O RAMO DE ATIVIDADE (Usamos o useEffect para carregar somente na criaçao do componente)
+   
     const [listaRamoAtividade, setListaRamoAtividade] = useState([]);
     useEffect(() => {
        
@@ -60,7 +60,7 @@ export default function Estabelecimento()
          // setDadosCarregados(true);
         });
 
-         // Chame a função de consulta diretamente
+         //BUSCA O RAMO DE ATIVIDADE
          ConsultaRamoAtividade((ramoAtividades) => {
           const retorno = ramoAtividades.map((atividade) => ({
               key: atividade.idRamoAtividade.toString(),
@@ -336,9 +336,7 @@ export default function Estabelecimento()
               <Text style={styles.btnLogoText}>SELECIONAR LOGO</Text>
             </TouchableOpacity>
           </View>
-          <View>
-
-          </View>
+    
           {msgNomeEstabelecimento == true ? (
             <HelperText style={styles.msgHelper}>Este campo é obrigatório</HelperText>
           ) : (

@@ -3,6 +3,7 @@ import { StyleSheet, SafeAreaView, useColorScheme } from 'react-native';
 import { useState, useContext } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { PaperProvider } from 'react-native-paper';
 
 //CONTEXT
 import { AppStateProvider, useAppState } from './components/Contexts/AppStateContext'
@@ -31,8 +32,6 @@ import Colaboradores from './components/Colaboradores/Colaboradores';
 
 
 export default function App() {
-
-console.log('TESTe --->', useColorScheme())
 
   //LIDANDO COM PRIMEIRO ACESSO
   const [primeiroAcesso, setPrimeiroAcesso] = useState(null);
@@ -79,6 +78,7 @@ console.log('TESTe --->', useColorScheme())
     setBoasVindasAtivo(novoValor);
   };
   //CONSULTA NO BANCO SE JA TEM ESTABELECIMENTO CADASTRADO
+ 
   ConsultaEstabelecimento((resultado) => {
     if (resultado === null) {
       setEstabelecimentoCadastro(true);
@@ -89,9 +89,9 @@ console.log('TESTe --->', useColorScheme())
   })
 
   //TRECHO QUE RESETA TUDO PARA TESTES
-   //removerAsyncStorage();
-   //guardaWizardAtivo('true');
-   //ExcluirBancoDeDados();
+  //  removerAsyncStorage();
+  //  guardaWizardAtivo('true');
+  //  ExcluirBancoDeDados();
   //--------------------------------
 
   return (

@@ -293,3 +293,29 @@ export function AtualizarServiçoAtivoPorIdRamoAtividade(idRamoAtividade, callba
     );
   });
 }
+
+//RETORNA TODOS OS SERVIÇOS DO ESTABELECIMENTO ORDENADO POR FAVORITOS E PORSTERIORMENTE POR NOME.
+export function RetornaServicosEstabelecimento(callback) {
+  db.transaction((tx) => {
+    tx.executeSql(
+      'SELECT nomeServico AS nome, favorito AS fav FROM servicos WHERE ativo = 1 ' +
+      'UNION ' +
+      'SELECT nomeServico, favorito FROM servicos_customizado WHERE ativo = 1 ' +
+      'ORDER BY fav DESC, nome',
+      [],
+      (tx, results) => {
+        const len = results.rows.length;
+        const resultados = [];
+        for (let i = 0; i < len; i++) {
+          const row = results.rows.item(i);
+          resultados.push(row.nome);
+        }
+        callback(resultados); //callback com os resultados
+      },
+      (tx, error) => {
+        console.log('Erro ao executar a consulta: ' + error.message);
+      }
+    );
+  });
+}
+

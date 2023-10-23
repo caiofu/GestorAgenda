@@ -15,19 +15,27 @@ export default function SQLiteManager() {
 
     db.transaction(tx => {
 
-      //Estabelecimento
+      //ESTABELECIMENTO
       tx.executeSql('CREATE TABLE IF NOT EXISTS estabelecimento (idEstabelecimento INTEGER PRIMARY KEY AUTOINCREMENT, nomeEstabelecimento TEXT, cnpj TEXT, logo TEXT, ramoAtividade TEXT);',
       );
 
-      //Colaborador
+      //COLABORADOR
       tx.executeSql('CREATE TABLE IF NOT EXISTS colaborador (idColaborador INTEGER PRIMARY KEY AUTOINCREMENT, nomeColaborador TEXT, descricao TEXT, ativo INTEGER);'
       );
 
-      //Ramo Atividade
+      //AGENDAMENTO
+      tx.executeSql('CREATE TABLE IF NOT EXISTS agendamento (idAgendamento INTEGER PRIMARY KEY AUTOINCREMENT, nomeCliente TEXT, telefone TEXT, data TEXT, horario TIME);'
+      );
+
+       //AGENDAMENTO_SERVIÇO
+       tx.executeSql('CREATE TABLE IF NOT EXISTS agendamento_servicos (idAgendamentoServico INTEGER PRIMARY KEY AUTOINCREMENT, idAgendamento INTEGER, nomeServico TEXT);'
+       );
+
+      //RAMO DE ATIVIDADE
       tx.executeSql(
         'CREATE TABLE IF NOT EXISTS ramoAtividade (idRamoAtividade INTEGER PRIMARY KEY AUTOINCREMENT, nomeAtividade TEXT);'
       );
-      //Serviços 
+      //SERVIÇOS
       tx.executeSql(
         'CREATE TABLE IF NOT EXISTS servicos (idServico INTEGER PRIMARY KEY AUTOINCREMENT, idRamoAtividade INTEGER, nomeServico TEXT, descricao TEXT, favorito INTEGER, ativo INTEGER, criado INTEGER);'
       );

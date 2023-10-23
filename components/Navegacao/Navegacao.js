@@ -4,14 +4,19 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {FontAwesome5, FontAwesome} from '@expo/vector-icons';
 
+
+
 import { ConsultaEstabelecimento } from '../SQLiteManager/SQLEstabelecimento';
 //Componentes (telas para navegação)
+import Agendamento from "../Agendamento/Agendamento";
 import Home from '../Home/Home';
 import Configuracoes from "../Configuracoes/Configuracoes";
 import Estabelecimento from "../Estabelecimento/Estabelecimento";
 import Servicos from "../Servicos/Servicos";
 import NovoServico from "../Servicos/NovoServico";
 import DetalhesServicos from "../Servicos/DetalhesServicos";
+import NovoAgendamento from "../Agendamento/NovoAgendamento";
+import DetalhesAgendamento from "../Agendamento/DetalhesAgendamento";
 
 
 import Colaboradores from "../Colaboradores/Colaboradores";
@@ -32,19 +37,23 @@ function Tabs()
 
     const { tema} = useAppState();
     //AQUI É ONDE FICA A BARRA NA PARTE INFERIOR COM OS BOTOES DE NAVEGAÇÃO
+    console.log('caiu nesse por que ?')
     return(
         <Tab.Navigator screenOptions={{headerShown: false, tabBarActiveTintColor:'#006699',}}>
-            <Tab.Screen name="Tela Inicial" component={StackTelas} initialParams={{tema1:tema}} options={{tabBarIcon: ({color, size}) => (<FontAwesome5 name="home" size={size} color={color} />),}} ></Tab.Screen>
-            <Tab.Screen name="Configuracoes"  component={Configuracoes}   options={{tabBarIcon: ({color, size}) => (<FontAwesome name="gear" size={size} color={color} />),headerShown:true, headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text, title:'Configurações'}   }></Tab.Screen>
+            <Tab.Screen name="Tela Inicial" component={OpTelaInicial} initialParams={{tema1:tema}} options={{tabBarIcon: ({color, size}) => (<FontAwesome5 name="home" size={size} color={color} />),}} ></Tab.Screen>
+            <Tab.Screen  name="Ações" component={OpAcoes} initialParams={{tema1:tema}} options={{ tabBarIcon: ({color, size}) => (<FontAwesome5 name="archive" size={size} color={color} />), headerShown:false}} ></Tab.Screen>
+            
+            <Tab.Screen name="Configuracoes"  component={ OpConfiguracoes}   options={{tabBarIcon: ({color, size}) => (<FontAwesome name="gear" size={size} color={color} />),headerShown:true, headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text, title:'Configurações'}   }></Tab.Screen>
         </Tab.Navigator>
     )
 }
 
-function StackTelas() {
+function OpAcoes() {
     const { tema} = useAppState();
     return (
-        <Stack.Navigator  >
-            <Stack.Screen name="Gestor Agenda" component={Home} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}} />
+        <Stack.Navigator screenOptions={{headerShown:true}}  >
+             {/* <Stack.Screen name="Gestor Agenda" component={Agendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}} /> */}
+            <Stack.Screen name="Home" component={Home} options={{title:'Ações', headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}} />
             {/* <Stack.Screen name="Serviços" component={Servicos} options={{ headerLeft: null, headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text }} /> */}
             <Stack.Screen name="Serviços" component={Servicos} options={{ headerLeft: null, headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text }} />
             <Stack.Screen name="Novo Serviço" component={NovoServico} options={{ headerLeft: null, headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text }} />
@@ -57,7 +66,30 @@ function StackTelas() {
     )
 }
 
+function OpTelaInicial() {
+    const { tema} = useAppState();
+    return (
+        <Stack.Navigator   >
+             <Stack.Screen name="Gestor Agenda" component={Agendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}} />
+             <Stack.Screen name="Novo Agendamento" component={NovoAgendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}}></Stack.Screen>
+             <Stack.Screen name="Detalhes Agendamento" component={DetalhesAgendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}}></Stack.Screen>
+           
+        </Stack.Navigator>
+    )
+}
+
+function OpConfiguracoes() {
+    const { tema} = useAppState();
+    return (
+        <Stack.Navigator screenOptions={{headerShown:false}} >
+             <Stack.Screen name="Gestor Agenda" component={Configuracoes} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}} />
+           
+        </Stack.Navigator>
+    )
+}
+
 function PrimeiroCadastroEstabelecimento() {
+    console.log('PRIMEIRO CADASTRO ESTA')
     return (
         <Stack.Navigator>
             <Stack.Screen name="Estabelecimento" component={Estabelecimento} />
@@ -87,7 +119,7 @@ export default function Navegacao()
        
       }, [tema]);
       
-  
+      console.log('estabelecimento nave ',navegacaoEstabelecimento)
         
    
     return(

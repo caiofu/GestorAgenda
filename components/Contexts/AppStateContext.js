@@ -40,8 +40,25 @@ export const AppStateProvider = ({ children }) => {
 
   //RESPONSAVEL PELO FAVORITOS DE SERVIÇOS
   const [atualizaFavoritos, setAtulizaFavoritos] = useState(false);
+
+  //RESPONSAVEL POR ATUALIZAR A LISTA DE AGENDAMENTO
+  const [atualizaAgendamentos, setAtualizaAgendamentos] = useState(false);
+
   return (
-    <AppStateContext.Provider value={{ navegacaoEstabelecimento, setNavegacaoEstabelecimento, tema, MudarTema, setTema, atulizaListaServico, setAtualisaListaServico, atualizaFavoritos, setAtulizaFavoritos, temaPadraoSistema, setTemaPadraoSistema}}>
+    <AppStateContext.Provider 
+    value={{  navegacaoEstabelecimento, 
+              setNavegacaoEstabelecimento,
+              tema, MudarTema, 
+              setTema, 
+              atulizaListaServico, 
+              setAtualisaListaServico, 
+              atualizaFavoritos, 
+              setAtulizaFavoritos, 
+              temaPadraoSistema, 
+              setTemaPadraoSistema,
+              atualizaAgendamentos,
+              setAtualizaAgendamentos
+              }}>
       {children}
     </AppStateContext.Provider>
    );
