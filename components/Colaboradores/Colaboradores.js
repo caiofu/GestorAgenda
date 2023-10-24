@@ -47,8 +47,9 @@ function Colaboradores() {
     return (
       // console.log(item),
       <List.Item
-        style={{margin:10}} // alterar para colocar mais estilo nisso aqui, agr to sem ideia
+        style={{margin:5, borderWidth:1, padding:10 ,borderRadius:10, borderColor: '#006699'}} // alterar para colocar mais estilo nisso aqui, agr to sem ideia
         title={item.nomeColaborador}
+        titleStyle={{color:'red', fontFamily:'Rubik_700Bold'}}
         description={item.descricao}
         left={() => <List.Icon icon="account-circle" />}
         onPress={() => {
@@ -60,12 +61,15 @@ function Colaboradores() {
   }
 
   return (
+    
     <PaperProvider>
-      <SafeAreaView
-        style={styles.container}
-      >
+    
+        <View style={[styles.container, {flex: 1, padding: 10, flexDirection: 'column'}]}>
         {/* <ScrollView> */}
-            <View>
+              <View style={{alignContent: 'center', alignItems: 'center', borderWidth:1, padding:10, marginBottom:5, backgroundColor:'#fff'}}>
+                  <Text>Lista de Colaboradores</Text>
+               </View>
+            <View style={{borderWidth:1, flex:1,marginBottom:70, marginTop:2, borderRadius:4, borderColor:'#006699'}}>
                 {erro ? (
                     <Text>{erro}</Text>
                 ) : (
@@ -75,7 +79,7 @@ function Colaboradores() {
                     <List.Section>
                         <FlatList
                             ListHeaderComponent={<View style={{alignContent: 'center', alignItems: 'center'}}>
-                                                    <List.Subheader style={styles.subHeader}>Lista de Colaboradores</List.Subheader>
+                                                    {/* <List.Subheader style={styles.subHeader}>Lista de Colaboradores</List.Subheader> */}
                                                  </View>}
                             data={colaboradores}
                             keyExtractor={(item) => item.idColaborador.toString()}
@@ -97,7 +101,8 @@ function Colaboradores() {
           onPress={() => {
             navigation.navigate('Formulário Colaborador', {colaborador: null})}}
         />
-      </SafeAreaView>
+        </View>
+    
     </PaperProvider>
   );
 }
