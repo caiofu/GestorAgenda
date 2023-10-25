@@ -71,13 +71,16 @@ export default function Agendamento()
                     nomeCliente: listaAgendamentos.nomeCliente,
                     telefone: listaAgendamentos.telefone,
                     data: listaAgendamentos.data,
-                    horario: listaAgendamentos.horario
+                    horario: listaAgendamentos.horario,
+                    atendido: listaAgendamentos.atendido,
+                    cancelado: listaAgendamentos.cancelado
                         
                  }));
                 setListaAgendamentos(retorno); 
             });
       },[atualizaAgendamentos, dataFormatada, date]);
      
+  
     //   ConsultaAgendamentoGeral((geral) => {
     //     console.log('GERAL ---> ', geral)
     //   })
@@ -89,6 +92,11 @@ export default function Agendamento()
       {
         navigation.navigate('Detalhes Agendamento', { id: idAgendamento }); 
       }
+         //VERIFICANDO STATUS  E ATRASOS
+        // const [verificaAgendamento, setVerificaAgendamento] = useState(false);
+        // setInterval(() =>{
+        //   setVerificaAgendamento(!verificaAgendamento);
+        // },60000);
     return (
         <PaperProvider>
             <View style={{flex: 1, padding: 10, flexDirection: 'column'}}>
@@ -111,8 +119,8 @@ export default function Agendamento()
                                         >
                                             {/* <Text  key={servico.idServico}>{servico.nomeServico} </Text> */}
                                             <List.Item key={agendamento.idAgendamento}
-                                                        title={ <FontAwesome name="calendar" size={24} color='#006699' />}
-                                                        description={agendamento.nomeCliente}
+                                                        title={agendamento.nomeCliente}
+                                                        description="Aguardando atendimento"
                                                         titleStyle={{color:'black', fontSize:12}}
                                                         descriptionStyle={{color:'gray', fontSize:10}}
                                                         descriptionNumberOfLines={1}
