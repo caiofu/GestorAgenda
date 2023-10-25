@@ -12,7 +12,8 @@ import { useAppState } from "../Contexts/AppStateContext";
 import { ConsultaEstabelecimento } from "../SQLiteManager/SQLEstabelecimento";
 import { ConsultaAgendamentoPorData, ConsultaAgendamentoGeral } from "../SQLiteManager/SQLAgendamento";
 
-
+//PARA TRABALHAR COM DATAS
+import { isBefore, isAfter, isEqual } from 'date-fns';
 
 export default function Agendamento()
 {
@@ -60,33 +61,110 @@ export default function Agendamento()
         navigation.navigate('Novo Agendamento'); 
       };
 
-      //BUSCA AGENDAMENTOS
-      const [listaAgendamentos, setListaAgendamentos] = useState([]);
-      useEffect(() =>{
-        console.log('açaoooooooooooooooooooooo !!!')
-            ConsultaAgendamentoPorData(dataFormatada, (agendamentos) =>{
-                //console.log('aged ==' ,agendamentos)
-                 const retorno = agendamentos.map((listaAgendamentos) => ({
-                    idAgendamento: listaAgendamentos.idAgendamento.toString(),
-                    nomeCliente: listaAgendamentos.nomeCliente,
-                    telefone: listaAgendamentos.telefone,
-                    data: listaAgendamentos.data,
-                    horario: listaAgendamentos.horario,
-                    atendido: listaAgendamentos.atendido,
-                    cancelado: listaAgendamentos.cancelado
+      // //BUSCA AGENDAMENTOS
+      // const [listaAgendamentos, setListaAgendamentos] = useState([]);
+      // useEffect(() =>{
+      //   console.log('açaoooooooooooooooooooooo !!!')
+      //       ConsultaAgendamentoPorData(dataFormatada, (agendamentos) =>{
+      //           //console.log('aged ==' ,agendamentos)
+      //            const retorno = agendamentos.map((listaAgendamentos) => ({
+      //               idAgendamento: listaAgendamentos.idAgendamento.toString(),
+      //               nomeCliente: listaAgendamentos.nomeCliente,
+      //               telefone: listaAgendamentos.telefone,
+      //               data: listaAgendamentos.data,
+      //               horario: listaAgendamentos.horario,
+      //               atendido: listaAgendamentos.atendido,
+      //               cancelado: listaAgendamentos.cancelado
                         
-                 }));
-                setListaAgendamentos(retorno); 
-            });
-      },[atualizaAgendamentos, dataFormatada, date]);
-     
+      //            }));
+      //           setListaAgendamentos(retorno);
+                
+                
+      //       });
+      // },[atualizaAgendamentos, dataFormatada, date]);
+      const [listaAgendamentos, setListaAgendamentos] = useState([]);
+      
+      useEffect(() => {
+          //DATA
+          const dataAtual = new Date();
+          dataAtual.setHours(0,0,0,0);
+          const dataAgendamento = new Date();
+          const horaAtual = new Date();
+          const horarioAgendamento = new Date();
+
+          ConsultaAgendamentoPorData(dataFormatada, (agendamentos) => {
+              const retorno = agendamentos.map((agendamento) => {
+                // Dividir a string em partes (dia, mês e ano)
+                const partesData = agendamento.data.split('/'); // Isso resultará em um array ["25", "10", "2023"]
+
+                // Converter as partes da data em números inteiros
+                const dia = parseInt(partesData[0], 10);
+                const mes = parseInt(partesData[1] -1, 10); // Lembre-se que os meses em JavaScript são baseados em zero (janeiro é 0).
+                const ano = parseInt(partesData[2], 10);
+                //Setando a data no objeto
+                dataAgendamento.setDate(dia);
+                dataAgendamento.setMonth(mes);
+                dataAgendamento.setFullYear(ano);
+                dataAgendamento.setHours(0,0,0,0)
+
+                const partesHorario = agendamento.horario.split(':');
+                const hora = parseInt(partesHorario[0], 10);
+                const minuto = parseInt(partesHorario[1], 10);
+                //Setando o horario no objeto
+                horarioAgendamento.setHours(hora);
+                horarioAgendamento.setMinutes(minuto);
+
+                let atraso = 0;
+                
+                console.log('hora agendamento: ', horarioAgendamento+'  horarioAtual: ', horaAtual);
+
+               
+
+                //Verificando se esta na data atual ou antes para verificar os atrasos
+                if(isEqual(dataAgendamento, dataAtual) )
+                {
+                    //Verificando se foi atendido ou se foi cancelado
+                    if(agendamento.atendido === 0 && agendamento.cancelado === 0)
+                    {
+                        console.log('NAO FOI NEM ATENDIDO NEM CANCELADO PODE VERIFICAR SE ESTA EM ATRASO');
+                        if(isBefore(horarioAgendamento, horaAtual))
+                        {
+                          console.log('ESTA ATRASADO -<-----')
+                          atraso =1;
+                        }
+                    }
+                }
+                else
+                {
+                    console.log("A DATA É POSTERIOR NAO PRECISA VERIFICAR ATRASO")
+                }
+                console.log('dataa ----> ', dataAgendamento + 'data atual: ', dataAtual);
+                  
+                  
+                  return {
+                      idAgendamento: agendamento.idAgendamento.toString(),
+                      nomeCliente: agendamento.nomeCliente,
+                      telefone: agendamento.telefone,
+                      data: agendamento.data,
+                      horario: agendamento.horario,
+                      atendido: agendamento.atendido,
+                      cancelado: agendamento.cancelado,
+                      atrasado: atraso
+                    
+                  };
+              });
+      
+              setListaAgendamentos(retorno);
+          });
+      }, [atualizaAgendamentos, dataFormatada, date]);
+      console.log('lista ?' ,listaAgendamentos)
   
     //   ConsultaAgendamentoGeral((geral) => {
     //     console.log('GERAL ---> ', geral)
     //   })
-      ConsultaAgendamentoPorData(dataFormatada, (agendamentos) =>{
-        console.log('Por data ====> ',agendamentos)
-      })
+      // ConsultaAgendamentoPorData(dataFormatada, (agendamentos) =>{
+      //   console.log('Por data ====> ',agendamentos)
+      // })
 
       function CarregaDetalhesAgendamento(idAgendamento)
       {
@@ -112,23 +190,27 @@ export default function Agendamento()
 
                     {/* LISTA*/}
                     { listaAgendamentos.map((agendamento) => (
+                          
                                         <TouchableOpacity 
                                              key={agendamento.idAgendamento}
                                              onPress={() => CarregaDetalhesAgendamento(agendamento.idAgendamento)} 
                                             style={{borderWidth:0.7, margin:4, borderRadius:10}}
+                                            
                                         >
+                                          {console.log('atendido ? ', agendamento.atendido+ ' cancelado ? ', agendamento.cancelado)}
                                             {/* <Text  key={servico.idServico}>{servico.nomeServico} </Text> */}
                                             <List.Item key={agendamento.idAgendamento}
                                                         title={agendamento.nomeCliente}
-                                                        description="Aguardando atendimento"
+                                                        description={agendamento.atendido === 1 && agendamento.cancelado === 0 ? 'Atendido':'Aguardando atendimento'}
                                                         titleStyle={{color:'black', fontSize:12}}
                                                         descriptionStyle={{color:'gray', fontSize:10}}
                                                         descriptionNumberOfLines={1}
+                                                        style={{backgroundColor: agendamento.atrasado === 1 ? '#efafaf' : '', borderRadius:10}}
                                                         right={props =>  <><FontAwesome5 name="clock" size={18} color='#006699' /><Text style={{marginLeft:5, fontFamily:'Rubik_700Bold', color:'#006699'}}>{agendamento.horario}</Text></>} />
                                             </TouchableOpacity>
 
                                         
-                                    ))}
+                                    )) }
                     {/* <TouchableOpacity style={{borderWidth:0.7, margin:4, borderRadius:10}}>
                         <List.Item
                         title="Barba"
