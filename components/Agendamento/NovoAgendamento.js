@@ -71,8 +71,6 @@ export default function NovoAgendamento()
     const [servicoSelecionado, setServicoSelecionado]   = useState([]);
 
     useEffect(() =>{
-
-
           RetornaServicosEstabelecimento(function(resultados) {
             const resultadosTratados = resultados.map((item, index) => ({
               key: index + 1, // Identificador único crescente
@@ -260,9 +258,9 @@ export default function NovoAgendamento()
     return(
 
           <PaperProvider>
-          <SafeAreaView style={styles.container}>
+          <SafeAreaView >
             <ScrollView>
-                <View>
+                <View style={styles.container}>
                    {helperTextCampos ? <HelperText style={styles.txtHelper}>Todos os campos são obrigatórios!</HelperText> : ''}
                     <View style={{flexDirection:'row'}}>
                         <TouchableOpacity style={[styles.btnDataTime, {borderColor:corTema}]} onPress={() => setAbrirDataPicker(true)} >
