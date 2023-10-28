@@ -21,6 +21,9 @@ export default function DetalhesAgendamento(props)
     const idAgendamento = props.route.params.id;
 
     const [helperTextCampos, setHelperTextCampos] = useState(false);
+    
+    //EDIÇÃO
+    const [habilitaEdicao, setHabilitaEdicao] = useState(false);
 
        //CONTEXT
        const {tema,  setAtualizaAgendamentos } = useAppState();
@@ -79,8 +82,6 @@ export default function DetalhesAgendamento(props)
 
             //DATA
             const partesData = agendamento.data.split('/'); 
-
-            // Converter as partes da data em números inteiros
             const dia = parseInt(partesData[0], 10);
             const mes = parseInt(partesData[1] -1, 10);
             const ano = parseInt(partesData[2], 10);
@@ -89,7 +90,8 @@ export default function DetalhesAgendamento(props)
             date.setDate(dia);
             date.setMonth(mes);
             date.setFullYear(ano);
-            date.setHours(0,0,0,0);        
+            date.setHours(0,0,0,0);
+            //INFORMAÇOES DO CLIENTE        
             setNome(agendamento.nomeCliente);
             setTelefone(agendamento.telefone);
 
@@ -139,23 +141,23 @@ export default function DetalhesAgendamento(props)
             <SafeAreaView>
                 <ScrollView>
                     <View >
-                        <View style={{ borderBottomWidth: 0.7, borderColor: '#006699', marginBottom: 10, flexDirection: 'row', paddingBottom: 8, width: '100%' }}>
-                            <TouchableOpacity style={[styles.btnAcaoDetalhes, { flex: 1 }]}>
-                                <View style={[styles.btnContainer, { alignContent: 'flex-end' }]}>
-                                <Text style={styles.btnAcaoText}>ATENDER</Text>
-                                </View>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity style={[styles.btnAcaoDetalhes, { flex: 1, backgroundColor:'red' }]}>
-                                <View style={styles.btnContainer}>
-                                <Text style={styles.btnAcaoText}>CANCELAR</Text>
-                                </View>
-                            </TouchableOpacity>
-                            </View>
+                        
 
                     {helperTextCampos ? <HelperText style={styles.txtHelper}>Todos os campos são obrigatórios!</HelperText> : ''}
+
+                    
+                        {!habilitaEdicao ? (
+                            <View>
+                                <TouchableOpacity style={{alignSelf:'flex-start', flexDirection:'row', marginBottom:15, marginLeft:15, backgroundColor:'#006699', padding:4, borderRadius:5}} onPress={() => setHabilitaEdicao(true)}>
+                                <FontAwesome name="edit" size={24} color="#fff" />
+                                    <Text style={{marginEnd:20, fontFamily:'Rubik_700Bold',alignSelf:'center', color:'#fff'}}> Editar</Text>
+                                </TouchableOpacity>
+                            </View>
+                        ): ''}
+                       
+                  
                     <View style={{flexDirection:'row'}}>
-                        <TouchableOpacity style={[styles.btnDataTime, {borderColor:corTema}]} onPress={() => setAbrirDataPicker(true)} >
+                        <TouchableOpacity style={[styles.btnDataTime, {borderColor:corTema}]} onPress={() => setAbrirDataPicker(true)} disabled={!habilitaEdicao}>
                         <FontAwesome name="calendar" size={24} color={corTema} />
                             <Text style={[styles.txtInput, {color:corTema}]}>{dataFormatada}</Text>
                         </TouchableOpacity>
@@ -163,7 +165,7 @@ export default function DetalhesAgendamento(props)
                                 <DateTimePicker value={date} mode='date' minimumDate={dataAtual} onChange={onChangeDataPicker} />
                             ) : null}
 
-                        <TouchableOpacity style={[styles.btnDataTime, {borderColor: helperTextCampos === true && horarioFormatado === null ? 'red' :corTema}]} onPress={() => setAbrirTimePicker(true)}>
+                        <TouchableOpacity style={[styles.btnDataTime, {borderColor: helperTextCampos === true && horarioFormatado === null ? 'red' :corTema}]} onPress={() => setAbrirTimePicker(true)} disabled={!habilitaEdicao}>
                         <FontAwesome5 name="clock" size={24} color={helperTextCampos === true && horarioFormatado === null ? 'red' :corTema} />
                             <Text style={[styles.txtInput, {color: helperTextCampos === true && horarioFormatado === null ? 'red' :corTema}]}>{horarioFormatado === null ? 'Horário' : horarioFormatado}</Text>
                         </TouchableOpacity>
@@ -174,7 +176,8 @@ export default function DetalhesAgendamento(props)
                     </View>
 
                     <TextInput
-                        style={styles.inputFormulario}
+                        editable={habilitaEdicao}
+                        style={[styles.inputFormulario, ]}
                         label="Nome"
                         onChangeText={(text) => setNome(text)}
                         value={nome}
@@ -186,6 +189,7 @@ export default function DetalhesAgendamento(props)
                     </TextInput >
 
                     <TextInput
+                        editable={habilitaEdicao}
                         style={styles.inputFormulario}
                         label="Telefone"
                         keyboardType="numeric"
@@ -198,9 +202,11 @@ export default function DetalhesAgendamento(props)
                     </TextInput>
                     
                   
-                   
+                    <View style={{marginLeft:20, marginRight:20, marginBottom:20}}>
+                                <Text>Colaborador </Text>
+                            </View>
                     </View>
-                    <View style={{marginLeft:20, marginRight:20}}>
+                    {/* <View style={{marginLeft:20, marginRight:20}}>
                         <Text>Serviços do atendimento</Text>
                         <View style={{flexDirection:'row', flexWrap:'wrap'}}>
                             {  listaServicosSalvo.map((servicos, index) =>(
@@ -208,11 +214,15 @@ export default function DetalhesAgendamento(props)
                                 <Chip key={index} icon={'check'} style={{margin:4,backgroundColor:'#006699' }}  >{servicos}</Chip>
                             
                             ))}   
-                        </View>                     
-                    </View>
+                        </View>   
+                                          
+                    </View> */}
+                    
                 </ScrollView>
-                 <View style={{marginLeft:20, marginRight:20}}>   
+                 <View style={{marginLeft:20, marginRight:20}}> 
+                 <Text>Serviços</Text>  
                     { <DropDownPicker
+                    disabled={!habilitaEdicao}
                             language="PT"
                             open={open}
                             value={listaServicosSalvo}
@@ -224,12 +234,38 @@ export default function DetalhesAgendamento(props)
                             autoScroll
                             multiple={true}
                             dropDownDirection='BOTTOM' 
+                            mode='BADGE'
                         />
                             }
-                            <View>
-                                <Text>Colaborador </Text>
-                            </View>
+                           
                  </View>
+                 <View style={{ borderTopWidth: 0.7, borderColor: '#006699', marginBottom: 10, paddingTop:10, marginTop:10,  paddingBottom: 8, width: '100%' }}>
+                    {habilitaEdicao  ? (
+                            <><TouchableOpacity style={[styles.btnAcaoDetalhes, {marginBottom:20} ]}>
+                            <View style={[styles.btnContainer, ]}>
+                                <Text style={styles.btnAcaoText}>ATUALIZAR</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.btnAcaoDetalhes, {backgroundColor: 'red' }]} onPress={() => setHabilitaEdicao(false)}>
+                                <View style={styles.btnContainer}>
+                                    <Text style={styles.btnAcaoText}>VOLTAR</Text>
+                                </View>
+                            </TouchableOpacity>
+                            </>
+                    ) : (
+                        <><TouchableOpacity style={[styles.btnAcaoDetalhes,{padding:10} ]}>
+                            <View style={[styles.btnContainer, ]}>
+                                <Text style={styles.btnAcaoText}>ATENDER</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.btnAcaoDetalhes, { backgroundColor: 'red', marginTop:20, padding:10 }]}>
+                                <View style={styles.btnContainer}>
+                                    <Text style={styles.btnAcaoText}>CANCELAR ATENDIMENTO</Text>
+                                </View>
+                            </TouchableOpacity></>
+                    )
+                        }
+                        </View>
             </SafeAreaView>
         </PaperProvider>
     );
