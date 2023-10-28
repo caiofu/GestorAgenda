@@ -64,9 +64,36 @@ export default function DetalhesAgendamento(props)
         setAbrirDataPicker(true);
     }
    
+    //DADOS DO AGENDAMENTO
     useEffect(() =>{
         ConsultaAgendamentoPorId(idAgendamento, (agendamento) => {
             console.log('agendamento ---> ', agendamento)
+            //HORA
+            const partesHorario = agendamento.horario.split(':');
+            const hora = parseInt(partesHorario[0], 10);
+            const minuto = parseInt(partesHorario[1], 10);
+            //Setando o horario no objeto
+            setHorarioFormatado(agendamento.horario);
+            horario.setHours(hora);
+            horario.setMinutes(minuto);
+
+            //DATA
+            const partesData = agendamento.data.split('/'); 
+
+            // Converter as partes da data em números inteiros
+            const dia = parseInt(partesData[0], 10);
+            const mes = parseInt(partesData[1] -1, 10);
+            const ano = parseInt(partesData[2], 10);
+            //Setando a data no objeto
+            setDataFormatada(agendamento.data);
+            date.setDate(dia);
+            date.setMonth(mes);
+            date.setFullYear(ano);
+            date.setHours(0,0,0,0);        
+            setNome(agendamento.nomeCliente);
+            setTelefone(agendamento.telefone);
+
+          
         } )
     },[])
 
@@ -112,7 +139,7 @@ export default function DetalhesAgendamento(props)
             <SafeAreaView>
                 <ScrollView>
                     <View >
-                        <View style={{ borderBottomWidth: 0.7, borderColor: '#006699', marginBottom: 20, flexDirection: 'row', paddingBottom: 22, backgroundColor:'#fff', width: '100%' }}>
+                        <View style={{ borderBottomWidth: 0.7, borderColor: '#006699', marginBottom: 10, flexDirection: 'row', paddingBottom: 8, width: '100%' }}>
                             <TouchableOpacity style={[styles.btnAcaoDetalhes, { flex: 1 }]}>
                                 <View style={[styles.btnContainer, { alignContent: 'flex-end' }]}>
                                 <Text style={styles.btnAcaoText}>ATENDER</Text>
@@ -173,33 +200,36 @@ export default function DetalhesAgendamento(props)
                   
                    
                     </View>
+                    <View style={{marginLeft:20, marginRight:20}}>
+                        <Text>Serviços do atendimento</Text>
+                        <View style={{flexDirection:'row', flexWrap:'wrap'}}>
+                            {  listaServicosSalvo.map((servicos, index) =>(
+
+                                <Chip key={index} icon={'check'} style={{margin:4,backgroundColor:'#006699' }}  >{servicos}</Chip>
+                            
+                            ))}   
+                        </View>                     
+                    </View>
                 </ScrollView>
-                <Text>Serviços do atendimento</Text>
-                <View style={{flexDirection:'row', flexWrap:'wrap'}}>
-                { listaServicosSalvo.map((servicos) =>(
-                     <Chip icon={'check'} style={{margin:4,backgroundColor:'#006699'}} >{servicos}</Chip>
-                 
-                ))}
-                
-                </View>
-                { <DropDownPicker
-                        language="PT"
-                        open={open}
-                        value={listaServicosSalvo}
-                        items={listaServicos}
-                        placeholder="Serviços selecionados"
-                        setOpen={setOpen}
-                        setValue={setValue}
-                        setItems={setItems}
-                        autoScroll
-                        multiple={true}
-                        dropDownDirection='BOTTOM'
-              
-                        
-                      
-                     
-                    />
-                         }
+                 <View style={{marginLeft:20, marginRight:20}}>   
+                    { <DropDownPicker
+                            language="PT"
+                            open={open}
+                            value={listaServicosSalvo}
+                            items={listaServicos}
+                            placeholder="Serviços selecionados"
+                            setOpen={setOpen}
+                            setValue={setValue}
+                            setItems={setItems}
+                            autoScroll
+                            multiple={true}
+                            dropDownDirection='BOTTOM' 
+                        />
+                            }
+                            <View>
+                                <Text>Colaborador </Text>
+                            </View>
+                 </View>
             </SafeAreaView>
         </PaperProvider>
     );

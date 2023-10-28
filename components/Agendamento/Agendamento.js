@@ -105,7 +105,7 @@ export default function Agendamento()
                 dataAgendamento.setDate(dia);
                 dataAgendamento.setMonth(mes);
                 dataAgendamento.setFullYear(ano);
-                dataAgendamento.setHours(0,0,0,0)
+                dataAgendamento.setHours(0,0,0,0);
 
                 const partesHorario = agendamento.horario.split(':');
                 const hora = parseInt(partesHorario[0], 10);

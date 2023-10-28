@@ -90,7 +90,7 @@ export default function FormColaboradores({route}) {
         }
     }, []);
     // }
-    console.log('retorno 000 --> ', listaServicosSelecionados)
+
     //BUSCA SERVIÇOS VINCULADOS AO ESTABELECIMENTO e ALTERA O ESTADO ISDROPDOWNOPEN PARA TRAZER O MULTIPLESELECTLIST ABERTO POR PADRÃO
     // useEffect(() => {
     //     GetServicosEstabelecimento(
