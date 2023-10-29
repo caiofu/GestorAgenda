@@ -189,3 +189,22 @@ export function ConsultaServicoAgendamentoPorId(id, callback) {
     );
   });
 }
+
+export function AlteraAgendamentoParaAtendimento(idAgendamento, callback)
+{
+  db.transaction((tx) => {
+    tx.executeSql(
+      'UPDATE agendamento SET atendido =  ? WHERE idAgendamento = ?',
+      [1, idAgendamento],
+      (tx, results) => {
+        console.log('Colaborador atualizado com sucesso (UpdateColaboradorporId)');
+        callback(true);
+      },
+      (error) => {
+        console.log('Erro ao atualizar serviço (UpdateColaboradorporId):' + error.message);
+        console.log(idColaborador, nome, funcao);
+        callback(false);
+      }
+    );
+  });
+}

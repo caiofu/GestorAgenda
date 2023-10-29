@@ -8,7 +8,7 @@ import { PaperProvider, TextInput, Chip } from "react-native-paper";
 import { FontAwesome5, Ionicons, FontAwesome } from '@expo/vector-icons';
 
 //SQLITE
-import { ConsultaAgendamentoPorId, ConsultaServicoAgendamentoPorId } from "../SQLiteManager/SQLAgendamento";
+import { ConsultaAgendamentoPorId, ConsultaServicoAgendamentoPorId, AlteraAgendamentoParaAtendimento } from "../SQLiteManager/SQLAgendamento";
 import { RetornaServicosEstabelecimento } from "../SQLiteManager/SQLServicos";
 import { listarColaboradores } from "../SQLiteManager/SQLiteColaborador";
 
@@ -26,14 +26,14 @@ export default function DetalhesAgendamento(props)
 
     const [helperTextCampos, setHelperTextCampos] = useState(false);
     
-    //EDIÇÃO
+    //EDIÇÃO E ATUALIZAÇÃO
     const [habilitaEdicao, setHabilitaEdicao] = useState(false);
+    const [atualizaDados, setAtualizadados]  = useState(false);
+    //CONTEXT
+    const {tema,  setAtualizaAgendamentos } = useAppState();
 
-       //CONTEXT
-       const {tema,  setAtualizaAgendamentos } = useAppState();
-
-       //COR DO TEMA
-        const [corTema, setCorTema] = useState('#006699');
+    //COR DO TEMA
+    const [corTema, setCorTema] = useState('#006699');
         useEffect(()=>{
    
                tema === 'light' ? setCorTema('#006699') : setCorTema(DarkTheme.colors.text);
@@ -66,6 +66,7 @@ export default function DetalhesAgendamento(props)
    //NOME E TELEFONE
     const [nome, setNome]           = useState(null);
     const [telefone, setTelefone]   = useState(null);
+    const [atendido, setAtendido]   = useState(null);
     const showDatePicker = () => {
    
         setAbrirDataPicker(true);
@@ -98,6 +99,7 @@ export default function DetalhesAgendamento(props)
             //INFORMAÇOES DO CLIENTE        
             setNome(agendamento.nomeCliente);
             setTelefone(agendamento.telefone);
+            setAtendido(agendamento.atendido);
 
           
         } )
@@ -168,6 +170,26 @@ export default function DetalhesAgendamento(props)
   ]);
   console.log('COLABORADOR SEELECIONADO ---> ',colaboradorSelecionado)
   console.log('SERVICO SELECIONADO ---> ', listaServicosSalvo)
+
+  function AtivaAtendimento()
+  {
+    //Não esquecer de verificar se nao foi cancelado
+
+    //Inserir colaborador no agendamento/atendimento (Tem que criar a tabela ainda)
+
+    //Altera de agendamento para atendimento
+    AlteraAgendamentoParaAtendimento(idAgendamento, (sucesso) => {
+        if (sucesso) {
+          console.log('Agendamento atualizado com sucesso.');
+          setAtualizadados(!atualizaDados);
+          // Faça o que for necessário após a atualização bem-sucedida.
+        } else {
+          console.log('Erro ao atualizar o agendamento.');
+          // Lide com o erro de atualização, se necessário.
+        }
+      });
+  }
+  console.log('atendido ',atendido)
     return(
         <PaperProvider>
             <SafeAreaView>
@@ -341,16 +363,23 @@ export default function DetalhesAgendamento(props)
                             </TouchableOpacity>
                             </>
                     ) : (
-                        <><TouchableOpacity style={[styles.btnAcaoDetalhes,{padding:10} ]}>
-                            <View style={[styles.btnContainer, ]}>
-                                <Text style={styles.btnAcaoText}>ATENDER</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={[styles.btnAcaoDetalhes, { backgroundColor: 'red', marginTop:20, padding:10 }]}>
-                                <View style={styles.btnContainer}>
-                                    <Text style={styles.btnAcaoText}>CANCELAR ATENDIMENTO</Text>
+                        
+                        <>{atendido !== 1 ?(<><TouchableOpacity style={[styles.btnAcaoDetalhes, { padding: 10 }]} onPress={AtivaAtendimento}>
+                                <View style={[styles.btnContainer,]}>
+                                    <Text style={styles.btnAcaoText}>ATENDER</Text>
                                 </View>
-                            </TouchableOpacity></>
+                            </TouchableOpacity><TouchableOpacity style={[styles.btnAcaoDetalhes, { backgroundColor: 'red', marginTop: 20, padding: 10 }]}>
+                                    <View style={styles.btnContainer}>
+                                        <Text style={styles.btnAcaoText}>CANCELAR ATENDIMENTO</Text>
+                                    </View>
+                                </TouchableOpacity></>
+                                ) :(
+                                    <TouchableOpacity style={[styles.btnAcaoDetalhes, { backgroundColor: 'red', marginTop: 20, padding: 10 }]}>
+                                    <View style={styles.btnContainer}>
+                                        <Text style={styles.btnAcaoText}>CANCELAR ATENDIMENTO</Text>
+                                    </View>
+                                </TouchableOpacity>
+                                )}</>
                     )
                         }
                         </View>
