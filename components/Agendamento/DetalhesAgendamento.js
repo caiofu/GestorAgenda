@@ -4,17 +4,21 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from "./StyleAgendamento";
 import DropDownPicker from 'react-native-dropdown-picker'; 
 import {  DarkTheme, useNavigation } from "@react-navigation/native";
+import { PaperProvider, TextInput, Chip } from "react-native-paper";
+import { FontAwesome5, Ionicons, FontAwesome } from '@expo/vector-icons';
 
 //SQLITE
 import { ConsultaAgendamentoPorId, ConsultaServicoAgendamentoPorId } from "../SQLiteManager/SQLAgendamento";
 import { RetornaServicosEstabelecimento } from "../SQLiteManager/SQLServicos";
-import { PaperProvider, TextInput, Chip } from "react-native-paper";
-import { FontAwesome5, Ionicons, FontAwesome } from '@expo/vector-icons';
+import { listarColaboradores } from "../SQLiteManager/SQLiteColaborador";
 
 //CONTEXT
 import { useAppState } from "../Contexts/AppStateContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+//MULTI SELECt
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+import {MaterialIcons} from '@expo/vector-icons';
 export default function DetalhesAgendamento(props)
 {
     // Acesse o valor do idServico por meio de props.route.params
@@ -102,28 +106,55 @@ export default function DetalhesAgendamento(props)
       //LISTA DE SERVIÇOS
       const [listaServicos, setListaServicos]             = useState([]);
       const [servicoSelecionado, setServicoSelecionado]   = useState([]);
-  
+      
+      //LISTA COLABORADORES
+      const [listaColaboradores, setListaColaboradores]             = useState([]);
+      const [colaboradorSelecionado, setColaboradorSelecionado]     = useState([]);
+      const [abrirListaColaborador, setAbrirListaColaborador]       = useState(false);
+      
       useEffect(() =>{
-            RetornaServicosEstabelecimento(function(resultados) {
-                console.log('lista serv est ',resultados)
-              const resultadosTratados = resultados.map((item, index) => ({
-                label: item, // Identificador único crescente
-                value: item,     // Nome do serviço
-              }));
+            // RetornaServicosEstabelecimento(function(resultados) {
+            //     console.log('lista serv est ',resultados)
+            //   const resultadosTratados = resultados.map((item, index) => ({
+            //     label: item, // Identificador único crescente
+            //     value: item,     // Nome do serviço
+            //   }));
   
+            //   setListaServicos(resultadosTratados)
+            // });
+
+            RetornaServicosEstabelecimento(function(resultados) {
+                
+              const resultadosTratados = resultados.map((item, index) => ({
+                name: item, // Identificador único crescente
+                id: index,     // Nome do serviço
+              }));
+              console.log('servico estabe --> ', resultadosTratados)
               setListaServicos(resultadosTratados)
             });
+
+            //Listar colaboradores
+            listarColaboradores(function(retorno) {
+               
+                const resultadoColaboradores = retorno.map((item, index) =>({
+                    name: item.nomeColaborador,
+                    id: item.idColaborador,
+                }));
+                setListaColaboradores(resultadoColaboradores);
+                console.log('colaboradores', resultadoColaboradores);
+            })
       }, [])
 
+      
     const [listaServicosSalvo, setListaServicoSalvo] = useState([]);
     useEffect(() => {
         ConsultaServicoAgendamentoPorId(idAgendamento, (servicos) =>{
           
-            const retorno = servicos.map((servico) => (servico.nomeServico
+            const retorno = servicos.map((servico, index) => (servico.nomeServico
    
            ));
             setListaServicoSalvo(retorno);
-            console.log('map servico ', retorno)
+            console.log('map servico salvo ', retorno)
       
         })
     }, [])
@@ -135,7 +166,8 @@ export default function DetalhesAgendamento(props)
     { label: 'Item 2', value: 'item2' },
     { label: 'Item 3', value: 'item3' },
   ]);
-
+  console.log('COLABORADOR SEELECIONADO ---> ',colaboradorSelecionado)
+  console.log('SERVICO SELECIONADO ---> ', listaServicosSalvo)
     return(
         <PaperProvider>
             <SafeAreaView>
@@ -202,9 +234,6 @@ export default function DetalhesAgendamento(props)
                     </TextInput>
                     
                   
-                    <View style={{marginLeft:20, marginRight:20, marginBottom:20}}>
-                                <Text>Colaborador </Text>
-                            </View>
                     </View>
                     {/* <View style={{marginLeft:20, marginRight:20}}>
                         <Text>Serviços do atendimento</Text>
@@ -217,8 +246,67 @@ export default function DetalhesAgendamento(props)
                         </View>   
                                           
                     </View> */}
-                    
+                    <View style={{marginRight:20, marginLeft:20}}>
+                        <SectionedMultiSelect
+                        items={listaColaboradores}
+                        IconRenderer={MaterialIcons}
+                        selectedText='selecionados'
+                        confirmText="Confirmar"
+                        colors={{text:'red'}}
+                        styles={{selectToggle:{borderWidth:1, borderRadius:5, padding:5},
+                                }}
+                        uniqueKey="id"
+                        selectText="Escolha o colaborador"
+                        showDropDowns={true}
+                        onSelectedItemsChange={setColaboradorSelecionado}
+                        selectedItems={colaboradorSelecionado}
+                        
+                        />
+                    </View>
+
+                    <View style={{marginRight:20, marginLeft:20, marginTop:20}}>
+                        <SectionedMultiSelect
+                        items={listaServicos}
+                        IconRenderer={MaterialIcons}
+                        selectedText='selecionados'
+                        confirmText="Confirmar"
+                        colors={{text:'red'}}
+                        styles={{selectToggle:{borderWidth:1, borderRadius:5, padding:5},
+                                }}
+                        uniqueKey="name"
+                        selectText="Serviços selecionados"
+                        showDropDowns={true}
+                        onSelectedItemsChange={setListaServicoSalvo}
+                                selectedItems={listaServicosSalvo}
+                       
+                        
+                        
+                        />
+                    </View>
+                   
                 </ScrollView>
+                
+                {/* <View style={{marginLeft:20, marginRight:20, marginBottom:20}}>
+                    <Text>Colaborador </Text>
+                    { <DropDownPicker
+                    disabled={!habilitaEdicao}
+                            language="PT"
+                            open={abrirListaColaborador}
+                            // value={lis}
+                            items={listaColaboradores}
+                            placeholder="Colaboradores selecionados"
+                            setOpen={setAbrirListaColaborador}
+                            // setValue={setValue}
+                            // setItems={setItems}
+                            autoScroll
+                            multiple={true}
+                            dropDownDirection='BOTTOM' 
+                            mode='BADGE'
+                           containerStyle={{position:'absolute'}}
+                        />
+                            }
+                </View> */}
+{/* 
                  <View style={{marginLeft:20, marginRight:20}}> 
                  <Text>Serviços</Text>  
                     { <DropDownPicker
@@ -238,7 +326,7 @@ export default function DetalhesAgendamento(props)
                         />
                             }
                            
-                 </View>
+                 </View> */}
                  <View style={{ borderTopWidth: 0.7, borderColor: '#006699', marginBottom: 10, paddingTop:10, marginTop:10,  paddingBottom: 8, width: '100%' }}>
                     {habilitaEdicao  ? (
                             <><TouchableOpacity style={[styles.btnAcaoDetalhes, {marginBottom:20} ]}>
