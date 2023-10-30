@@ -36,7 +36,7 @@ function Colaboradores() {
         }
       );
       return () => {
-        console.log('Tela Colaboradores perdeu o foco');
+        console.log('[LOGS] - Tela Colaboradores perdeu o foco');
         // Código de limpeza, se necessário, quando a tela perde foco
       };
     }, [])
@@ -49,11 +49,10 @@ function Colaboradores() {
       <List.Item
         style={{margin:5, borderWidth:1, padding:10 ,borderRadius:10, borderColor: '#006699'}} // alterar para colocar mais estilo nisso aqui, agr to sem ideia
         title={item.nomeColaborador}
-        titleStyle={{color:'red', fontFamily:'Rubik_700Bold'}}
-        description={item.descricao}
+        titleStyle={{color:'#006699', fontFamily:'Rubik_700Bold'}}
+        description={item.ativo === 1 ? "Status: Ativo" : "Status: Inativo"}
         left={() => <List.Icon icon="account-circle" />}
         onPress={() => {
-          console.log('pressed')
           navigation.navigate('Formulário Colaborador', {colaborador: item});
         }}
       />
@@ -65,42 +64,40 @@ function Colaboradores() {
     <PaperProvider>
     
         <View style={[styles.container, {flex: 1, padding: 10, flexDirection: 'column'}]}>
-        {/* <ScrollView> */}
-              <View style={{alignContent: 'center', alignItems: 'center', borderWidth:1, padding:10, marginBottom:5, backgroundColor:'#fff'}}>
-                  <Text>Lista de Colaboradores</Text>
-               </View>
-            <View style={{borderWidth:1, flex:1,marginBottom:70, marginTop:2, borderRadius:4, borderColor:'#006699'}}>
-                {erro ? (
-                    <Text>{erro}</Text>
-                ) : (
-                    colaboradores.length === 0 ? (
-                    <Text>Nenhum colaborador encontrado.</Text>
-                    ) : (
-                    <List.Section>
-                        <FlatList
-                            ListHeaderComponent={<View style={{alignContent: 'center', alignItems: 'center'}}>
-                                                    {/* <List.Subheader style={styles.subHeader}>Lista de Colaboradores</List.Subheader> */}
-                                                 </View>}
-                            data={colaboradores}
-                            keyExtractor={(item) => item.idColaborador.toString()}
-                            renderItem={({ item }) => (
-                              itemColaborador(item)
-                              //a performance de uma lista melhora com o uso de flatlist e passando uma função ao renderItem
-                              //ao invés de criar diretamente nele
-                            )}
-                        />
-                     </List.Section>
-                    )
-                )}
-            </View>
-        {/* </ScrollView> */}
-        <FAB
-          style={styles.fab}
-          label='Novo Colaborador'
-          icon="plus"
-          onPress={() => {
-            navigation.navigate('Formulário Colaborador', {colaborador: null})}}
-        />
+          <View style={{alignContent: 'center', alignItems: 'center', borderWidth:1, padding:10, marginBottom:5, backgroundColor:'#fff'}}>
+              <Text>Lista de Colaboradores</Text>
+          </View>
+          <View style={{borderWidth:1, flex:1,marginBottom:70, marginTop:2, borderRadius:4, borderColor:'#006699'}}>
+              {erro ? (
+                  <Text>{erro}</Text>
+              ) : (
+                  colaboradores.length === 0 ? (
+                  <Text>Nenhum colaborador encontrado.</Text>
+                  ) : (
+                  <List.Section>
+                      <FlatList
+                          ListHeaderComponent={<View style={{alignContent: 'center', alignItems: 'center'}}>
+                                                  {/* <List.Subheader style={styles.subHeader}>Lista de Colaboradores</List.Subheader> */}
+                                              </View>}
+                          data={colaboradores}
+                          keyExtractor={(item) => item.idColaborador.toString()}
+                          renderItem={({ item }) => (
+                            itemColaborador(item)
+                            //a performance de uma lista melhora com o uso de flatlist e passando uma função ao renderItem
+                            //ao invés de renderizar diretamente nele
+                          )}
+                      />
+                  </List.Section>
+                  )
+              )}
+          </View>
+          <FAB
+            style={styles.fab}
+            label='Novo Colaborador'
+            icon="plus"
+            onPress={() => {
+              navigation.navigate('Formulário Colaborador', {colaborador: null})}}
+          />
         </View>
     
     </PaperProvider>
