@@ -75,7 +75,7 @@ export default function DetalhesAgendamento(props)
    
         setAbrirDataPicker(true);
     }
-   console.log('ATUALIZA DADOS -----< ', atualizaDados)
+
     //DADOS DO AGENDAMENTO
     useEffect(() =>{
         ConsultaAgendamentoPorId(idAgendamento, (agendamento) => {
@@ -133,8 +133,8 @@ export default function DetalhesAgendamento(props)
             RetornaServicosEstabelecimento(function(resultados) {
                 
               const resultadosTratados = resultados.map((item, index) => ({
-                name: item, // Identificador único crescente
-                id: index,     // Nome do serviço
+                name: item, 
+                id: index,     
               }));
               console.log('servico estabe --> ', resultadosTratados)
               setListaServicos(resultadosTratados)
@@ -150,25 +150,36 @@ export default function DetalhesAgendamento(props)
                 setListaColaboradores(resultadoColaboradores);
                 console.log('colaboradores', resultadoColaboradores);
             })
+
+            //LISTA COLABORADORES JA SALVOS PARA ESSE ATENDIMENTO (FAZER CONSULTA AINDA)
       }, [habilitaEdicao])
+
 
       
     const [listaServicosSalvo, setListaServicoSalvo] = useState([]);
     useEffect(() => {
         ConsultaServicoAgendamentoPorId(idAgendamento, (servicos) =>{
           
-            const retorno = servicos.map((servico, index) => (servico.nomeServico
-   
-           ));
+            const retorno = servicos.map((servico, index) => (servico.nomeServico ));
             setListaServicoSalvo(retorno);
             console.log('map servico salvo ', retorno)
       
         })
     }, [habilitaEdicao])
 
+    const [colaboradorSalvo, setColaboradorSalvo ] = useState([]);
+
+    useEffect(() =>{
+      ConsultaColaboradoresPorAgendamento(idAgendamento, (colaboradores) => {
+          const retorno = colaboradores.map((colaborador, index) => (colaborador.nomeColaborador ));
+          console.log('RESULTADOS AC -->', retorno)
+          setColaboradorSalvo(retorno);
+        });
+    },[])
+
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
-    console.log('serciçlo sl ', servicoSelecionado.length)
+  
     // const [atualizaDados, setAtualizaDados] = useState(false);
     function BotaoVoltarEdicao()
     {
@@ -196,11 +207,11 @@ export default function DetalhesAgendamento(props)
                 if (resultado === true) {
                 // Faça algo em caso de sucesso.
                 console.log('Excluido com sucesso!');
-                if(colaboradorSelecionado.length > 0)
+                if(colaboradorSalvo.length > 0)
                 {
-                    colaboradorSelecionado.forEach((colaboradorSelecionado) => {
-                        const nomeColaborador = listaColaboradores.find(colaborador => colaborador.id === colaboradorSelecionado);
-            
+                    colaboradorSalvo.forEach((colaboradorSelecionado) => {
+                        const nomeColaborador = listaColaboradores.find(colaborador => colaborador.name === colaboradorSelecionado);
+                        console.log('---------------------->')
                         //console.log('foi ', colaboradorSelecionado, ' t = ',nomeColaborador.id +' t2 ', nomeColaborador.name);
                         //LOGICA PARA SALVAR OS COLABORADORES
                         SalvaColaboradorAtendimento(nomeColaborador.name, nomeColaborador.id, idAgendamento, (resultado) =>{
@@ -246,9 +257,7 @@ export default function DetalhesAgendamento(props)
   }
 
 
-  ConsultaColaboradoresPorAgendamento(idAgendamento, (resultados) => {
-    console.log('RESULTADOS AC -->', resultados)
-  });
+ 
 
 //CANCELAR ATENDIMENTO
 function CancelarAtendimento()
@@ -320,6 +329,15 @@ function CancelarAtendimento()
        
     }
 }, [boxDialogSucesso])
+
+console.log('lista cola ', listaColaboradores+' colaboradores salvo ', colaboradorSalvo)
+console.log('lista ser ', listaServicos+' serv sal ', listaServicosSalvo)
+
+//ATUALIZAR DADOS
+function AtualizarDados()
+{
+    
+}
     return(
         <PaperProvider >
             <SafeAreaView>
@@ -424,6 +442,7 @@ function CancelarAtendimento()
 
                     <View style={{marginRight:20, marginLeft:20}}>
                         <SectionedMultiSelect
+                         
                         items={listaColaboradores}
                         IconRenderer={MaterialIcons}
                         selectedText='selecionados'
@@ -431,11 +450,12 @@ function CancelarAtendimento()
                         colors={{text:'red'}}
                         styles={{selectToggle:{borderWidth:1, borderRadius:5, padding:5},
                                 }}
-                        uniqueKey="id"
+                        uniqueKey="name"
+                        
                         selectText="Escolha o colaborador"
                         showDropDowns={true}
-                        onSelectedItemsChange={setColaboradorSelecionado}
-                        selectedItems={colaboradorSelecionado}
+                        onSelectedItemsChange={setColaboradorSalvo}
+                        selectedItems={colaboradorSalvo}
                         hideChipRemove={!habilitaEdicao}
                         />
                     </View>
@@ -443,7 +463,7 @@ function CancelarAtendimento()
                     {cancelado === 0 ? (         
                     <View style={{ borderTopWidth: 0.7, borderColor: '#006699', marginBottom: 10, paddingTop:10, marginTop:10,  paddingBottom: 8, width: '100%' }}>
                         {habilitaEdicao  ? (
-                                <><TouchableOpacity style={[styles.btnAcaoDetalhes, {marginBottom:20} ]}>
+                                <><TouchableOpacity style={[styles.btnAcaoDetalhes, {marginBottom:20} ]} onPress={AtualizarDados}>
                                 <View style={[styles.btnContainer, ]}>
                                     <Text style={styles.btnAcaoText}>ATUALIZAR</Text>
                                 </View>
