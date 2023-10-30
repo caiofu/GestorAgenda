@@ -4,11 +4,11 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from "./StyleAgendamento";
 
 import {  DarkTheme, useNavigation } from "@react-navigation/native";
-import { PaperProvider, TextInput, Chip } from "react-native-paper";
+import { PaperProvider, TextInput, Chip, Portal, Dialog, ProgressBar } from "react-native-paper";
 import { FontAwesome5, Ionicons, FontAwesome } from '@expo/vector-icons';
 
 //SQLITE
-import { ConsultaColaboradoresPorAgendamento, ConsultaAgendamentoPorId, ConsultaServicoAgendamentoPorId, AlteraAgendamentoParaAtendimento, SalvaColaboradorAtendimento, ExcluiColaboradorAtendimento } from "../SQLiteManager/SQLAgendamento";
+import { ConsultaColaboradoresPorAgendamento, ConsultaAgendamentoPorId, ConsultaServicoAgendamentoPorId, CancelaAtendimento, AlteraAgendamentoParaAtendimento, SalvaColaboradorAtendimento, ExcluiColaboradorAtendimento } from "../SQLiteManager/SQLAgendamento";
 import { RetornaServicosEstabelecimento } from "../SQLiteManager/SQLServicos";
 import { listarColaboradores } from "../SQLiteManager/SQLiteColaborador";
 import { ListaTodasTabelas } from "../SQLiteManager/SQLiteManager";
@@ -75,7 +75,7 @@ export default function DetalhesAgendamento(props)
    
         setAbrirDataPicker(true);
     }
-   
+   console.log('ATUALIZA DADOS -----< ', atualizaDados)
     //DADOS DO AGENDAMENTO
     useEffect(() =>{
         ConsultaAgendamentoPorId(idAgendamento, (agendamento) => {
@@ -108,7 +108,7 @@ export default function DetalhesAgendamento(props)
 
           
         } )
-    },[])
+    },[habilitaEdicao])
 
       //LISTA DE SERVIÇOS
       const [listaServicos, setListaServicos]             = useState([]);
@@ -150,7 +150,7 @@ export default function DetalhesAgendamento(props)
                 setListaColaboradores(resultadoColaboradores);
                 console.log('colaboradores', resultadoColaboradores);
             })
-      }, [])
+      }, [habilitaEdicao])
 
       
     const [listaServicosSalvo, setListaServicoSalvo] = useState([]);
@@ -164,24 +164,25 @@ export default function DetalhesAgendamento(props)
             console.log('map servico salvo ', retorno)
       
         })
-    }, [])
+    }, [habilitaEdicao])
 
     const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    { label: 'Item 1', value: 'item1' },
-    { label: 'Item 2', value: 'item2' },
-    { label: 'Item 3', value: 'item3' },
-  ]);
-  console.log('COLABORADOR SEELECIONADO ---> ',colaboradorSelecionado)
-  console.log('SERVICO SELECIONADO ---> ', listaServicosSalvo)
+    const [value, setValue] = useState(null);
+    console.log('serciçlo sl ', servicoSelecionado.length)
+    // const [atualizaDados, setAtualizaDados] = useState(false);
+    function BotaoVoltarEdicao()
+    {
+        setHabilitaEdicao(false);
+
+    }
 
   function AtivaAtendimento()
   {
         
    
     //Verifica se tem pelo menos um serviço selecionado
-    if(servicoSelecionado.length > 0 )
+  
+    if(listaServicosSalvo.length > 0 )
     {
 
         //Altera de agendamento para atendimento
@@ -195,27 +196,37 @@ export default function DetalhesAgendamento(props)
                 if (resultado === true) {
                 // Faça algo em caso de sucesso.
                 console.log('Excluido com sucesso!');
-                colaboradorSelecionado.forEach((colaboradorSelecionado) => {
-                    const nomeColaborador = listaColaboradores.find(colaborador => colaborador.id === colaboradorSelecionado);
-        
-                    //console.log('foi ', colaboradorSelecionado, ' t = ',nomeColaborador.id +' t2 ', nomeColaborador.name);
-                    //LOGICA PARA SALVAR OS COLABORADORES
-                    SalvaColaboradorAtendimento(nomeColaborador.name, nomeColaborador.id, idAgendamento, (resultado) =>{
-                        console.log('inserido ----------------------->  ', resultado)
-                        if(resultado !== 0)
-                        {
-                            console.log('atualizadoooooooooooooooooooooooo')
-                            //Volta para lista de agendamentos
-                            setAtualizaAgendamentos(!atualizaAgendamentos);
-                            navigation.navigate('Gestor Agenda'); 
-                        
-                        }
-                    });
-                })
+                if(colaboradorSelecionado.length > 0)
+                {
+                    colaboradorSelecionado.forEach((colaboradorSelecionado) => {
+                        const nomeColaborador = listaColaboradores.find(colaborador => colaborador.id === colaboradorSelecionado);
+            
+                        //console.log('foi ', colaboradorSelecionado, ' t = ',nomeColaborador.id +' t2 ', nomeColaborador.name);
+                        //LOGICA PARA SALVAR OS COLABORADORES
+                        SalvaColaboradorAtendimento(nomeColaborador.name, nomeColaborador.id, idAgendamento, (resultado) =>{
+                            console.log('inserido ----------------------->  ', resultado)
+                            if(resultado !== 0)
+                            {
+                             
+                               
+                               // navigation.navigate('Gestor Agenda'); 
+                            
+                            }
+                        });
+                    })
+                }
+                
+                 //Volta para lista de agendamentos
+                 setAtualizaAgendamentos(!atualizaAgendamentos);
+                 setBoxDialogSucesso((att) => true);
+                 setTExtoBoxDialog("Cliente Atendido");
+         
+                  BoxDialog();
                 } else if (resultado === false) {
                 // Faça algo em caso de nenhum registro excluído.
+                console.log('algo deu errado...')
                 } else {
-                // Trate o erro, se houver.
+                 console.log('else ao tentar atender')
                 }
             });
             //SalvaColaboradorAtendimento();
@@ -227,16 +238,88 @@ export default function DetalhesAgendamento(props)
     }
     else
     {
-        console.log("Escolha pelo menos um serviço")
+        setBoxDialogSucesso((att) => false);
+        setTExtoBoxDialog("Você tem que selecionar pelo menos um serviço");
+
+         BoxDialog();
     }
   }
-  console.log('atendido ',atendido)
-  console.log('cancelado ', cancelado)
-  console.log('tabelas -- ', )
+
 
   ConsultaColaboradoresPorAgendamento(idAgendamento, (resultados) => {
     console.log('RESULTADOS AC -->', resultados)
   });
+
+//CANCELAR ATENDIMENTO
+function CancelarAtendimento()
+{
+    CancelaAtendimento(idAgendamento, (sucesso) => { 
+        if(sucesso)
+        {
+            console.log('atendimento cancelado com sucesso!');
+            setAtualizaAgendamentos(!atualizaAgendamentos);
+            setBoxDialogSucesso((att) => true);
+            setTExtoBoxDialog("Atendimento cancelado!");
+    
+             BoxDialog();
+        }
+        else
+        {
+            console.log('não foi possivel cancelar o atendimento!')
+            setAtualizaAgendamentos(!atualizaAgendamentos);
+            setBoxDialogSucesso((att) => false);
+            setTExtoBoxDialog("Não foi possivel cancelar o atendimento!");
+    
+             BoxDialog();
+        }
+    })
+}
+  
+  //BOX DIALOG
+  const [boxVisivel, setBoxVisivel] = useState(false);
+  const [barraProgresso , setBarraProgresso] = useState(0)
+  const [textoBoxDialog, setTExtoBoxDialog] = useState("")
+  const [boxDialogSucesso, setBoxDialogSucesso] = useState(null);
+
+  function BoxDialog()
+  {
+
+      setBoxVisivel(true);
+      let novoProgresso = 0;
+     const intervalo =   setInterval(() =>{
+          novoProgresso += 0.1;
+          if(novoProgresso >=1) //Para finalizar o intervalo
+          {
+              clearInterval(intervalo);
+              boxDialogSucesso ? navigation.navigate('Gestor Agenda') : '';
+              setBoxVisivel(false);
+              setBarraProgresso(0);
+              console.log('box dialogo sucesso, ',boxDialogSucesso)
+              // if(boxDialogSucesso === true)
+              // {
+              //     console.log('tedentro do if')
+              //     navigation.navigate('Gestor Agenda');
+              // }
+
+
+          }
+          else
+          {
+              setBarraProgresso(novoProgresso);
+          }
+
+      }, 200);
+
+    
+
+  }
+  useEffect(() =>{
+    if(boxDialogSucesso !== null)
+    {
+        BoxDialog();
+       
+    }
+}, [boxDialogSucesso])
     return(
         <PaperProvider >
             <SafeAreaView>
@@ -365,7 +448,7 @@ export default function DetalhesAgendamento(props)
                                     <Text style={styles.btnAcaoText}>ATUALIZAR</Text>
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity style={[styles.btnAcaoDetalhes, {backgroundColor: 'red' }]} onPress={() => setHabilitaEdicao(false)}>
+                            <TouchableOpacity style={[styles.btnAcaoDetalhes, {backgroundColor: 'red' }]} onPress={BotaoVoltarEdicao }>
                                     <View style={styles.btnContainer}>
                                         <Text style={styles.btnAcaoText}>VOLTAR</Text>
                                     </View>
@@ -377,13 +460,14 @@ export default function DetalhesAgendamento(props)
                                     <View style={[styles.btnContainer,]}>
                                         <Text style={styles.btnAcaoText}>ATENDER</Text>
                                     </View>
-                                </TouchableOpacity><TouchableOpacity style={[styles.btnAcaoDetalhes, { backgroundColor: 'red', marginTop: 20, padding: 10 }]}>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.btnAcaoDetalhes, { backgroundColor: 'red', marginTop: 20, padding: 10 }]} onPress={CancelarAtendimento}>
                                         <View style={styles.btnContainer}>
                                             <Text style={styles.btnAcaoText}>CANCELAR ATENDIMENTO</Text>
                                         </View>
                                     </TouchableOpacity></>
                                     ) :(
-                                        <TouchableOpacity style={[styles.btnAcaoDetalhes, { backgroundColor: 'red', marginTop: 20, padding: 10 }]}>
+                                        <TouchableOpacity style={[styles.btnAcaoDetalhes, { backgroundColor: 'red', marginTop: 20, padding: 10 }]} onPress={CancelarAtendimento}>
                                         <View style={styles.btnContainer}>
                                             <Text style={styles.btnAcaoText}>CANCELAR ATENDIMENTO</Text>
                                         </View>
@@ -393,6 +477,14 @@ export default function DetalhesAgendamento(props)
                             }
                     </View>
                     ) : ''}   
+                      <Portal>
+                    <Dialog visible={boxVisivel} style={{backgroundColor:'#fff'}}>
+                        <Dialog.Content>
+                        <Text style={[styles.txtDialog, {color: boxDialogSucesso ? "#006699" : 'red'}]} variant="bodyMedium">{textoBoxDialog}</Text>
+                        <ProgressBar progress={barraProgresso} style={{height:10,  backgroundColor: 'rgba(112, 120, 147, 0.3)' }}  color='#006699' />
+                        </Dialog.Content>
+                    </Dialog>
+                    </Portal>
                 </ScrollView>
             </SafeAreaView>
         </PaperProvider>

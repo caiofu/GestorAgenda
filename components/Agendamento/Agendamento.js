@@ -191,18 +191,21 @@ export default function Agendamento()
                     {/* LISTA*/}
                     { listaAgendamentos.map((agendamento) => {
                         let corStatus = '';
-
-                        if(agendamento.atendido === 1)
+                        let textoStatus = 'Aguardando atendimento';    
+                        if(agendamento.atendido === 1 && agendamento.cancelado === 0)
                         {
-                            corStatus = 'green'
+                            corStatus = '#49b6754d'
+                            textoStatus = 'Atendido';
                         }
                         else if(agendamento.cancelado === 1)
                         {
-                            corStatus = 'red'
+                            corStatus = '#d12c3847'
+                            textoStatus = 'Cancelado'
                         }
                         else if (agendamento.atendido === 0 && agendamento.atrasado === 1)
                         {
-                            corStatus = '#efafaf'
+                            corStatus = '#f7730947'
+                            textoStatus = 'Aguardando atendimento (atrasado)'
                         }
 
                         return (
@@ -216,7 +219,7 @@ export default function Agendamento()
                                             {/* <Text  key={servico.idServico}>{servico.nomeServico} </Text> */}
                                             <List.Item key={agendamento.idAgendamento}
                                                         title={agendamento.nomeCliente}
-                                                        description={agendamento.atendido === 1 && agendamento.cancelado === 0 ? 'Atendido':'Aguardando atendimento'}
+                                                        description={textoStatus}
                                                         titleStyle={{color:'black', fontSize:12}}
                                                         descriptionStyle={{color:'gray', fontSize:10}}
                                                         descriptionNumberOfLines={1}
