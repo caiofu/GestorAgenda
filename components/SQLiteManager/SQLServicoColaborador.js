@@ -66,7 +66,6 @@ export function GetServicosColaborador(idColaborador, callback) {
 
 
 export function FavoritarServicoColaborador(idColaborador, idServico, nomeServico, callback){
-    
     db.transaction((tx)=>{
       tx.executeSql(
         'INSERT INTO servicoColaborador (idColaborador, idServico, nomeServico) VALUES (?, ?, ?)',
@@ -86,5 +85,27 @@ export function FavoritarServicoColaborador(idColaborador, idServico, nomeServic
     }
     );
     
+}
+
+export function DesfavoritarServicoColaborador(idColaborador, idServico, callback){
+    console.log("LOGS] - DesfavoritarServicoColaborador - idColaborador: ", idColaborador);
+    db.transaction((tx)=>{
+      tx.executeSql(
+        'DELETE FROM servicoColaborador WHERE idColaborador = ? AND idServico = ?',
+        [idColaborador, idServico],
+        (tx, results) => {
+          console.log("[LOGS] - Serviço Desfavoritado.");
+          callback(true);
+        },
+        (() =>{
+          console.log('[LOGS] - Erro ao desfavoritar Serviço')
+          callback(false);
+        })
+      );
+    },
+    (error)=>{
+      console.log("[LOGS] - Erro na transação SQL: ", error.message);
+    }
+    )
 }
 
