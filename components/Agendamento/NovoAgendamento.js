@@ -125,10 +125,10 @@ export default function NovoAgendamento()
 
          const dataIgual = isEqual(dataAtual, date)
         
-        console.log('Hora selecionada : ', horario.getHours()+' menor ', dataHora.getHours())
-        console.log('horario ? ', horario  +' Formatado '+horarioFormatado);
-        if(dataIgual &&  horario.getHours() <=  dataHora.getHours())
-        {
+      
+       // if(dataIgual &&  horario.getHours() <=  dataHora.getHours() && horario.getMinutes() > dataHora.getMinutes()+10)
+       if(isBefore(horario, dataHora)) 
+       {
           
             setBoxDialogSucesso((att) => false);
               setTExtoBoxDialog("O horario não pode ser menor que o horario atual nesta data!");

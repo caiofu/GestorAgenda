@@ -189,8 +189,23 @@ export default function Agendamento()
                 <ScrollView>
 
                     {/* LISTA*/}
-                    { listaAgendamentos.map((agendamento) => (
-                          
+                    { listaAgendamentos.map((agendamento) => {
+                        let corStatus = '';
+
+                        if(agendamento.atendido === 1)
+                        {
+                            corStatus = 'green'
+                        }
+                        else if(agendamento.cancelado === 1)
+                        {
+                            corStatus = 'red'
+                        }
+                        else if (agendamento.atendido === 0 && agendamento.atrasado === 1)
+                        {
+                            corStatus = '#efafaf'
+                        }
+
+                        return (
                                         <TouchableOpacity 
                                              key={agendamento.idAgendamento}
                                              onPress={() => CarregaDetalhesAgendamento(agendamento.idAgendamento)} 
@@ -205,12 +220,12 @@ export default function Agendamento()
                                                         titleStyle={{color:'black', fontSize:12}}
                                                         descriptionStyle={{color:'gray', fontSize:10}}
                                                         descriptionNumberOfLines={1}
-                                                        style={{backgroundColor: agendamento.atrasado === 1 ? '#efafaf' : '', borderRadius:10}}
+                                                        style={{backgroundColor: corStatus, borderRadius:10}}
                                                         right={props =>  <><FontAwesome5 name="clock" size={18} color='#006699' /><Text style={{marginLeft:5, fontFamily:'Rubik_700Bold', color:'#006699'}}>{agendamento.horario}</Text></>} />
                                             </TouchableOpacity>
 
-                                        
-                                    )) }
+                        )               
+                    }) }
                     {/* <TouchableOpacity style={{borderWidth:0.7, margin:4, borderRadius:10}}>
                         <List.Item
                         title="Barba"

@@ -2,15 +2,16 @@ import { ScrollView, View, TouchableOpacity, Text } from "react-native";
 import { useEffect, useState } from "react";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from "./StyleAgendamento";
-import DropDownPicker from 'react-native-dropdown-picker'; 
+
 import {  DarkTheme, useNavigation } from "@react-navigation/native";
 import { PaperProvider, TextInput, Chip } from "react-native-paper";
 import { FontAwesome5, Ionicons, FontAwesome } from '@expo/vector-icons';
 
 //SQLITE
-import { ConsultaAgendamentoPorId, ConsultaServicoAgendamentoPorId, AlteraAgendamentoParaAtendimento } from "../SQLiteManager/SQLAgendamento";
+import { ConsultaColaboradoresPorAgendamento, ConsultaAgendamentoPorId, ConsultaServicoAgendamentoPorId, AlteraAgendamentoParaAtendimento, SalvaColaboradorAtendimento, ExcluiColaboradorAtendimento } from "../SQLiteManager/SQLAgendamento";
 import { RetornaServicosEstabelecimento } from "../SQLiteManager/SQLServicos";
 import { listarColaboradores } from "../SQLiteManager/SQLiteColaborador";
+import { ListaTodasTabelas } from "../SQLiteManager/SQLiteManager";
 
 //CONTEXT
 import { useAppState } from "../Contexts/AppStateContext";
@@ -24,13 +25,15 @@ export default function DetalhesAgendamento(props)
     // Acesse o valor do idServico por meio de props.route.params
     const idAgendamento = props.route.params.id;
 
+    const navigation = useNavigation();
+
     const [helperTextCampos, setHelperTextCampos] = useState(false);
     
     //EDIÇÃO E ATUALIZAÇÃO
     const [habilitaEdicao, setHabilitaEdicao] = useState(false);
     const [atualizaDados, setAtualizadados]  = useState(false);
     //CONTEXT
-    const {tema,  setAtualizaAgendamentos } = useAppState();
+    const {tema,  setAtualizaAgendamentos , atualizaAgendamentos} = useAppState();
 
     //COR DO TEMA
     const [corTema, setCorTema] = useState('#006699');
@@ -67,6 +70,7 @@ export default function DetalhesAgendamento(props)
     const [nome, setNome]           = useState(null);
     const [telefone, setTelefone]   = useState(null);
     const [atendido, setAtendido]   = useState(null);
+    const [cancelado, setCancelado] = useState(null);
     const showDatePicker = () => {
    
         setAbrirDataPicker(true);
@@ -100,6 +104,7 @@ export default function DetalhesAgendamento(props)
             setNome(agendamento.nomeCliente);
             setTelefone(agendamento.telefone);
             setAtendido(agendamento.atendido);
+            setCancelado(agendamento.cancelado);
 
           
         } )
@@ -173,34 +178,76 @@ export default function DetalhesAgendamento(props)
 
   function AtivaAtendimento()
   {
-    //Não esquecer de verificar se nao foi cancelado
+        
+   
+    //Verifica se tem pelo menos um serviço selecionado
+    if(servicoSelecionado.length > 0 )
+    {
 
-    //Inserir colaborador no agendamento/atendimento (Tem que criar a tabela ainda)
-
-    //Altera de agendamento para atendimento
-    AlteraAgendamentoParaAtendimento(idAgendamento, (sucesso) => {
-        if (sucesso) {
-          console.log('Agendamento atualizado com sucesso.');
-          setAtualizadados(!atualizaDados);
-          // Faça o que for necessário após a atualização bem-sucedida.
-        } else {
-          console.log('Erro ao atualizar o agendamento.');
-          // Lide com o erro de atualização, se necessário.
-        }
-      });
+        //Altera de agendamento para atendimento
+        AlteraAgendamentoParaAtendimento(idAgendamento, (sucesso) => {
+            if (sucesso) {
+            console.log('Agendamento atualizado com sucesso.');
+            setAtualizadados(!atualizaDados);
+            
+            //Drop nos registro para nao subscrever (alterar essa forma posteriormente)
+            ExcluiColaboradorAtendimento(idAgendamento, (resultado) => {
+                if (resultado === true) {
+                // Faça algo em caso de sucesso.
+                console.log('Excluido com sucesso!');
+                colaboradorSelecionado.forEach((colaboradorSelecionado) => {
+                    const nomeColaborador = listaColaboradores.find(colaborador => colaborador.id === colaboradorSelecionado);
+        
+                    //console.log('foi ', colaboradorSelecionado, ' t = ',nomeColaborador.id +' t2 ', nomeColaborador.name);
+                    //LOGICA PARA SALVAR OS COLABORADORES
+                    SalvaColaboradorAtendimento(nomeColaborador.name, nomeColaborador.id, idAgendamento, (resultado) =>{
+                        console.log('inserido ----------------------->  ', resultado)
+                        if(resultado !== 0)
+                        {
+                            console.log('atualizadoooooooooooooooooooooooo')
+                            //Volta para lista de agendamentos
+                            setAtualizaAgendamentos(!atualizaAgendamentos);
+                            navigation.navigate('Gestor Agenda'); 
+                        
+                        }
+                    });
+                })
+                } else if (resultado === false) {
+                // Faça algo em caso de nenhum registro excluído.
+                } else {
+                // Trate o erro, se houver.
+                }
+            });
+            //SalvaColaboradorAtendimento();
+            } else {
+            console.log('Erro ao atualizar o agendamento.');
+            // Lide com o erro de atualização, se necessário.
+            }
+        });
+    }
+    else
+    {
+        console.log("Escolha pelo menos um serviço")
+    }
   }
   console.log('atendido ',atendido)
+  console.log('cancelado ', cancelado)
+  console.log('tabelas -- ', )
+
+  ConsultaColaboradoresPorAgendamento(idAgendamento, (resultados) => {
+    console.log('RESULTADOS AC -->', resultados)
+  });
     return(
-        <PaperProvider>
+        <PaperProvider >
             <SafeAreaView>
-                <ScrollView>
+                <ScrollView style={{backgroundColor: cancelado === 1 ? '#efb4b48f' : ''}}>
                     <View >
                         
 
                     {helperTextCampos ? <HelperText style={styles.txtHelper}>Todos os campos são obrigatórios!</HelperText> : ''}
 
                     
-                        {!habilitaEdicao ? (
+                        {habilitaEdicao === false && cancelado === 0 ? (
                             <View>
                                 <TouchableOpacity style={{alignSelf:'flex-start', flexDirection:'row', marginBottom:15, marginLeft:15, backgroundColor:'#006699', padding:4, borderRadius:5}} onPress={() => setHabilitaEdicao(true)}>
                                 <FontAwesome name="edit" size={24} color="#fff" />
@@ -268,6 +315,30 @@ export default function DetalhesAgendamento(props)
                         </View>   
                                           
                     </View> */}
+
+                    
+                    <View style={{marginRight:20, marginLeft:20, marginTop:10}}>
+                        <SectionedMultiSelect
+                        disabled={!habilitaEdicao}
+                        items={listaServicos}
+                        IconRenderer={MaterialIcons}
+                        selectedText='selecionados'
+                        confirmText="Confirmar"
+                        colors={{text:'red'}}
+                        styles={{selectToggle:{borderWidth:1, borderRadius:5, padding:5},
+                                }}
+                        uniqueKey="name"
+                        selectText="Serviços selecionados"
+                        showDropDowns={true}
+                        onSelectedItemsChange={setListaServicoSalvo}
+                        selectedItems={listaServicosSalvo}
+                        hideChipRemove={!habilitaEdicao}
+                       
+                        
+                        
+                        />
+                    </View>
+
                     <View style={{marginRight:20, marginLeft:20}}>
                         <SectionedMultiSelect
                         items={listaColaboradores}
@@ -282,107 +353,47 @@ export default function DetalhesAgendamento(props)
                         showDropDowns={true}
                         onSelectedItemsChange={setColaboradorSelecionado}
                         selectedItems={colaboradorSelecionado}
-                        
+                        hideChipRemove={!habilitaEdicao}
                         />
                     </View>
-
-                    <View style={{marginRight:20, marginLeft:20, marginTop:20}}>
-                        <SectionedMultiSelect
-                        items={listaServicos}
-                        IconRenderer={MaterialIcons}
-                        selectedText='selecionados'
-                        confirmText="Confirmar"
-                        colors={{text:'red'}}
-                        styles={{selectToggle:{borderWidth:1, borderRadius:5, padding:5},
-                                }}
-                        uniqueKey="name"
-                        selectText="Serviços selecionados"
-                        showDropDowns={true}
-                        onSelectedItemsChange={setListaServicoSalvo}
-                                selectedItems={listaServicosSalvo}
-                       
-                        
-                        
-                        />
-                    </View>
-                   
-                </ScrollView>
-                
-                {/* <View style={{marginLeft:20, marginRight:20, marginBottom:20}}>
-                    <Text>Colaborador </Text>
-                    { <DropDownPicker
-                    disabled={!habilitaEdicao}
-                            language="PT"
-                            open={abrirListaColaborador}
-                            // value={lis}
-                            items={listaColaboradores}
-                            placeholder="Colaboradores selecionados"
-                            setOpen={setAbrirListaColaborador}
-                            // setValue={setValue}
-                            // setItems={setItems}
-                            autoScroll
-                            multiple={true}
-                            dropDownDirection='BOTTOM' 
-                            mode='BADGE'
-                           containerStyle={{position:'absolute'}}
-                        />
-                            }
-                </View> */}
-{/* 
-                 <View style={{marginLeft:20, marginRight:20}}> 
-                 <Text>Serviços</Text>  
-                    { <DropDownPicker
-                    disabled={!habilitaEdicao}
-                            language="PT"
-                            open={open}
-                            value={listaServicosSalvo}
-                            items={listaServicos}
-                            placeholder="Serviços selecionados"
-                            setOpen={setOpen}
-                            setValue={setValue}
-                            setItems={setItems}
-                            autoScroll
-                            multiple={true}
-                            dropDownDirection='BOTTOM' 
-                            mode='BADGE'
-                        />
-                            }
-                           
-                 </View> */}
-                 <View style={{ borderTopWidth: 0.7, borderColor: '#006699', marginBottom: 10, paddingTop:10, marginTop:10,  paddingBottom: 8, width: '100%' }}>
-                    {habilitaEdicao  ? (
-                            <><TouchableOpacity style={[styles.btnAcaoDetalhes, {marginBottom:20} ]}>
-                            <View style={[styles.btnContainer, ]}>
-                                <Text style={styles.btnAcaoText}>ATUALIZAR</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={[styles.btnAcaoDetalhes, {backgroundColor: 'red' }]} onPress={() => setHabilitaEdicao(false)}>
-                                <View style={styles.btnContainer}>
-                                    <Text style={styles.btnAcaoText}>VOLTAR</Text>
+           
+                    {cancelado === 0 ? (         
+                    <View style={{ borderTopWidth: 0.7, borderColor: '#006699', marginBottom: 10, paddingTop:10, marginTop:10,  paddingBottom: 8, width: '100%' }}>
+                        {habilitaEdicao  ? (
+                                <><TouchableOpacity style={[styles.btnAcaoDetalhes, {marginBottom:20} ]}>
+                                <View style={[styles.btnContainer, ]}>
+                                    <Text style={styles.btnAcaoText}>ATUALIZAR</Text>
                                 </View>
                             </TouchableOpacity>
-                            </>
-                    ) : (
-                        
-                        <>{atendido !== 1 ?(<><TouchableOpacity style={[styles.btnAcaoDetalhes, { padding: 10 }]} onPress={AtivaAtendimento}>
-                                <View style={[styles.btnContainer,]}>
-                                    <Text style={styles.btnAcaoText}>ATENDER</Text>
-                                </View>
-                            </TouchableOpacity><TouchableOpacity style={[styles.btnAcaoDetalhes, { backgroundColor: 'red', marginTop: 20, padding: 10 }]}>
+                            <TouchableOpacity style={[styles.btnAcaoDetalhes, {backgroundColor: 'red' }]} onPress={() => setHabilitaEdicao(false)}>
                                     <View style={styles.btnContainer}>
-                                        <Text style={styles.btnAcaoText}>CANCELAR ATENDIMENTO</Text>
-                                    </View>
-                                </TouchableOpacity></>
-                                ) :(
-                                    <TouchableOpacity style={[styles.btnAcaoDetalhes, { backgroundColor: 'red', marginTop: 20, padding: 10 }]}>
-                                    <View style={styles.btnContainer}>
-                                        <Text style={styles.btnAcaoText}>CANCELAR ATENDIMENTO</Text>
+                                        <Text style={styles.btnAcaoText}>VOLTAR</Text>
                                     </View>
                                 </TouchableOpacity>
-                                )}</>
-                    )
-                        }
-                        </View>
+                                </>
+                        ) : (
+                            
+                            <>{atendido !== 1 ?(<><TouchableOpacity style={[styles.btnAcaoDetalhes, { padding: 10 }]} onPress={AtivaAtendimento}>
+                                    <View style={[styles.btnContainer,]}>
+                                        <Text style={styles.btnAcaoText}>ATENDER</Text>
+                                    </View>
+                                </TouchableOpacity><TouchableOpacity style={[styles.btnAcaoDetalhes, { backgroundColor: 'red', marginTop: 20, padding: 10 }]}>
+                                        <View style={styles.btnContainer}>
+                                            <Text style={styles.btnAcaoText}>CANCELAR ATENDIMENTO</Text>
+                                        </View>
+                                    </TouchableOpacity></>
+                                    ) :(
+                                        <TouchableOpacity style={[styles.btnAcaoDetalhes, { backgroundColor: 'red', marginTop: 20, padding: 10 }]}>
+                                        <View style={styles.btnContainer}>
+                                            <Text style={styles.btnAcaoText}>CANCELAR ATENDIMENTO</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                    )}</>
+                        )
+                            }
+                    </View>
+                    ) : ''}   
+                </ScrollView>
             </SafeAreaView>
         </PaperProvider>
     );

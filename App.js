@@ -29,7 +29,7 @@ import BoasVindas from './components/BoasVindas/BoasVindas';
 import Wizard from './components/Wizard/Wizard';
 import { ConsultaEstabelecimento } from './components/SQLiteManager/SQLEstabelecimento';
 import Colaboradores from './components/Colaboradores/Colaboradores';
-
+import { ExcluirTodasAsTabelas } from './components/SQLiteManager/SQLiteManager';
 
 export default function App() {
 
@@ -91,7 +91,7 @@ export default function App() {
   //TRECHO QUE RESETA TUDO PARA TESTES
   //  removerAsyncStorage();
   //  guardaWizardAtivo('true');
-  //  ExcluirBancoDeDados();
+  //  ExcluirTodasAsTabelas();
   //--------------------------------
 
   return (

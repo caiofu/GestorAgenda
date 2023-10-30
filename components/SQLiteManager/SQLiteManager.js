@@ -31,6 +31,9 @@ export default function SQLiteManager() {
        tx.executeSql('CREATE TABLE IF NOT EXISTS agendamento_servicos (idAgendamentoServico INTEGER PRIMARY KEY AUTOINCREMENT, idAgendamento INTEGER, nomeServico TEXT);'
        );
 
+       //AGENDAMENTO_COLABORADOR
+       tx.executeSql('CREATE TABLE IF NOT EXISTS agendamento_colaborador (idAgendamentoColaborador INTEGER PRIMARY KEY AUTOINCREMENT, idAgendamento INTEGER, nomeColaborador TEXT, idColaborador INTEGER);'
+       );
       //RAMO DE ATIVIDADE
       tx.executeSql(
         'CREATE TABLE IF NOT EXISTS ramoAtividade (idRamoAtividade INTEGER PRIMARY KEY AUTOINCREMENT, nomeAtividade TEXT);'
@@ -206,3 +209,27 @@ export function ExcluirBancoDeDados() {
     );
   });
 }
+
+export function ExcluirTodasAsTabelas() {
+  db.transaction(tx => {
+    // Consulta para obter os nomes de todas as tabelas no banco de dados, excluindo a tabela sqlite_sequence.
+    tx.executeSql(
+      "SELECT name FROM sqlite_master WHERE type='table' AND name != 'sqlite_sequence';",
+      [],
+      (_, result) => {
+        const rows = result.rows;
+        for (let i = 0; i < rows.length; i++) {
+          const tableName = rows.item(i).name;
+          tx.executeSql(`DROP TABLE IF EXISTS ${tableName}`);
+        }
+        console.log('Todas as tabelas foram excluídas com sucesso.');
+      },
+      (_, error) => {
+        console.error('Erro ao obter nomes das tabelas:', error);
+      }
+    );
+  });
+}
+
+
+

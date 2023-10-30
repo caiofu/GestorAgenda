@@ -138,7 +138,7 @@ export function ConsultaAgendamentoGeral( callback) {
 }
 export function SalvarServicoAgendamento (idAgendamento, nomeServico , callback)
 {
-  console.log('idAg ',idAgendamento +' nomeSer ',nomeServico)
+ 
     //CREATE TABLE IF NOT EXISTS agendamento_serviços (idAgendamentoServico INTEGER PRIMARY KEY AUTOINCREMENT, idAgendamento INTEGER, idServiço INTEGER
     db.transaction((tx) => {
         tx.executeSql(
@@ -206,5 +206,70 @@ export function AlteraAgendamentoParaAtendimento(idAgendamento, callback)
         callback(false);
       }
     );
+  });
+}
+
+export function SalvaColaboradorAtendimento(nomeColaborador, idColaborador, idAgendamento, callback)
+{
+  db.transaction((tx) => {
+    tx.executeSql(
+        'INSERT INTO agendamento_colaborador (nomeColaborador, idColaborador, idAgendamento ) VALUES (?, ?, ? )',
+        [nomeColaborador, idColaborador, idAgendamento], 
+        (tx, results) => {
+          // Verificando se a inserção foi bem-sucedida
+          if (results.rowsAffected > 0) {
+            console.log('Inserção bem-sucedida');
+            // Recuperando o ID do novo registro
+            const novoID = results.insertId;
+            //Função de retorno (callback) com o resultado (novoID)
+            callback(novoID);
+          } else {
+            console.log('Falha ao inserir');
+            callback(null);
+          }
+        },
+        (error) => {
+          console.log('Erro ao executar consulta salva servico agendamento ===>:', error);
+        }
+      );
+})
+}
+
+export function ExcluiColaboradorAtendimento(idAgendamento, callback) {
+  db.transaction((tx) => {
+    tx.executeSql('DELETE FROM agendamento_colaborador WHERE idAgendamento = ?', [idAgendamento], (tx, results) => {
+      if (results.rowsAffected > 0) {
+        console.log('Registros com ID de agendamento', idAgendamento, 'foram excluídos com sucesso.');
+        // Você não pode retornar diretamente de uma função de callback.
+        // Em vez disso, chame uma função de retorno (callback) passando o resultado.
+        callback(true);
+      } else {
+        console.log('Nenhum registro foi excluído para o ID de agendamento', idAgendamento);
+        callback(true);
+      }
+    }, (error) => {
+      console.error('Erro ao excluir registros:', error);
+      // Você pode lidar com erros passando-os para uma função de retorno (callback).
+      callback(error);
+    });
+  });
+}
+
+export function ConsultaColaboradoresPorAgendamento(idAgendamento, callback) {
+  db.transaction((tx) => {
+    tx.executeSql('SELECT * FROM agendamento_colaborador WHERE idAgendamento = ?', [idAgendamento], (tx, results) => {
+      const len = results.rows.length;
+      const registros = [];
+      for (let i = 0; i < len; i++) {
+        registros.push(results.rows.item(i));
+      }
+    
+      // Retorne os registros encontrados usando a função de retorno (callback).
+      callback(registros);
+    }, (error) => {
+      console.error('Erro ao consultar registros:', error);
+      // Você pode lidar com erros passando-os para uma função de retorno (callback).
+      callback(error);
+    });
   });
 }
