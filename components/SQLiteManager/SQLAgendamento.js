@@ -8,8 +8,8 @@ export function CriaNovoAgendamento(data, horario, nomeCliente, telefone, callba
 {
   db.transaction((tx) => {
     tx.executeSql(
-      'INSERT INTO agendamento (nomeCliente, telefone, data, horario) VALUES (?, ?, ?, ?)',
-      [nomeCliente, telefone,data, horario], 
+      'INSERT INTO agendamento (nomeCliente, telefone, data, horario, atendido, cancelado) VALUES (?, ?, ?, ?, ?, ?)',
+      [nomeCliente, telefone,data, horario,0,0], 
       (tx, results) => {
         // Verificando se a inserção foi bem-sucedida
         if (results.rowsAffected > 0) {
@@ -30,6 +30,29 @@ export function CriaNovoAgendamento(data, horario, nomeCliente, telefone, callba
   });
   
 }
+
+export function ConsultaAgendamentoPorId(id, callback) {
+  db.transaction((tx) => {
+    tx.executeSql(
+      'SELECT * FROM agendamento WHERE idAgendamento = ?',
+      [id],
+      (tx, results) => {
+        const len = results.rows.length;
+        if (len > 0) {
+          const horario = results.rows.item(0);
+          callback(horario);
+        } else {
+          // Nenhum resultado encontrado
+          callback(null);
+        }
+      },
+      (error) => {
+        console.log('Erro ao extrair serviço por ID (servicos): ' + error);
+      }
+    );
+  });
+}
+
 
 export function ConsultaAgendamentoPorHorarioData(horario, data, callback)
 {
@@ -52,27 +75,6 @@ export function ConsultaAgendamentoPorHorarioData(horario, data, callback)
 }
 
 
-// export function ConsultaAgendamentoPorData(data, callback) {
-//   db.transaction((tx) => {
-//     tx.executeSql(
-//       'SELECT * FROM agendamento WHERE data = ? ORDER BY horario ASC',
-//       [data],
-//       (tx, results) => {
-//         const len = results.rows.length;
-//         const agendamentos = [];
-
-//         for (let i = 0; i < len; i++) {
-//           agendamentos.push(results.rows.item(i));
-//         }
-
-//         callback(agendamentos);
-//       },
-//       (error) => {
-//         console.log('Erro ao extrair agendamentos por data:', error);
-//       }
-//     );
-//   });
-// }
 
 export function ConsultaAgendamentoPorData(data, callback) {
   db.transaction((tx) => {
@@ -160,4 +162,49 @@ export function SalvarServicoAgendamento (idAgendamento, nomeServico , callback)
             }
           );
     })
+}
+
+export function ConsultaServicoAgendamentoPorId(id, callback) {
+  db.transaction((tx) => {
+    tx.executeSql(
+      'SELECT * FROM agendamento_servicos WHERE idAgendamento = ?',
+      [id],
+      (tx, results) => {
+        console.log('Número de registros encontrados:', results.rows.length);
+
+        const servicos = [];
+
+        // Iterar sobre os resultados e adicionar cada registro ao array de serviços
+        for (let i = 0; i < results.rows.length; i++) {
+          const servico = results.rows.item(i);
+          servicos.push(servico);
+        }
+
+        callback(servicos); // Chamar a função de callback com o array de serviços
+      },
+      (error) => {
+        console.log('Erro ao extrair serviços ativos: ' + error);
+        callback(null); // Trate o erro e chame a função de callback com null
+      }
+    );
+  });
+}
+
+export function AlteraAgendamentoParaAtendimento(idAgendamento, callback)
+{
+  db.transaction((tx) => {
+    tx.executeSql(
+      'UPDATE agendamento SET atendido =  ? WHERE idAgendamento = ?',
+      [1, idAgendamento],
+      (tx, results) => {
+        console.log('Colaborador atualizado com sucesso (UpdateColaboradorporId)');
+        callback(true);
+      },
+      (error) => {
+        console.log('Erro ao atualizar serviço (UpdateColaboradorporId):' + error.message);
+        console.log(idColaborador, nome, funcao);
+        callback(false);
+      }
+    );
+  });
 }

@@ -17,6 +17,9 @@ import { useAppState } from "../Contexts/AppStateContext";
 import { RetornaServicosEstabelecimento } from "../SQLiteManager/SQLServicos";
 import { CriaNovoAgendamento, ConsultaAgendamentoPorHorarioData, SalvarServicoAgendamento } from "../SQLiteManager/SQLAgendamento";
 
+//PARA TRABALHAR COM DATAS
+import { isBefore, isAfter, isEqual } from 'date-fns';
+
 export default function NovoAgendamento()
 {
      //NAVIGATION
@@ -34,7 +37,7 @@ export default function NovoAgendamento()
 
     //DATA
     const [dataAtual, setDataAtual] = useState(new Date());
-    const [horaAtual, setHoraAtual] = useState(new Date());
+    // const [horaAtual, setHoraAtual] = useState(new Date());
     const [date, setDate] = useState(new Date());
     const [dataFormatada, setDataFormatada] = useState((date.getDate()+'/'+date.getMonth()+1+'/'+date.getFullYear()).toString());
     const [abriDataPicker, setAbrirDataPicker] = useState(false);
@@ -50,9 +53,10 @@ export default function NovoAgendamento()
     const [abriTimePicker, setAbrirTimePicker] = useState(false);
     const [horario, setHorario] = useState(new Date());
     const [horarioFormatado, setHorarioFormatado] = useState(null);
+    
     const onChangeTimePicker = (event, horarioSelecionado) => {
         setHorario(horarioSelecionado);
-        setHorarioFormatado((horario.getHours().toString()+':'+horario.getMinutes().toString().padStart(2,'0')).toString())
+        setHorarioFormatado((horarioSelecionado.getHours().toString()+':'+horarioSelecionado.getMinutes().toString().padStart(2,'0')).toString())
         setAbrirTimePicker(false);
     }
 
@@ -67,8 +71,6 @@ export default function NovoAgendamento()
     const [servicoSelecionado, setServicoSelecionado]   = useState([]);
 
     useEffect(() =>{
-
-
           RetornaServicosEstabelecimento(function(resultados) {
             const resultadosTratados = resultados.map((item, index) => ({
               key: index + 1, // Identificador único crescente
@@ -113,68 +115,92 @@ export default function NovoAgendamento()
     }
     else
     {
-        setHelperTextCampos(false);
-        //VERIFICANDO SE EXISTE AGENDAMENTO NESSE HORARIO E DATA
-        ConsultaAgendamentoPorHorarioData(horarioFormatado, dataFormatada,  (agendamento) => {
-            if (agendamento) {
-              // A consulta foi bem-sucedida, você pode acessar os dados do agendamento aqui
-              console.log('Agendamento encontrado:', agendamento);
-              setBoxDialogSucesso((att) => false);
-              setTExtoBoxDialog("Já existe um agendamento para essa data e horario!");
+        //Verifica se esta na data de hj e se o horario é maior que o horario atual (pelo menos uma hora a mais para nao dar erro)
+        let dataHora = new Date();
+        let dataAtual =  new Date();
+        dataAtual.setHours(0,0,0,0)
+    
+        const dataSelecionadaFormatada = date;
+        dataSelecionadaFormatada.setHours(0,0,0,0)
+
+         const dataIgual = isEqual(dataAtual, date)
+        
+        console.log('Hora selecionada : ', horario.getHours()+' menor ', dataHora.getHours())
+        console.log('horario ? ', horario  +' Formatado '+horarioFormatado);
+        if(dataIgual &&  horario.getHours() <=  dataHora.getHours())
+        {
+          
+            setBoxDialogSucesso((att) => false);
+              setTExtoBoxDialog("O horario não pode ser menor que o horario atual nesta data!");
 
                BoxDialog();
+        }
+        else
+        {
+            setHelperTextCampos(false);
+            //VERIFICANDO SE EXISTE AGENDAMENTO NESSE HORARIO E DATA
+        
+            ConsultaAgendamentoPorHorarioData(horarioFormatado, dataFormatada,  (agendamento) => {
+                if (agendamento) {
+                // A consulta foi bem-sucedida, você pode acessar os dados do agendamento aqui
+                console.log('Agendamento encontrado:', agendamento);
+                setBoxDialogSucesso((att) => false);
+                setTExtoBoxDialog("Já existe um agendamento para essa data e horario!");
 
-            } else {
-              // Não foi encontrado nenhum agendamento com o horário especificado
-              console.log('Nenhum agendamento encontrado para o horário:', );
-              //CRIA AGENDAMENTO
-              CriaNovoAgendamento(dataFormatada, horarioFormatado, nome, telefone, (idAgendamento) => {
-                console.log('novoid ',idAgendamento)
-                if (idAgendamento !== null) {
-                console.log(`Novo ID do agendamento inserido: ${idAgendamento}`);
-                //INSERE SERVIÇOS COM ID DO AGENDAMENTO
-
-                //Loop para caso conter mais de um serviço selecionado
-                let insercaoBemSucedida = 0;
-                let totalInsercoes = servicoSelecionado.length;
-
-                servicoSelecionado.forEach((servicoSelecionado) => {
-                    console.log('serviço selecionado para salvar  -->', servicoSelecionado)
-                    //Precisa pega o id do serviço ou nome do serviço ? ?
-                    SalvarServicoAgendamento(idAgendamento, servicoSelecionado, (idServicoAgendamento) => {
-                        console.log('idAgendamentoSer ', idServicoAgendamento)
-                        if(idServicoAgendamento !== null )
-                        {
-                            console.log('caiu aquiiiii')
-                            insercaoBemSucedida = insercaoBemSucedida +1;
-                            console.log(insercaoBemSucedida)
-                             //Verifica se inseriu todas
-
-                                if(insercaoBemSucedida === totalInsercoes)
-                                {
-                                    console.log('sucedidade ', insercaoBemSucedida+' total ', totalInsercoes)
-                                    //Chama a caixa de dialogo
-                                    setAtualizaAgendamentos(true);
-                                    setTExtoBoxDialog("Agendamento criado com sucesso!");
-                                    setBoxDialogSucesso(true); //Chama o box de mensagem pela mudança de estado
-                                 
-                                    console.log('todos as '+totalInsercoes+ 'forma inseridas com sucesso');
-                                }
-                        }
-                    } );
-
-
-                });
-              //  SalvarServicoAgendamento(idAgendamento,)
+                BoxDialog();
 
                 } else {
-                console.log('Falha ao inserir o agendamento');
+                // Não foi encontrado nenhum agendamento com o horário especificado
+                console.log('Nenhum agendamento encontrado para o horário:', );
+                //CRIA AGENDAMENTO
+                CriaNovoAgendamento(dataFormatada, horarioFormatado, nome, telefone, (idAgendamento) => {
+                    console.log('novoid ',idAgendamento)
+                    if (idAgendamento !== null) {
+                    console.log(`Novo ID do agendamento inserido: ${idAgendamento}`);
+                    //INSERE SERVIÇOS COM ID DO AGENDAMENTO
+
+                    //Loop para caso conter mais de um serviço selecionado
+                    let insercaoBemSucedida = 0;
+                    let totalInsercoes = servicoSelecionado.length;
+
+                    servicoSelecionado.forEach((servicoSelecionado) => {
+                        console.log('serviço selecionado para salvar  -->', servicoSelecionado)
+                        //Precisa pega o id do serviço ou nome do serviço ? ?
+                        SalvarServicoAgendamento(idAgendamento, servicoSelecionado, (idServicoAgendamento) => {
+                            console.log('idAgendamentoSer ', idServicoAgendamento)
+                            if(idServicoAgendamento !== null )
+                            {
+                                console.log('caiu aquiiiii')
+                                insercaoBemSucedida = insercaoBemSucedida +1;
+                                console.log(insercaoBemSucedida)
+                                //Verifica se inseriu todas
+
+                                    if(insercaoBemSucedida === totalInsercoes)
+                                    {
+                                        console.log('sucedidade ', insercaoBemSucedida+' total ', totalInsercoes)
+                                        //Chama a caixa de dialogo
+                                        setAtualizaAgendamentos(true);
+                                        setTExtoBoxDialog("Agendamento criado com sucesso!");
+                                        setBoxDialogSucesso(true); //Chama o box de mensagem pela mudança de estado
+                                    
+                                        console.log('todos as '+totalInsercoes+ 'forma inseridas com sucesso');
+                                    }
+                            }
+                        } );
+
+
+                    });
+                //  SalvarServicoAgendamento(idAgendamento,)
+
+                    } else {
+                        console.log('Falha ao inserir o agendamento');
+                    }
+                });
                 }
             });
-            }
-          });
 
 
+        }
     }
 
     //   });
@@ -228,12 +254,13 @@ export default function NovoAgendamento()
         }
     }, [boxDialogSucesso])
     
+   
     return(
 
           <PaperProvider>
-          <SafeAreaView style={styles.container}>
+          <SafeAreaView >
             <ScrollView>
-                <View>
+                <View style={styles.container}>
                    {helperTextCampos ? <HelperText style={styles.txtHelper}>Todos os campos são obrigatórios!</HelperText> : ''}
                     <View style={{flexDirection:'row'}}>
                         <TouchableOpacity style={[styles.btnDataTime, {borderColor:corTema}]} onPress={() => setAbrirDataPicker(true)} >
@@ -249,7 +276,7 @@ export default function NovoAgendamento()
                             <Text style={[styles.txtInput, {color: helperTextCampos === true && horarioFormatado === null ? 'red' :corTema}]}>{horarioFormatado === null ? 'Horário' : horarioFormatado}</Text>
                         </TouchableOpacity>
                         {abriTimePicker ? (
-                                <DateTimePicker value={date} mode='time' onChange={onChangeTimePicker} />
+                                <DateTimePicker value={horario} mode='time' onChange={onChangeTimePicker} />
                             ) : null}
 
                     </View>

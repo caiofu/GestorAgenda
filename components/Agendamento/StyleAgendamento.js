@@ -43,6 +43,26 @@ const styles = StyleSheet.create({
 
     },
 
+    btnAcaoDetalhes:
+    {
+        backgroundColor:'#006699',
+        marginLeft:20,
+        marginRight:20,
+        padding:6,
+        borderRadius:5,
+        
+    },
+
+    btnAcaoText:
+    {
+        color:'#ffff',
+        marginLeft:10,
+        fontSize:17,
+        alignSelf:'center',
+        fontFamily:'Rubik_700Bold'
+
+    },
+
     inputFormularioSelect:
     {
         marginLeft:15, 
