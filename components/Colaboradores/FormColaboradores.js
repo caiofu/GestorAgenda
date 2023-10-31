@@ -67,7 +67,8 @@ export default function FormColaboradores({route}) {
 
     //Estados Botão
     const [desabilitaBotao, setDesabilitaBotao] = useState(true);
-
+    
+    //constante que recebe parâmetro de colaborador, caso for null, significa que veio do botão 
     const colaborador = route.params.colaborador;
 
     //Inicialização dos dados
@@ -112,7 +113,7 @@ export default function FormColaboradores({route}) {
                 setListaServicosSelecionados(ValuesServicosColaborador);
                 // console.log("ValuesServicosColaborador: ", ValuesServicosColaborador);
             })
-            setDesabilitaBotao(false)
+            // setDesabilitaBotao(false)
         }
         else {
             setNome('');
@@ -225,7 +226,7 @@ export default function FormColaboradores({route}) {
                     }
                     if(listaNovosServicosSelecionados.length !== 0){
                         totalChamadas = listaNovosServicosSelecionados.length;
-                        FavoritarServicos(idColaborador, totalChamadas, listaNovosServicosSelecionados, (sucesso)=>{
+                        FavoritarServicos(idColaborador, totalChamadas, listaNovosServicosSelecionados, async (sucesso)=>{
                             if(sucesso){
                                 //Chama a caixa de dialogo
                                 sucessoTotal = true;
@@ -255,13 +256,7 @@ export default function FormColaboradores({route}) {
                         })
                     }
                 } else {
-                // A inserção falhou
                 console.log('Falha ao atualizar');
-                // setDialogTitulo('Atenção');
-                // setDialogMensagem('Não foi possivel criar o serviço')
-                // setDialogTipoMensagem('E');
-                // setMsgAcaoVisivel(true)
-            
                 }
             });
         }
@@ -391,8 +386,8 @@ export default function FormColaboradores({route}) {
                         label='Nome Colaborador'
                         value={nome} 
                         onChangeText={(entrada)=>{
-                            entrada === '' ? setDesabilitaBotao(true) : setDesabilitaBotao(false);
-                            entrada === '' ? setDesabilitaLista(true) : setDesabilitaLista(false);
+                            entrada !== '' ? setDesabilitaBotao(false) : setDesabilitaBotao(true);
+                            entrada !== '' ? setDesabilitaLista(false) : setDesabilitaLista(true);
                             setNome(entrada)
                         }} 
                         theme={{
@@ -445,9 +440,11 @@ export default function FormColaboradores({route}) {
                     {/* --------------------------------------------------- */}
 
                     {/* BOTAO DE EDICAO/CADASTRO */}
-                    
-                    <View style={desabilitaBotao ? styles.buttonContainerDesabilitado : styles.buttonContainer}>
-                        <TouchableOpacity style={desabilitaBotao ? styles.btnDesabilitado :  styles.btn} onPress={edicaoCadastro ? SalvarEdicao : CriarColaborador} disabled={!statusColaborador}>
+                    {/* {console.log('statusColaborador: ', statusColaborador)}
+                    {console.log('desabilitaBotao: ', desabilitaBotao)}
+                    {console.log('desabilitaLista: ', desabilitaLista)} */}
+                    <View style={desabilitaBotao ? styles.buttonContainerDesabilitado : styles.buttonContainer}> 
+                        <TouchableOpacity style={desabilitaBotao ? styles.btnDesabilitado :  styles.btn} onPress={edicaoCadastro ? SalvarEdicao : CriarColaborador} disabled={desabilitaBotao}> 
                             <View style={styles.btnContainer}>
                                 {/* <FontAwesome5 name="plus" size={28} color="#fff" /> */}
                                 <Text style={styles.btnText}>{edicaoCadastro ? 'SALVAR' : 'CRIAR COLABORADOR'}</Text> 
@@ -461,7 +458,7 @@ export default function FormColaboradores({route}) {
                             <ProgressBar progress={barraProgresso} style={{height:10,  backgroundColor: 'rgba(112, 120, 147, 0.3)' }}  color='#006699' />
                             </Dialog.Content>
                         </Dialog>
-                        </Portal>
+                    </Portal>
                 </View> 
             </SafeAreaView>
         </PaperProvider>
