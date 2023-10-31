@@ -330,13 +330,21 @@ function CancelarAtendimento()
     }
 }, [boxDialogSucesso])
 
-console.log('lista cola ', listaColaboradores+' colaboradores salvo ', colaboradorSalvo)
-console.log('lista ser ', listaServicos+' serv sal ', listaServicosSalvo)
+
 
 //ATUALIZAR DADOS
 function AtualizarDados()
 {
-    
+    console.log(listaServicosSalvo.length)
+    //VALIDAR SE TODOS OS DADOS OBRIGATORIOS FORAM PREENCHIDOS
+    if( nome === null || telefone === null ||  horarioFormatado === null || listaServicosSalvo.length === 0)
+    {
+        console.log('nao pode salvar')
+    }
+    else
+    {
+        console.log('pode salvar')
+    }
 }
     return(
         <PaperProvider >

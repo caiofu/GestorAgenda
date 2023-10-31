@@ -22,6 +22,8 @@ import DetalhesAgendamento from "../Agendamento/DetalhesAgendamento";
 import Colaboradores from "../Colaboradores/Colaboradores";
 import { useState, useEffect } from "react";
 
+
+
 //CONTEXT
 import { useAppState } from "../Contexts/AppStateContext";
 import FormColaboradores from "../Colaboradores/FormColaboradores";
@@ -31,6 +33,9 @@ import {SalvaTema,VerificaTema} from "../AsyncStorage/AsyncStorage";
 
 const Stack = createNativeStackNavigator(); //Responsavel pela navegação Stack 
 const Tab = createBottomTabNavigator(); //Responsavel pela navegaçao BottomTabs
+
+
+
 
 function Tabs()
 {
@@ -68,12 +73,31 @@ function OpAcoes() {
 
 function OpTelaInicial() {
     const { tema} = useAppState();
+    const [nomeEstabelecimento, setNomeEstabelecimento] = useState(null);
+    const [logo, setLogo] = useState(null);
+    useEffect(() => {
+       
+
+        ConsultaEstabelecimento((resultado) => {
+          console.log("RESULTADO"+resultado)
+         
+
+           // let jsonTe = resultado;
+            resultado.logo === '' ? setLogo(null) :  setLogo(resultado.logo); //Verifica se é a imagem padrao
+
+            setNomeEstabelecimento(resultado.nomeEstabelecimento);
+          
+  
+        });
+    },[])
     return (
         <Stack.Navigator   >
-             <Stack.Screen name="Gestor Agenda" component={Agendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text, headerTitle: (props) => ( <><Image
-                 source={require('../../assets/logo/logo-app.png')}
+             <Stack.Screen name="Gestor Agenda" component={Agendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text, headerTitle: (props) => ( <>
+             {logo == null ? <Image source={require('../../assets/logo/logo-app.png')} style={{ width: 60, height: 60 }} /> : <Image
+                 source={{ uri: logo }} 
                  style={{ width: 60, height: 60 }} // Personalize o tamanho da imagem
-             /><Text>Nome do Estabelecimento</Text></>)}} />
+             /> }
+            <Text style={{marginLeft:10}}>{nomeEstabelecimento}</Text></>)}} />
              <Stack.Screen name="Novo Agendamento" component={NovoAgendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}}></Stack.Screen>
              <Stack.Screen name="Detalhes Agendamento" component={DetalhesAgendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}}></Stack.Screen>
            

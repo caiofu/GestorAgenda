@@ -29,6 +29,7 @@ export default function Agendamento()
       }
       else
       {
+        console.log('logo ----> ', resultado.logo)
         setNavegacaoEstabelecimento(false);
       }
     })
@@ -84,6 +85,8 @@ export default function Agendamento()
       // },[atualizaAgendamentos, dataFormatada, date]);
       const [listaAgendamentos, setListaAgendamentos] = useState([]);
       
+      //CARREGANDO DADOS
+   
       useEffect(() => {
           //DATA
           const dataAtual = new Date();
@@ -134,9 +137,13 @@ export default function Agendamento()
                         }
                     }
                 }
-                else
+                else if (isBefore(dataAgendamento, dataAtual))
                 {
                     console.log("A DATA É POSTERIOR NAO PRECISA VERIFICAR ATRASO")
+                    if(agendamento.atendido === 0 && agendamento.cancelado === 0)
+                    {
+                        atraso = 1;
+                    }
                 }
                 console.log('dataa ----> ', dataAgendamento + 'data atual: ', dataAtual);
                   
@@ -156,6 +163,7 @@ export default function Agendamento()
       
               setListaAgendamentos(retorno);
           });
+          console.log('vericou <--------------------------------------------------')
       }, [atualizaAgendamentos, dataFormatada, date]);
       console.log('lista ?' ,listaAgendamentos)
   
@@ -173,7 +181,7 @@ export default function Agendamento()
          //VERIFICANDO STATUS  E ATRASOS
         // const [verificaAgendamento, setVerificaAgendamento] = useState(false);
         // setInterval(() =>{
-        //   setVerificaAgendamento(!verificaAgendamento);
+        //  setVerificaAgendamento(!verificaAgendamento);
         // },60000);
     return (
         <PaperProvider>
