@@ -1,4 +1,4 @@
-import {useColorScheme } from "react-native";
+import {useColorScheme, Image, Text } from "react-native";
 import { NavigationContainer, useRoute, DefaultTheme, DarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -70,7 +70,10 @@ function OpTelaInicial() {
     const { tema} = useAppState();
     return (
         <Stack.Navigator   >
-             <Stack.Screen name="Gestor Agenda" component={Agendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}} />
+             <Stack.Screen name="Gestor Agenda" component={Agendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text, headerTitle: (props) => ( <><Image
+                 source={require('../../assets/logo/logo-app.png')}
+                 style={{ width: 60, height: 60 }} // Personalize o tamanho da imagem
+             /><Text>Nome do Estabelecimento</Text></>)}} />
              <Stack.Screen name="Novo Agendamento" component={NovoAgendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}}></Stack.Screen>
              <Stack.Screen name="Detalhes Agendamento" component={DetalhesAgendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}}></Stack.Screen>
            
