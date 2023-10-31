@@ -67,7 +67,8 @@ export default function FormColaboradores({route}) {
 
     //Estados Botão
     const [desabilitaBotao, setDesabilitaBotao] = useState(true);
-
+    
+    //constante que recebe parâmetro de colaborador, caso for null, significa que veio do botão 
     const colaborador = route.params.colaborador;
 
     //Inicialização dos dados
@@ -112,7 +113,7 @@ export default function FormColaboradores({route}) {
                 setListaServicosSelecionados(ValuesServicosColaborador);
                 // console.log("ValuesServicosColaborador: ", ValuesServicosColaborador);
             })
-            setDesabilitaBotao(false)
+            // setDesabilitaBotao(false)
         }
         else {
             setNome('');
@@ -157,7 +158,6 @@ export default function FormColaboradores({route}) {
                                 FavoritarServicos(novoID, totalChamadas, listaServicosSelecionados, (sucesso)=>{
                                     if(sucesso){
                                         //Chama a caixa de dialogo
-                                        console.log("caiu aqui");
                                         setTextoBoxDialog("Colaborador criado com sucesso!");
                                         setBoxDialogSucesso(true); //Chama o box de mensagem pela mudança de estado
                                         // console.log("inserir dialog informando sucesso da função CriarColaborador linha 86");
@@ -197,7 +197,7 @@ export default function FormColaboradores({route}) {
     }
 
     //Edição de colaborador
-    function SalvarEdicao(){
+    async function SalvarEdicao(){
         if(nome === '')
         {
             setHelperNome(true);
@@ -206,7 +206,7 @@ export default function FormColaboradores({route}) {
         else
         {
             setHelperNome(false);
-            UpdateColaboradorPorId(idColaborador, nome, funcao, (sucesso) => {
+            UpdateColaboradorPorId(idColaborador, nome, funcao, async (sucesso) => {
                 if (sucesso) {
                     // A inserção foi bem-sucedida
                     console.log('[LOGS] - UpdateColaboradorPorId - Edição bem sucedida.');
@@ -224,44 +224,47 @@ export default function FormColaboradores({route}) {
                         sucessoTotal = true;
                     }
                     if(listaNovosServicosSelecionados.length !== 0){
-                        totalChamadas = listaNovosServicosSelecionados.length;
-                        FavoritarServicos(idColaborador, totalChamadas, listaNovosServicosSelecionados, (sucesso)=>{
-                            if(sucesso){
-                                //Chama a caixa de dialogo
-                                sucessoTotal = true;
-                                setTextoBoxDialog("Colaborador atualizado com sucesso!");
-                                setBoxDialogSucesso(true); //Chama o box de mensagem pela mudança de estado
-                                // console.log("inserir dialog informando sucesso da função CriarColaborador linha 86");
-                            }
-                            else{
-                                console.warn("A edição de dados deu certo, mas houve algum problema com o vínculo de serviços! Favor contatar o suporte técnico.");
-                            }
-                        });
+                        await new Promise((resolve) => {
+                            totalChamadas = listaNovosServicosSelecionados.length;
+                            FavoritarServicos(idColaborador, totalChamadas, listaNovosServicosSelecionados, async (sucesso)=>{
+                                if(await sucesso){
+                                    //Chama a caixa de dialogo
+                                    sucessoTotal = true;
+                                    // setTextoBoxDialog("Colaborador atualizado com sucesso!");
+                                    // setBoxDialogSucesso(true); //Chama o box de mensagem pela mudança de estado
+                                    // console.log("inserir dialog informando sucesso da função CriarColaborador linha 86");
+                                }
+                                else{
+                                    sucessoTotal = false;
+                                    console.warn("A edição de dados deu certo, mas houve algum problema com o vínculo de serviços! Favor contatar o suporte técnico.");
+                                }
+                                resolve();
+                            });
+                        }) 
                     }
                     if(listaServicosDesfavoritados.length !==0){
-                            // console.log("Implementar CRUD para efetuar DELETE na tabela ServicosColaborador!");
-                        totalChamadas = listaServicosDesfavoritados.length;
-                        DesfavoritarServicos(idColaborador, totalChamadas, listaServicosDesfavoritados, (sucesso)=> {
-                            if(sucesso){
-                                //Chama a caixa de dialogo
-                                sucessoTotal = true;
-                                setTextoBoxDialog("Colaborador atualizado com sucesso!");
-                                setBoxDialogSucesso(true); //Chama o box de mensagem pela mudança de estado
-                                // console.log("inserir dialog informando sucesso da função CriarColaborador linha 86");
-                            }
-                            else{
-                                console.warn("A edição de dados deu certo, mas houve algum problema com o desvínculo de serviços! Favor contatar o suporte técnico.");
-                            }
+                        await new Promise ((resolve) => {
+                            totalChamadas = listaServicosDesfavoritados.length;
+                            DesfavoritarServicos(idColaborador, totalChamadas, listaServicosDesfavoritados, async (sucesso)=> {
+                                if(await sucesso){
+                                    sucessoTotal = true;
+                                }
+                                else{
+                                    sucessoTotal = false;
+                                    console.warn("A edição de dados deu certo, mas houve algum problema com o desvínculo de serviços! Favor contatar o suporte técnico.");
+                                }
+                                resolve();
+                            })
                         })
                     }
+                    console.log("Sucesso total: ", sucessoTotal);
+                    if(sucessoTotal){
+                        setTextoBoxDialog("Colaborador atualizado com sucesso!");
+                        setBoxDialogSucesso(true); //Chama o box de mensagem pela mudança de estado
+                    }
+                    else console.log("Deu tudo errado no Salvar Edição. Corram para as colinas");
                 } else {
-                // A inserção falhou
                 console.log('Falha ao atualizar');
-                // setDialogTitulo('Atenção');
-                // setDialogMensagem('Não foi possivel criar o serviço')
-                // setDialogTipoMensagem('E');
-                // setMsgAcaoVisivel(true)
-            
                 }
             });
         }
@@ -290,7 +293,7 @@ export default function FormColaboradores({route}) {
                     console.log("[LOGS] - Erro em FavoritarServicoColaborador. Serviço que deu problema: " + {servico});
                     callback(false);
                 }
-                console.log('Serviço', chamadasBemSucedidas + 'total ', listaServicos.length)
+                console.log('Serviço', chamadasBemSucedidas + '. Total ', listaServicos.length)
                 if(chamadasBemSucedidas === totalChamadas){
                     console.log('[LOGS] - Sucesso JOB FavoritarServicos!');
                     callback(true);
@@ -391,8 +394,8 @@ export default function FormColaboradores({route}) {
                         label='Nome Colaborador'
                         value={nome} 
                         onChangeText={(entrada)=>{
-                            entrada === '' ? setDesabilitaBotao(true) : setDesabilitaBotao(false);
-                            entrada === '' ? setDesabilitaLista(true) : setDesabilitaLista(false);
+                            entrada !== '' ? setDesabilitaBotao(false) : setDesabilitaBotao(true);
+                            entrada !== '' ? setDesabilitaLista(false) : setDesabilitaLista(true);
                             setNome(entrada)
                         }} 
                         theme={{
@@ -416,7 +419,7 @@ export default function FormColaboradores({route}) {
                     {/*BLOCO DE DEBUG */}
                     {/* {console.log("Servicos do colaborador - listaServicosSelecionados", listaServicosSelecionados)}  */}
                     {/* Componente utilizado para trazer o serviços, tanto os favoritos quanto os não favoritos */}
-                    {console.log(desabilitaLista)}
+                    {/* {console.log(desabilitaLista)} */}
                     <DropDownPicker
                         disabled={desabilitaLista}
                         placeholder='Serviços Preferidos do Colaborador'
@@ -445,9 +448,11 @@ export default function FormColaboradores({route}) {
                     {/* --------------------------------------------------- */}
 
                     {/* BOTAO DE EDICAO/CADASTRO */}
-                    
-                    <View style={desabilitaBotao ? styles.buttonContainerDesabilitado : styles.buttonContainer}>
-                        <TouchableOpacity style={desabilitaBotao ? styles.btnDesabilitado :  styles.btn} onPress={edicaoCadastro ? SalvarEdicao : CriarColaborador} disabled={!statusColaborador}>
+                    {/* {console.log('statusColaborador: ', statusColaborador)}
+                    {console.log('desabilitaBotao: ', desabilitaBotao)}
+                    {console.log('desabilitaLista: ', desabilitaLista)} */}
+                    <View style={desabilitaBotao ? styles.buttonContainerDesabilitado : styles.buttonContainer}> 
+                        <TouchableOpacity style={desabilitaBotao ? styles.btnDesabilitado :  styles.btn} onPress={edicaoCadastro ? SalvarEdicao : CriarColaborador} disabled={desabilitaBotao}> 
                             <View style={styles.btnContainer}>
                                 {/* <FontAwesome5 name="plus" size={28} color="#fff" /> */}
                                 <Text style={styles.btnText}>{edicaoCadastro ? 'SALVAR' : 'CRIAR COLABORADOR'}</Text> 
@@ -461,7 +466,7 @@ export default function FormColaboradores({route}) {
                             <ProgressBar progress={barraProgresso} style={{height:10,  backgroundColor: 'rgba(112, 120, 147, 0.3)' }}  color='#006699' />
                             </Dialog.Content>
                         </Dialog>
-                        </Portal>
+                    </Portal>
                 </View> 
             </SafeAreaView>
         </PaperProvider>

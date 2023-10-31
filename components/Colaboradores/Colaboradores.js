@@ -92,6 +92,7 @@ function Colaboradores() {
               )}
           </View>
           <FAB
+            color="#fff"
             style={styles.fab}
             label='Novo Colaborador'
             icon="plus"
