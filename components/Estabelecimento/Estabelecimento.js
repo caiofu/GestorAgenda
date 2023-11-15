@@ -34,7 +34,7 @@ export default function Estabelecimento()
        
 
         ConsultaEstabelecimento((resultado) => {
-          console.log("RESULTADO"+resultado)
+        
           if (resultado !== null) {
             
             setPrimeiroCadastro(false);

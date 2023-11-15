@@ -19,7 +19,7 @@ export default function Agendamento()
 {
 
     //CONTEXT
-    const { navegacaoEstabelecimento, setNavegacaoEstabelecimento, atualizaAgendamentos } = useAppState();
+    const { navegacaoEstabelecimento, setNavegacaoEstabelecimento, atualizaAgendamentos, logo, setLogo, nomeEstabelecimento, setNomeEstabelecimento } = useAppState();
 
     //VERIFICA SE TEM CADASTRO DE ESTABELECIMENTO APRA DEFINIR QUAL PRIMEIRA TELA APARECERA
     ConsultaEstabelecimento((resultado) => {
@@ -33,6 +33,34 @@ export default function Agendamento()
         setNavegacaoEstabelecimento(false);
       }
     })
+
+   
+        useEffect(() => {
+            if(navegacaoEstabelecimento != null)
+            {
+            console.log('navegaçao estabelecimento ---> ', navegacaoEstabelecimento)
+            ConsultaEstabelecimento((resultado) => {
+              console.log("RESULTADO ?"+resultado)
+              console.log('LOGO ', resultado.logo +' bnome ', resultado.nomeEstabelecimento)
+             
+    
+               let jsonTe = resultado;
+               if( resultado && resultado.logo !== null)
+               {
+                    console.log("ESTA ENTRANDO NO IF ---------------------------------")
+                    setLogo(resultado.logo); 
+               }
+              
+                 
+    
+               setNomeEstabelecimento(resultado.nomeEstabelecimento);
+              
+      
+            });
+        }
+        },[logo, navegacaoEstabelecimento ])
+   
+      
 
     //
     const navigation = useNavigation();

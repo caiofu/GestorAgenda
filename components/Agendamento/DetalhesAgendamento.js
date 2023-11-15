@@ -234,7 +234,7 @@ export default function DetalhesAgendamento(props)
          
                   BoxDialog();
                 } else if (resultado === false) {
-                // Faça algo em caso de nenhum registro excluído.
+               
                 console.log('algo deu errado...')
                 } else {
                  console.log('else ao tentar atender')

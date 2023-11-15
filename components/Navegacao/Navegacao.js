@@ -42,7 +42,7 @@ function Tabs()
 
     const { tema} = useAppState();
     //AQUI É ONDE FICA A BARRA NA PARTE INFERIOR COM OS BOTOES DE NAVEGAÇÃO
-    console.log('caiu nesse por que ?')
+
     return(
         <Tab.Navigator screenOptions={{headerShown: false, tabBarActiveTintColor:'#006699',}}>
             <Tab.Screen name="Tela Inicial" component={OpTelaInicial} initialParams={{tema1:tema}} options={{tabBarIcon: ({color, size}) => (<FontAwesome5 name="home" size={size} color={color} />),}} ></Tab.Screen>
@@ -72,31 +72,23 @@ function OpAcoes() {
 }
 
 function OpTelaInicial() {
-    const { tema} = useAppState();
-    const [nomeEstabelecimento, setNomeEstabelecimento] = useState(null);
-    const [logo, setLogo] = useState(null);
+    const { tema, logo, setLogo, nomeEstabelecimento, setNomeEstabelecimento} = useAppState();
+    // const [nomeEstabelecimento, setNomeEstabelecimento] = useState(null);
+    // const [logo, setLogo] = useState('../../assets/logo/logo-app.png');
+
+    const [teste, setTeste] = useState(null);
     useEffect(() => {
-       
+       setTeste(logo);
 
-        ConsultaEstabelecimento((resultado) => {
-          console.log("RESULTADO"+resultado)
-         
-
-           // let jsonTe = resultado;
-            resultado.logo === '' ? setLogo(null) :  setLogo(resultado.logo); //Verifica se é a imagem padrao
-
-            setNomeEstabelecimento(resultado.nomeEstabelecimento);
-          
-  
-        });
-    },[])
+    },[logo])
+    console.log(teste)
+    
+    //FAZER NO CONTEXT A TRATATIVA
     return (
         <Stack.Navigator   >
              <Stack.Screen name="Gestor Agenda" component={Agendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text, headerTitle: (props) => ( <>
-             {logo == null ? <Image source={require('../../assets/logo/logo-app.png')} style={{ width: 60, height: 60 }} /> : <Image
-                 source={{ uri: logo }} 
-                 style={{ width: 60, height: 60 }} // Personalize o tamanho da imagem
-             /> }
+              <Image  source={{ uri: logo}} style={{ width: 60, height: 60 }}
+             />
             <Text style={{marginLeft:10}}>{nomeEstabelecimento}</Text></>)}} />
              <Stack.Screen name="Novo Agendamento" component={NovoAgendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}}></Stack.Screen>
              <Stack.Screen name="Detalhes Agendamento" component={DetalhesAgendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}}></Stack.Screen>
@@ -116,7 +108,7 @@ function OpConfiguracoes() {
 }
 
 function PrimeiroCadastroEstabelecimento() {
-    console.log('PRIMEIRO CADASTRO ESTA')
+ 
     return (
         <Stack.Navigator>
             <Stack.Screen name="Estabelecimento" component={Estabelecimento} />
@@ -146,7 +138,7 @@ export default function Navegacao()
        
       }, [tema]);
       
-      console.log('estabelecimento nave ',navegacaoEstabelecimento)
+
         
    
     return(
