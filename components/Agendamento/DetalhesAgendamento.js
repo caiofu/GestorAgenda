@@ -346,6 +346,12 @@ function AtualizarDados()
         console.log('pode salvar')
     }
 }
+
+function CompartilharDados()
+{
+    //Logica suando clipboard para salvar o texto com clipboard ja instalado
+    //https://www.npmjs.com/package/@react-native-clipboard/clipboard
+}
     return(
         <PaperProvider >
             <SafeAreaView>
@@ -357,10 +363,15 @@ function AtualizarDados()
 
                     
                         {habilitaEdicao === false && cancelado === 0 ? (
-                            <View>
+                            <View style={{ flexDirection: 'row',  }}>
                                 <TouchableOpacity style={{alignSelf:'flex-start', flexDirection:'row', marginBottom:15, marginLeft:15, backgroundColor:'#006699', padding:4, borderRadius:5}} onPress={() => setHabilitaEdicao(true)}>
                                 <FontAwesome name="edit" size={24} color="#fff" />
                                     <Text style={{marginEnd:20, fontFamily:'Rubik_700Bold',alignSelf:'center', color:'#fff'}}> Editar</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity style={{alignSelf:'flex-start', flexDirection:'row', marginBottom:15, marginLeft:15, backgroundColor:'#006699', padding:4, borderRadius:5}} onPress={() => setHabilitaEdicao(true)}>
+                                <FontAwesome name="edit" size={24} color="#fff" />
+                                    <Text style={{marginEnd:20, fontFamily:'Rubik_700Bold',alignSelf:'center', color:'#fff'}}>Compartilhar</Text>
                                 </TouchableOpacity>
                             </View>
                         ): ''}
