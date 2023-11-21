@@ -1,10 +1,10 @@
-import { ScrollView, View, TouchableOpacity, Text } from "react-native";
+import { ScrollView, View, TouchableOpacity, Text, Linking } from "react-native";
 import { useEffect, useState } from "react";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from "./StyleAgendamento";
 
 import {  DarkTheme, useNavigation } from "@react-navigation/native";
-import { PaperProvider, TextInput, Chip, Portal, Dialog, ProgressBar } from "react-native-paper";
+import { PaperProvider, TextInput, Chip, Portal, Dialog, ProgressBar, Button } from "react-native-paper";
 import { FontAwesome5, Ionicons, FontAwesome } from '@expo/vector-icons';
 
 //SQLITE
@@ -17,9 +17,13 @@ import { ListaTodasTabelas } from "../SQLiteManager/SQLiteManager";
 import { useAppState } from "../Contexts/AppStateContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-//MULTI SELECt
+//MULTI SELECT
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import {MaterialIcons} from '@expo/vector-icons';
+
+//CLIPBOARD
+import * as Clipboard from 'expo-clipboard';
+
 export default function DetalhesAgendamento(props)
 {
     // Acesse o valor do idServico por meio de props.route.params
@@ -347,11 +351,43 @@ function AtualizarDados()
     }
 }
 
+const [boxCompartilhar, setBoxCompartilhar] = useState(false);
 function CompartilharDados()
 {
     //Logica suando clipboard para salvar o texto com clipboard ja instalado
     //https://www.npmjs.com/package/@react-native-clipboard/clipboard
+    
+    console.log('compartilhar dados')
+    
+    setBoxCompartilhar(true);
+    CopiarClipboard();
 }
+
+async function CopiarClipboard()
+{
+    await Clipboard.setStringAsync('Teste');
+}
+
+const textoParaCompartilhar = 'Texto para compartilhar no WhatsApp';
+
+const compartilharNoWhatsApp = () => {
+    const mensagem = encodeURIComponent('Texto para compartilhar no WhatsApp');
+    const url = `whatsapp://send?text=${mensagem}`;
+  
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (supported) {
+          return Linking.openURL(url);
+        } else {
+          console.log('WhatsApp não está instalado');
+          // Aqui você pode fornecer uma alternativa, como abrir o navegador ou mostrar uma mensagem ao usuário.
+        }
+      })
+      .catch((error) => {
+        console.error('Erro ao tentar abrir WhatsApp:', error);
+      });
+  };
+  
     return(
         <PaperProvider >
             <SafeAreaView>
@@ -369,7 +405,7 @@ function CompartilharDados()
                                     <Text style={{marginEnd:20, fontFamily:'Rubik_700Bold',alignSelf:'center', color:'#fff'}}> Editar</Text>
                                 </TouchableOpacity>
 
-                                <TouchableOpacity style={{alignSelf:'flex-start', flexDirection:'row', marginBottom:15, marginLeft:15, backgroundColor:'#006699', padding:4, borderRadius:5}} onPress={() => setHabilitaEdicao(true)}>
+                                <TouchableOpacity style={{alignSelf:'flex-start', flexDirection:'row', marginBottom:15, marginLeft:15, backgroundColor:'#006699', padding:4, borderRadius:5}} onPress={compartilharNoWhatsApp}>
                                 <FontAwesome name="edit" size={24} color="#fff" />
                                     <Text style={{marginEnd:20, fontFamily:'Rubik_700Bold',alignSelf:'center', color:'#fff'}}>Compartilhar</Text>
                                 </TouchableOpacity>
@@ -517,12 +553,22 @@ function CompartilharDados()
                     </View>
                     ) : ''}   
                       <Portal>
-                    <Dialog visible={boxVisivel} style={{backgroundColor:'#fff'}}>
-                        <Dialog.Content>
-                        <Text style={[styles.txtDialog, {color: boxDialogSucesso ? "#006699" : 'red'}]} variant="bodyMedium">{textoBoxDialog}</Text>
-                        <ProgressBar progress={barraProgresso} style={{height:10,  backgroundColor: 'rgba(112, 120, 147, 0.3)' }}  color='#006699' />
-                        </Dialog.Content>
-                    </Dialog>
+                        <Dialog visible={boxVisivel} style={{backgroundColor:'#fff'}}>
+                            <Dialog.Content>
+                            <Text style={[styles.txtDialog, {color: boxDialogSucesso ? "#006699" : 'red'}]} variant="bodyMedium">{textoBoxDialog}</Text>
+                            <ProgressBar progress={barraProgresso} style={{height:10,  backgroundColor: 'rgba(112, 120, 147, 0.3)' }}  color='#006699' />
+                            </Dialog.Content>
+                        </Dialog>
+
+                        <Dialog visible={boxCompartilhar} style={{backgroundColor:'#fff'}}>
+                            <Dialog.Content>
+                           
+                           
+                            </Dialog.Content>
+                            <Dialog.Actions>
+                                <Button onPress={() => setBoxCompartilhar(false)}>Fechar</Button>
+                            </Dialog.Actions>
+                        </Dialog>
                     </Portal>
                 </ScrollView>
             </SafeAreaView>
