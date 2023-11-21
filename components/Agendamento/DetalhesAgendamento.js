@@ -1,4 +1,4 @@
-import { ScrollView, View, TouchableOpacity, Text, Linking } from "react-native";
+import { ScrollView, View, TouchableOpacity, Text, Linking, Image } from "react-native";
 import { useEffect, useState } from "react";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from "./StyleAgendamento";
@@ -352,16 +352,16 @@ function AtualizarDados()
 }
 
 const [boxCompartilhar, setBoxCompartilhar] = useState(false);
-function CompartilharDados()
-{
-    //Logica suando clipboard para salvar o texto com clipboard ja instalado
-    //https://www.npmjs.com/package/@react-native-clipboard/clipboard
+// function CompartilharDados()
+// {
+//     //Logica suando clipboard para salvar o texto com clipboard ja instalado
+//     //https://www.npmjs.com/package/@react-native-clipboard/clipboard
     
-    console.log('compartilhar dados')
+//     console.log('compartilhar dados')
     
-    setBoxCompartilhar(true);
-    CopiarClipboard();
-}
+   
+//     CopiarClipboard();
+// }
 
 async function CopiarClipboard()
 {
@@ -380,7 +380,7 @@ const compartilharNoWhatsApp = () => {
           return Linking.openURL(url);
         } else {
           console.log('WhatsApp não está instalado');
-          // Aqui você pode fornecer uma alternativa, como abrir o navegador ou mostrar uma mensagem ao usuário.
+          //Colocar um dialog notificando que nao tem whast instalado
         }
       })
       .catch((error) => {
@@ -405,7 +405,7 @@ const compartilharNoWhatsApp = () => {
                                     <Text style={{marginEnd:20, fontFamily:'Rubik_700Bold',alignSelf:'center', color:'#fff'}}> Editar</Text>
                                 </TouchableOpacity>
 
-                                <TouchableOpacity style={{alignSelf:'flex-start', flexDirection:'row', marginBottom:15, marginLeft:15, backgroundColor:'#006699', padding:4, borderRadius:5}} onPress={compartilharNoWhatsApp}>
+                                <TouchableOpacity style={{alignSelf:'flex-start', flexDirection:'row', marginBottom:15, marginLeft:15, backgroundColor:'#006699', padding:4, borderRadius:5}} onPress={() =>  setBoxCompartilhar(true)}>
                                 <FontAwesome name="edit" size={24} color="#fff" />
                                     <Text style={{marginEnd:20, fontFamily:'Rubik_700Bold',alignSelf:'center', color:'#fff'}}>Compartilhar</Text>
                                 </TouchableOpacity>
@@ -561,12 +561,19 @@ const compartilharNoWhatsApp = () => {
                         </Dialog>
 
                         <Dialog visible={boxCompartilhar} style={{backgroundColor:'#fff'}}>
+                            <Dialog.Title>Compartilhar</Dialog.Title>
                             <Dialog.Content>
-                           
-                           
+                                <View>
+                                <TouchableOpacity onPress={compartilharNoWhatsApp}>
+                                        <Image
+                                        source={require('../../assets/icone/whatsapp.png')}
+                                        style={{ width: 50, height: 50 }}
+                                        />
+                                </TouchableOpacity>
+                            </View>
                             </Dialog.Content>
                             <Dialog.Actions>
-                                <Button onPress={() => setBoxCompartilhar(false)}>Fechar</Button>
+                                <Button style={{color:'#006699',  opacity:1}}  onPress={() => setBoxCompartilhar(false)}>Fechar</Button>
                             </Dialog.Actions>
                         </Dialog>
                     </Portal>
