@@ -37,7 +37,7 @@ export default function DetalhesAgendamento(props)
     const [habilitaEdicao, setHabilitaEdicao] = useState(false);
     const [atualizaDados, setAtualizadados]  = useState(false);
     //CONTEXT
-    const {tema,  setAtualizaAgendamentos , atualizaAgendamentos} = useAppState();
+    const {tema,  setAtualizaAgendamentos , atualizaAgendamentos, nomeEstabelecimento} = useAppState();
 
     //COR DO TEMA
     const [corTema, setCorTema] = useState('#006699');
@@ -352,35 +352,40 @@ function AtualizarDados()
 }
 
 const [boxCompartilhar, setBoxCompartilhar] = useState(false);
-// function CompartilharDados()
-// {
-//     //Logica suando clipboard para salvar o texto com clipboard ja instalado
-//     //https://www.npmjs.com/package/@react-native-clipboard/clipboard
-    
-//     console.log('compartilhar dados')
-    
-   
-//     CopiarClipboard();
-// }
+//Responsavel pela mensagem após ação
+const [boxMsgCopiar, setBoxMsgCopiar] = useState(false);
+const [txtBoxMsgCopiar, setTxtBoxMsgCopiar] = useState(false);
 
+//const textoParaCompartilhar = 'Olá, '+nome+' você tem um agendamento para o dia '+dataFormatada+' ás '+horarioFormatado+' para o seguinte serviço: '+listaServicosSalvo;
+const textoParaCompartilhar = 'Olá, '+nome+', aqui é do(a) '+nomeEstabelecimento+'.Você tem agendamento: '+listaServicosSalvo+' para o dia '+dataFormatada+' às '+horarioFormatado+'.'
 async function CopiarClipboard()
 {
-    await Clipboard.setStringAsync('Teste');
+    await Clipboard.setStringAsync(textoParaCompartilhar);
+         setBoxCompartilhar(false);
+          setTxtBoxMsgCopiar("Copiado com sucesso!");
+          setBoxMsgCopiar(true);
 }
 
-const textoParaCompartilhar = 'Texto para compartilhar no WhatsApp';
+
 
 const compartilharNoWhatsApp = () => {
-    const mensagem = encodeURIComponent('Texto para compartilhar no WhatsApp');
+    const mensagem = encodeURIComponent(textoParaCompartilhar);
     const url = `whatsapp://send?text=${mensagem}`;
   
     Linking.canOpenURL(url)
       .then((supported) => {
         if (supported) {
           return Linking.openURL(url);
+
+          //Box de mensagem
+        //   setBoxCompartilhar(false);
+        //   setTxtBoxMsgCopiar("Copiado com sucesso!");
+        //   setBoxMsgCopiar(true);
         } else {
           console.log('WhatsApp não está instalado');
-          //Colocar um dialog notificando que nao tem whast instalado
+          setBoxCompartilhar(false);
+          setTxtBoxMsgCopiar("Whatsapp não instalado!");
+          setBoxMsgCopiar(true);
         }
       })
       .catch((error) => {
@@ -561,19 +566,36 @@ const compartilharNoWhatsApp = () => {
                         </Dialog>
 
                         <Dialog visible={boxCompartilhar} style={{backgroundColor:'#fff'}}>
-                            <Dialog.Title>Compartilhar</Dialog.Title>
+                            <Dialog.Title style={{color:'#006699'}}>Compartilhar <FontAwesome5 name="share-alt" size={24} color="#006699" /></Dialog.Title>
+                            <View style={{borderBottomWidth:0.31, width:'90%', alignSelf:'center', marginBottom:20}}></View>
                             <Dialog.Content>
-                                <View>
-                                <TouchableOpacity onPress={compartilharNoWhatsApp}>
-                                        <Image
-                                        source={require('../../assets/icone/whatsapp.png')}
-                                        style={{ width: 50, height: 50 }}
-                                        />
+                                <View style={{alignItems:'center'}}>
+                                <TouchableOpacity onPress={compartilharNoWhatsApp} style={styles.btnCompartilhar}>
+                                    <FontAwesome5 name="whatsapp-square" size={50} color="green" />
+                                    <Text style={styles.txtBtnCompartilhar}>WhatsApp</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity onPress={CopiarClipboard} style={styles.btnCompartilhar}>
+                                <FontAwesome5 name="copy" size={50} color="gray" />
+                                        <Text style={styles.txtBtnCompartilhar}>Copiar</Text>
+                                     
                                 </TouchableOpacity>
                             </View>
+                            
                             </Dialog.Content>
-                            <Dialog.Actions>
-                                <Button style={{color:'#006699',  opacity:1}}  onPress={() => setBoxCompartilhar(false)}>Fechar</Button>
+                            <View style={{borderBottomWidth:0.51, width:'90%', alignSelf:'center'}}></View>
+                            <Dialog.Actions >
+                                <Button  textColor="#006699"  onPress={() => setBoxCompartilhar(false)}>Fechar</Button>
+                            </Dialog.Actions>
+                        </Dialog>
+
+                        <Dialog visible={boxMsgCopiar} style={{backgroundColor:'#fff'}}>
+                            <Dialog.Content>
+                            <Text style={[styles.txtDialog, {color: "#006699", fontSize:22 }]} variant="bodyMedium">{txtBoxMsgCopiar}</Text>
+                            
+                            </Dialog.Content>
+                            <Dialog.Actions >
+                                <Button  textColor="#006699"  onPress={() => setBoxMsgCopiar(false)}>Fechar</Button>
                             </Dialog.Actions>
                         </Dialog>
                     </Portal>
