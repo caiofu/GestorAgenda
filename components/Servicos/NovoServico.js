@@ -89,7 +89,7 @@ export default function NovoServico() {
                     key: atividade.idRamoAtividade.toString(),
                     value: atividade.nomeAtividade,
                 }));
-                //console.log(retorno);
+                //// console.log(retorno);
                 setListaRamoAtividade(retorno);
 
             });
@@ -102,7 +102,7 @@ export default function NovoServico() {
         // Obtendo chave correspondente ao valor do ramo de atividade
         const chaveSelecionada = listaRamoAtividade.find(item => item.value === ramoAtividadeSelecionado)?.key;
         setIdRamoAtividade(chaveSelecionada);
-        console.log(chaveSelecionada)
+        // console.log(chaveSelecionada)
     }, [ramoAtividadeSelecionado, listaRamoAtividade]);
 
     //BUSCA A LISTA DE SERVIÇOS DE ACORDO COM RAMO ESCOLHIDO
@@ -144,7 +144,7 @@ export default function NovoServico() {
                     if (atualizacaoBemSucedida) {
                         chamadasBemSucedidas++;
                     }
-                    console.log('contador', chamadasBemSucedidas + 'toatal ', servicoSelecionado.length)
+                    // console.log('contador', chamadasBemSucedidas + 'toatal ', servicoSelecionado.length)
                     if (chamadasBemSucedidas === totalChamadas) {
                         //setImportMensagemVisible(true);
                         setDialogTitulo('Sucesso');
@@ -174,7 +174,7 @@ export default function NovoServico() {
                     if (atualizacaoBemSucedida) {
                         chamadasBemSucedidas++;
                     }
-                    console.log('contador', chamadasBemSucedidas + 'toatal ', listaRamoAtividade.length)
+                    // console.log('contador', chamadasBemSucedidas + 'toatal ', listaRamoAtividade.length)
                     if (chamadasBemSucedidas === totalChamadas) {
                         //setImportMensagemVisible(true);
                         setDialogTitulo('Sucesso');
@@ -212,7 +212,7 @@ export default function NovoServico() {
             CriaNovoServico(novoNomeServico, novaDescricao, favorito, (novoID) => {
                 if (novoID !== null) {
                     // A inserção foi bem-sucedida
-                    console.log(`Inserção bem-sucedida. Novo ID: ${novoID}`);
+                    // console.log(`Inserção bem-sucedida. Novo ID: ${novoID}`);
                     setDialogTitulo('Sucesso');
                     setDialogMensagem('Serviço criado!')
                     setDialogTelaRetorno('Novo Serviço')
@@ -222,7 +222,7 @@ export default function NovoServico() {
                     //setAtualisaListaServico(true); ATUALIZAR LISTA DE SERVIÇO CUSTOMIZADO
                 } else {
                     // A inserção falhou
-                    console.log('Falha ao inserir');
+                    // console.log('Falha ao inserir');
                     setDialogTitulo('Atenção');
                     setDialogMensagem('Não foi possivel criar o serviço')
                     setDialogTipoMensagem('E');

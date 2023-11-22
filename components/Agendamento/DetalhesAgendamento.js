@@ -78,7 +78,7 @@ export default function DetalhesAgendamento(props) {
     //DADOS DO AGENDAMENTO
     useEffect(() => {
         ConsultaAgendamentoPorId(idAgendamento, (agendamento) => {
-            console.log('agendamento ---> ', agendamento)
+            // console.log('agendamento ---> ', agendamento)
             //HORA
             const partesHorario = agendamento.horario.split(':');
             const hora = parseInt(partesHorario[0], 10);
@@ -120,7 +120,7 @@ export default function DetalhesAgendamento(props) {
 
     useEffect(() => {
         // RetornaServicosEstabelecimento(function(resultados) {
-        //     console.log('lista serv est ',resultados)
+        //     // console.log('lista serv est ',resultados)
         //   const resultadosTratados = resultados.map((item, index) => ({
         //     label: item, // Identificador único crescente
         //     value: item,     // Nome do serviço
@@ -135,7 +135,7 @@ export default function DetalhesAgendamento(props) {
                 name: item,
                 id: index,
             }));
-            console.log('servico estabe --> ', resultadosTratados)
+            // console.log('servico estabe --> ', resultadosTratados)
             setListaServicos(resultadosTratados)
         });
 
@@ -147,7 +147,7 @@ export default function DetalhesAgendamento(props) {
                 id: item.idColaborador,
             }));
             setListaColaboradores(resultadoColaboradores);
-            console.log('colaboradores', resultadoColaboradores);
+            // console.log('colaboradores', resultadoColaboradores);
         })
 
         //LISTA COLABORADORES JA SALVOS PARA ESSE ATENDIMENTO (FAZER CONSULTA AINDA)
@@ -161,7 +161,7 @@ export default function DetalhesAgendamento(props) {
 
             const retorno = servicos.map((servico, index) => (servico.nomeServico));
             setListaServicoSalvo(retorno);
-            console.log('map servico salvo ', retorno)
+            // console.log('map servico salvo ', retorno)
 
         })
     }, [habilitaEdicao])
@@ -171,7 +171,7 @@ export default function DetalhesAgendamento(props) {
     useEffect(() => {
         ConsultaColaboradoresPorAgendamento(idAgendamento, (colaboradores) => {
             const retorno = colaboradores.map((colaborador, index) => (colaborador.nomeColaborador));
-            console.log('RESULTADOS AC -->', retorno)
+            // console.log('RESULTADOS AC -->', retorno)
             setColaboradorSalvo(retorno);
         });
     }, [])
@@ -195,22 +195,22 @@ export default function DetalhesAgendamento(props) {
             //Altera de agendamento para atendimento
             AlteraAgendamentoParaAtendimento(idAgendamento, (sucesso) => {
                 if (sucesso) {
-                    console.log('Agendamento atualizado com sucesso.');
+                    // console.log('Agendamento atualizado com sucesso.');
                     setAtualizadados(!atualizaDados);
 
                     //Drop nos registro para nao subscrever (alterar essa forma posteriormente)
                     ExcluiColaboradorAtendimento(idAgendamento, (resultado) => {
                         if (resultado === true) {
                             // Faça algo em caso de sucesso.
-                            console.log('Excluido com sucesso!');
+                            // console.log('Excluido com sucesso!');
                             if (colaboradorSalvo.length > 0) {
                                 colaboradorSalvo.forEach((colaboradorSelecionado) => {
                                     const nomeColaborador = listaColaboradores.find(colaborador => colaborador.name === colaboradorSelecionado);
-                                    console.log('---------------------->')
-                                    //console.log('foi ', colaboradorSelecionado, ' t = ',nomeColaborador.id +' t2 ', nomeColaborador.name);
+                                    // console.log('---------------------->')
+                                    //// console.log('foi ', colaboradorSelecionado, ' t = ',nomeColaborador.id +' t2 ', nomeColaborador.name);
                                     //LOGICA PARA SALVAR OS COLABORADORES
                                     SalvaColaboradorAtendimento(nomeColaborador.name, nomeColaborador.id, idAgendamento, (resultado) => {
-                                        console.log('inserido ----------------------->  ', resultado)
+                                        // console.log('inserido ----------------------->  ', resultado)
                                         if (resultado !== 0) {
 
 
@@ -229,14 +229,14 @@ export default function DetalhesAgendamento(props) {
                             BoxDialog();
                         } else if (resultado === false) {
                             // Faça algo em caso de nenhum registro excluído.
-                            console.log('algo deu errado...')
+                            // console.log('algo deu errado...')
                         } else {
-                            console.log('else ao tentar atender')
+                            // console.log('else ao tentar atender')
                         }
                     });
                     //SalvaColaboradorAtendimento();
                 } else {
-                    console.log('Erro ao atualizar o agendamento.');
+                    // console.log('Erro ao atualizar o agendamento.');
                     // Lide com o erro de atualização, se necessário.
                 }
             });
@@ -271,7 +271,7 @@ export default function DetalhesAgendamento(props) {
     function CancelarAtendimento() {
         CancelaAtendimento(idAgendamento, (sucesso) => {
             if (sucesso) {
-                console.log('atendimento cancelado com sucesso!');
+                // console.log('atendimento cancelado com sucesso!');
                 setAtualizaAgendamentos(!atualizaAgendamentos);
                 setBoxDialogSucesso((att) => true);
                 setTExtoBoxDialog("Atendimento cancelado!");
@@ -279,7 +279,7 @@ export default function DetalhesAgendamento(props) {
                 BoxDialog();
             }
             else {
-                console.log('não foi possivel cancelar o atendimento!')
+                // console.log('não foi possivel cancelar o atendimento!')
                 setAtualizaAgendamentos(!atualizaAgendamentos);
                 setBoxDialogSucesso((att) => false);
                 setTExtoBoxDialog("Não foi possivel cancelar o atendimento!");
@@ -307,10 +307,10 @@ export default function DetalhesAgendamento(props) {
                 boxDialogSucesso ? navigation.navigate('Gestor Agenda') : '';
                 setBoxVisivel(false);
                 setBarraProgresso(0);
-                console.log('box dialogo sucesso, ', boxDialogSucesso)
+                // console.log('box dialogo sucesso, ', boxDialogSucesso)
                 // if(boxDialogSucesso === true)
                 // {
-                //     console.log('tedentro do if')
+                //     // console.log('tedentro do if')
                 //     navigation.navigate('Gestor Agenda');
                 // }
 
@@ -336,13 +336,13 @@ export default function DetalhesAgendamento(props) {
 
     //ATUALIZAR DADOS
     function AtualizarDados() {
-        console.log(listaServicosSalvo.length)
+        // console.log(listaServicosSalvo.length)
         //VALIDAR SE TODOS OS DADOS OBRIGATORIOS FORAM PREENCHIDOS
         if (nome === null || telefone === null || horarioFormatado === null || listaServicosSalvo.length === 0) {
-            console.log('nao pode salvar')
+            // console.log('nao pode salvar')
         }
         else {
-            console.log('pode salvar')
+            // console.log('pode salvar')
         }
     }
     return (

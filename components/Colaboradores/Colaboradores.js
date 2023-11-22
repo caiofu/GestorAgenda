@@ -36,7 +36,7 @@ function Colaboradores() {
         }
       );
       return () => {
-        console.log('[LOGS] - Tela Colaboradores perdeu o foco');
+        // console.log('[LOGS] - Tela Colaboradores perdeu o foco');
         // Código de limpeza, se necessário, quando a tela perde foco
       };
     }, [])
@@ -45,7 +45,7 @@ function Colaboradores() {
 
   function itemColaborador(item){
     return (
-      // console.log(item),
+      // // console.log(item),
       <List.Item
         style={{margin:5, borderWidth:1, padding:10 ,borderRadius:10, borderColor: '#006699'}} // alterar para colocar mais estilo nisso aqui, agr to sem ideia
         title={item.nomeColaborador}

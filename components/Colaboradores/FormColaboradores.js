@@ -34,7 +34,7 @@ export default function FormColaboradores({route}) {
        tema === 'light' ? setCorTema('#006699') : setCorTema(DarkTheme.colors.text);
          },[tema])
 
-    //console.log(route); //verificar os parâmetro fornecidos à tela de formulário.
+    //// console.log(route); //verificar os parâmetro fornecidos à tela de formulário.
     //Dados colaboradora
     const [idColaborador, setIdColaborador] = useState(null);
     const [nome, setNome] = useState('');
@@ -84,7 +84,7 @@ export default function FormColaboradores({route}) {
             },
             (error) => {
                 setErro(error);
-                console.log('[LOGS] - Erro GetServicosEstabelecimento: ', error)
+                // console.log('[LOGS] - Erro GetServicosEstabelecimento: ', error)
             }
         );
         //condição para editar o cadastro
@@ -99,19 +99,19 @@ export default function FormColaboradores({route}) {
                 setDesabilitaBotao(false);
             }
             else{
-                console.log('Ta caindo aqui!!!!');
+                // console.log('Ta caindo aqui!!!!');
                 setDesabilitaLista(true);
                 setDesabilitaBotao(true);
             }
             //setDesabilitaLista(false);
-            // console.log(route.params.colaborador.idColaborador);
+            // // console.log(route.params.colaborador.idColaborador);
             GetServicosColaborador(colaborador.idColaborador, (servicosColaboradorArray)=>{
-                // console.log("Serviços sendo inseridos em setListaServicosSelecionados");
+                // // console.log("Serviços sendo inseridos em setListaServicosSelecionados");
                 const ValuesServicosColaborador = servicosColaboradorArray.map((servico)=>servico.value);
-                console.log(servicosColaboradorArray);
+                // console.log(servicosColaboradorArray);
                 setListaServicosPreEdicao(ValuesServicosColaborador); //usada para comparar com o estado final da lista no momento de salvar a edição
                 setListaServicosSelecionados(ValuesServicosColaborador);
-                // console.log("ValuesServicosColaborador: ", ValuesServicosColaborador);
+                // // console.log("ValuesServicosColaborador: ", ValuesServicosColaborador);
             })
             // setDesabilitaBotao(false)
         }
@@ -151,7 +151,7 @@ export default function FormColaboradores({route}) {
                     CriaNovoColaborador(nome, funcao, (novoID) => {
                         if (novoID !== null) {
                             // A inserção foi bem-sucedida
-                            console.log('[LOGS] - Inserção bem-sucedida em CriaNovoColaborador. Novo ID: ${novoID}');
+                            // console.log('[LOGS] - Inserção bem-sucedida em CriaNovoColaborador. Novo ID: ${novoID}');
                             //Etapa de vínculo do novo colaborador com serviços favoritos(caso selecionado algum)
                             const totalChamadas = listaServicosSelecionados.length;
                             if(totalChamadas != 0){
@@ -160,7 +160,7 @@ export default function FormColaboradores({route}) {
                                         //Chama a caixa de dialogo
                                         setTextoBoxDialog("Colaborador criado com sucesso!");
                                         setBoxDialogSucesso(true); //Chama o box de mensagem pela mudança de estado
-                                        // console.log("inserir dialog informando sucesso da função CriarColaborador linha 86");
+                                        // // console.log("inserir dialog informando sucesso da função CriarColaborador linha 86");
                                     }
                                     else{
                                         console.warn("O cadastro foi feito, mas houve algum problema com o vínculo de serviços! Favor contatar o suporte técnico.");
@@ -168,7 +168,7 @@ export default function FormColaboradores({route}) {
                                 });
                             }
                             else{
-                                console.log("[LOGS] - Sem serviços a serem favoritados.");
+                                // console.log("[LOGS] - Sem serviços a serem favoritados.");
                             }
                             // setDialogTitulo('Sucesso');
                             // setDialogMensagem('Serviço criado!')
@@ -179,7 +179,7 @@ export default function FormColaboradores({route}) {
                             //setAtualisaListaServico(true); ATUALIZAR LISTA DE SERVIÇO CUSTOMIZADO
                         } else {
                         // A inserção falhou
-                        console.log('Falha ao inserir');
+                        // console.log('Falha ao inserir');
                         // setDialogTitulo('Atenção');
                         // setDialogMensagem('Não foi possivel criar o serviço')
                         // setDialogTipoMensagem('E');
@@ -209,7 +209,7 @@ export default function FormColaboradores({route}) {
             UpdateColaboradorPorId(idColaborador, nome, funcao, async (sucesso) => {
                 if (sucesso) {
                     // A inserção foi bem-sucedida
-                    console.log('[LOGS] - UpdateColaboradorPorId - Edição bem sucedida.');
+                    // console.log('[LOGS] - UpdateColaboradorPorId - Edição bem sucedida.');
 
                     let listaNovosServicosSelecionados = []; 
                     let listaServicosDesfavoritados = [];
@@ -218,9 +218,9 @@ export default function FormColaboradores({route}) {
                     listaServicosDesfavoritados = comparator.difference(listaServicosPreEdicao, listaServicosSelecionados);
 
                     let totalChamadas = 0;
-                    console.log("[LOGS] - Início de validação das listas")
+                    // console.log("[LOGS] - Início de validação das listas")
                     if(comparator.isEqual(listaServicosPreEdicao, listaServicosSelecionados)){
-                        console.log("[LOGS] - Lista não foi alterada!");
+                        // console.log("[LOGS] - Lista não foi alterada!");
                         sucessoTotal = true;
                     }
                     if(listaNovosServicosSelecionados.length !== 0){
@@ -232,7 +232,7 @@ export default function FormColaboradores({route}) {
                                     sucessoTotal = true;
                                     // setTextoBoxDialog("Colaborador atualizado com sucesso!");
                                     // setBoxDialogSucesso(true); //Chama o box de mensagem pela mudança de estado
-                                    // console.log("inserir dialog informando sucesso da função CriarColaborador linha 86");
+                                    // // console.log("inserir dialog informando sucesso da função CriarColaborador linha 86");
                                 }
                                 else{
                                     sucessoTotal = false;
@@ -257,14 +257,16 @@ export default function FormColaboradores({route}) {
                             })
                         })
                     }
-                    console.log("Sucesso total: ", sucessoTotal);
+                    // console.log("Sucesso total: ", sucessoTotal);
                     if(sucessoTotal){
                         setTextoBoxDialog("Colaborador atualizado com sucesso!");
                         setBoxDialogSucesso(true); //Chama o box de mensagem pela mudança de estado
                     }
-                    else console.log("Deu tudo errado no Salvar Edição. Corram para as colinas");
+                    else {
+                        // console.log("Deu tudo errado no Salvar Edição. Corram para as colinas");
+                    }
                 } else {
-                console.log('Falha ao atualizar');
+                // console.log('Falha ao atualizar');
                 }
             });
         }
@@ -276,26 +278,26 @@ export default function FormColaboradores({route}) {
         //A partir disso é possível iterar a lista.
         listaServicos.forEach((novoServico) => {
             const servico = listaServicosEstabelecimento.find((item)=>item.value === novoServico);
-            // console.log('servico:', servico);
-            // console.log("servico.label", servico.label);
-            // console.log("servico.value", servico.value);
+            // // console.log('servico:', servico);
+            // // console.log("servico.label", servico.label);
+            // // console.log("servico.value", servico.value);
             
         if(servico){
-            console.log("[LOGS] - Informações do serviço: ", {servico});
-            // console.log(servico);
+            // console.log("[LOGS] - Informações do serviço: ", {servico});
+            // // console.log(servico);
             FavoritarServicoColaborador(idColaborador, servico.value, servico.label, (sucesso)=>{
                 if(sucesso){
-                    console.log(chamadasBemSucedidas);
+                    // console.log(chamadasBemSucedidas);
                     chamadasBemSucedidas++;
-                    console.log('[LOGS] - Serviço ', chamadasBemSucedidas + ' de ', listaServicos.length + " favoritado!")
+                    // console.log('[LOGS] - Serviço ', chamadasBemSucedidas + ' de ', listaServicos.length + " favoritado!")
                 }
                 else{
-                    console.log("[LOGS] - Erro em FavoritarServicoColaborador. Serviço que deu problema: " + {servico});
+                    // console.log("[LOGS] - Erro em FavoritarServicoColaborador. Serviço que deu problema: " + {servico});
                     callback(false);
                 }
-                console.log('Serviço', chamadasBemSucedidas + '. Total ', listaServicos.length)
+                // console.log('Serviço', chamadasBemSucedidas + '. Total ', listaServicos.length)
                 if(chamadasBemSucedidas === totalChamadas){
-                    console.log('[LOGS] - Sucesso JOB FavoritarServicos!');
+                    // console.log('[LOGS] - Sucesso JOB FavoritarServicos!');
                     callback(true);
                 }
             })
@@ -311,25 +313,25 @@ export default function FormColaboradores({route}) {
         //A partir disso é possível iterar a lista.
         listaServicos.forEach((novoServico) => {
             const servico = listaServicosEstabelecimento.find((item)=>item.value === novoServico);
-            // console.log('servico:', servico);
-            // console.log("servico.label", servico.label);
-            // console.log("servico.value", servico.value);
+            // // console.log('servico:', servico);
+            // // console.log("servico.label", servico.label);
+            // // console.log("servico.value", servico.value);
         if(servico){
-            console.log("[LOGS] - Informações do serviço a ser desfavoritado: ", {servico});
-            // console.log(servico);
+            // console.log("[LOGS] - Informações do serviço a ser desfavoritado: ", {servico});
+            // // console.log(servico);
             DesfavoritarServicoColaborador(idColaborador, servico.value, (sucesso)=>{
                 if(sucesso){
-                    console.log(chamadasBemSucedidas);
+                    // console.log(chamadasBemSucedidas);
                     chamadasBemSucedidas++;
-                    console.log('[LOGS] - Serviço ', chamadasBemSucedidas + ' de ', listaServicos.length + " desfavoritado!")
+                    // console.log('[LOGS] - Serviço ', chamadasBemSucedidas + ' de ', listaServicos.length + " desfavoritado!")
                 }
                 else{
-                    console.log("[LOGS] - Erro em DesfavoritarServicoColaborador. Serviço que deu problema: " + {servico});
+                    // console.log("[LOGS] - Erro em DesfavoritarServicoColaborador. Serviço que deu problema: " + {servico});
                     callback(false);
                 }
-                console.log('Serviço ', chamadasBemSucedidas + '. Total ', listaServicos.length)
+                // console.log('Serviço ', chamadasBemSucedidas + '. Total ', listaServicos.length)
                 if(chamadasBemSucedidas === totalChamadas){
-                    console.log('[LOGS] - Sucesso JOB DesfavoritarServicos!');
+                    // console.log('[LOGS] - Sucesso JOB DesfavoritarServicos!');
                     callback(true);
                 }
             })
@@ -355,7 +357,7 @@ export default function FormColaboradores({route}) {
                 boxDialogSucesso ? navigation.navigate('Colaboradores') : '';
                 setBoxVisivel(false);
                 setBarraProgresso(0);
-                console.log('Box diálogo sucesso: ',boxDialogSucesso)
+                // console.log('Box diálogo sucesso: ',boxDialogSucesso)
             }
             else
             {
@@ -417,9 +419,9 @@ export default function FormColaboradores({route}) {
                         style={styles.inputFormulario}
                     />                
                     {/*BLOCO DE DEBUG */}
-                    {/* {console.log("Servicos do colaborador - listaServicosSelecionados", listaServicosSelecionados)}  */}
+                    {/* {// console.log("Servicos do colaborador - listaServicosSelecionados", listaServicosSelecionados)}  */}
                     {/* Componente utilizado para trazer o serviços, tanto os favoritos quanto os não favoritos */}
-                    {/* {console.log(desabilitaLista)} */}
+                    {/* {// console.log(desabilitaLista)} */}
                     <DropDownPicker
                         disabled={desabilitaLista}
                         placeholder='Serviços Preferidos do Colaborador'
@@ -448,9 +450,9 @@ export default function FormColaboradores({route}) {
                     {/* --------------------------------------------------- */}
 
                     {/* BOTAO DE EDICAO/CADASTRO */}
-                    {/* {console.log('statusColaborador: ', statusColaborador)}
-                    {console.log('desabilitaBotao: ', desabilitaBotao)}
-                    {console.log('desabilitaLista: ', desabilitaLista)} */}
+                    {/* {// console.log('statusColaborador: ', statusColaborador)}
+                    {// console.log('desabilitaBotao: ', desabilitaBotao)}
+                    {// console.log('desabilitaLista: ', desabilitaLista)} */}
                     <View style={desabilitaBotao ? styles.buttonContainerDesabilitado : styles.buttonContainer}> 
                         <TouchableOpacity style={desabilitaBotao ? styles.btnDesabilitado :  styles.btn} onPress={edicaoCadastro ? SalvarEdicao : CriarColaborador} disabled={desabilitaBotao}> 
                             <View style={styles.btnContainer}>
