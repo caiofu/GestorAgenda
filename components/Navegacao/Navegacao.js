@@ -17,6 +17,7 @@ import NovoServico from "../Servicos/NovoServico";
 import DetalhesServicos from "../Servicos/DetalhesServicos";
 import NovoAgendamento from "../Agendamento/NovoAgendamento";
 import DetalhesAgendamento from "../Agendamento/DetalhesAgendamento";
+import Atendimentos from "../Atendimentos/Atendimentos";
 
 
 import Colaboradores from "../Colaboradores/Colaboradores";
@@ -66,6 +67,7 @@ function OpAcoes() {
             <Stack.Screen name="Estabelecimento" component={Estabelecimento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}} />
             <Stack.Screen name="Colaboradores" component={Colaboradores}/>
             <Stack.Screen name="Formulário Colaborador" component={FormColaboradores}/>
+            <Stack.Screen name="Atendimentos" component={Atendimentos} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}} />
         
         </Stack.Navigator>
     )

@@ -375,12 +375,8 @@ const compartilharNoWhatsApp = () => {
     Linking.canOpenURL(url)
       .then((supported) => {
         if (supported) {
+          //Enviado para o whatsapp  
           return Linking.openURL(url);
-
-          //Box de mensagem
-        //   setBoxCompartilhar(false);
-        //   setTxtBoxMsgCopiar("Copiado com sucesso!");
-        //   setBoxMsgCopiar(true);
         } else {
           console.log('WhatsApp não está instalado');
           setBoxCompartilhar(false);
