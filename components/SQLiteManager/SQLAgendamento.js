@@ -292,3 +292,54 @@ export function ConsultaColaboradoresPorAgendamento(idAgendamento, callback) {
     });
   });
 }
+
+export function ConsultaAtendidosPorMesAno(ano, mes, callback) {
+
+  db.transaction((tx) => {
+   console.log("MES SELECIONADAO ---> ",mes)
+    //Verificando quais campos foram passados para montar o sql
+    let sql = 'SELECT * FROM agendamento WHERE';
+
+    let condicoes   = [];
+    let  parametros = [];
+    
+     if(ano && ano != 'Nenhum') 
+     {  
+      condicoes.push(' SUBSTR(data, 7, 4) LIKE ? ');
+      parametros.push(`%${ano}`);
+      
+     }
+
+     if(mes && mes != 'Nenhum') 
+     {  
+      condicoes.push(' SUBSTR(data, 4, 2) LIKE ? ');
+      parametros.push(`%${mes}%`);
+     }
+
+  
+     sql += condicoes.join(' AND ');
+     sql += 'ORDER BY nomeCliente, telefone';
+     console.log(' SQL NOVO -------------------------------------------------->', sql + ' parametros '+parametros)
+    tx.executeSql(
+      // 'SELECT * FROM agendamento WHERE data LIKE ? OR data LIKE ? ORDER BY nomeCliente, telefone',
+      sql,
+      parametros,
+      // [`${mes}%`, `%/${ano}`],
+      (tx, results) => {
+        const len = results.rows.length;
+        const agendamentos = [];
+        
+        for (let i = 0; i < len; i++) {
+          agendamentos.push(results.rows.item(i));
+        }
+
+      
+        callback(agendamentos);
+      },
+      (error) => {
+        console.log('Erro ao extrair agendamentos por data:', error);
+      }
+    );
+  });
+}
+

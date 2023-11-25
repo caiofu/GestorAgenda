@@ -47,7 +47,7 @@ export default function Agendamento()
                let jsonTe = resultado;
                if( resultado && resultado.logo !== null)
                {
-                    console.log("ESTA ENTRANDO NO IF ---------------------------------")
+                   
                     setLogo(resultado.logo); 
                }
               
@@ -125,6 +125,7 @@ export default function Agendamento()
 
           ConsultaAgendamentoPorData(dataFormatada, (agendamentos) => {
               const retorno = agendamentos.map((agendamento) => {
+                console.log("retorno --->"+retorno)
                 // Dividir a string em partes (dia, mês e ano)
                 const partesData = agendamento.data.split('/'); // Isso resultará em um array ["25", "10", "2023"]
 
@@ -147,7 +148,7 @@ export default function Agendamento()
 
                 let atraso = 0;
                 
-                console.log('hora agendamento: ', horarioAgendamento+'  horarioAtual: ', horaAtual);
+           
 
                
 

@@ -14,6 +14,9 @@ import styles from "./StyleAtendimentos";
 import { useState, useEffect } from "react";
 import { ScrollView } from "react-native";
 
+//SQL
+import { ConsultaAtendidosPorMesAno } from "../SQLiteManager/SQLAgendamento";
+
 
 
 export default function Atendimentos()
@@ -32,13 +35,74 @@ export default function Atendimentos()
     const [mesSelecionado, setMesSelecionado] = useState('')
   const [anoSelecionado, setAnoSelecionado] = useState('');
     const meses = [
-        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+       'Nenhum', 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
         'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
       ];
     
-      const anos = ['2022', '2023', '2024', '2025', /*...outras opções...*/];
+      const anos = ['Nenhum', '2022', '2023', '2024', '2025', /*...outras opções...*/];
+
+      const [listaAtendimentos, setListaAtendimentos] = useState([]);
+      useEffect(() => {
+        setListaAtendimentos([]);
+        if((anoSelecionado !== 'Nenhum' && anoSelecionado !== '') || (mesSelecionado !== 'Nenhum' && mesSelecionado !== ''))
+        { 
+           // Defina os valores de ano e mês desejados
+          let ano = anoSelecionado;
+        let mes = '';//mesSelecionado; // Novembro
+
+         switch (mesSelecionado) {
+          case 'Janeiro':
+            mes = '01';
+            break;
+          case 'Fevereiro':
+            mes = '02';
+            break;
+          case 'Março':
+            mes = '03';
+            break;
+          case 'Abril':
+            mes = '04';
+            break;
+          case 'Maio':
+            mes = '05';
+            break;
+          case 'Junho':
+            mes = '06';
+            break;
+          case 'Julho':
+            mes = '07';
+            break;
+          case 'Agosto':
+            mes = '08';
+            break;
+          case 'Setembro':
+            mes = '09';
+            break;
+          case 'Outubro':
+            mes = '10';
+            break;
+          case 'Novembro':
+            mes = '11';
+            break;
+          case 'Dezembro':
+            mes = '12';
+            break;
+          default:
+            mes = 'Nenhum';
+        }
+    
+
+        ConsultaAtendidosPorMesAno(ano, mes, (atendimentos) => {
+         
+          
+          setListaAtendimentos(atendimentos)
+        });
+        }
+       
+      }, [anoSelecionado, mesSelecionado]);
+      console.log('state atendimento lista ---> ', listaAtendimentos)
     return(
-        <View>
+        <View style={{flex:1}}>
         <View style={{ flexDirection: 'row', borderWidth:1, padding:10 }}>
           <View style={{ marginRight: 10, marginLeft: 10, flex:1}}>
           
@@ -66,7 +130,7 @@ export default function Atendimentos()
             <SelectList
                placeholder="Selecione o ano"
                searchPlaceholder=""
-
+          
                 fontFamily="Rubik_400Regular"
                 boxStyles={styles.inputFormularioSelect}
                 dropdownStyles={{ alignSelf: 'center'}}
@@ -79,28 +143,38 @@ export default function Atendimentos()
                  closeicon={<FontAwesome name="close" size={24} color={corTema} />}
                                         // defaultOption={{key:idRamoAtividade,value:ramoAtividade}}
                   inputStyles={{ color: corTema }} />
-            {/* <TouchableOpacity style={{ borderWidth: 1 }}>
-              <Picker
-                selectedValue={selectedYear}
-                onValueChange={(itemValue) => setSelectedYear(itemValue)}
-              >
-                <Picker.Item label="Selecione um ano" value="" />
-                {anos.map((ano, index) => (
-                  <Picker.Item key={index} label={ano} value={ano} />
-                ))}
-              </Picker>
-            </TouchableOpacity> */}
+          
           </View>
         </View>
+       
         <ScrollView>
-        <Card.Title
-            title="Caio Furegati"
-            subtitle="17981016680"
-            left={(props) => <Avatar.Icon {...props} icon="folder" />}
-            right={(props) => <Text style={{paddingRight:4, fontStyle:'italic'}}>20/09/2023</Text>}
-            style={{borderWidth:1, margin:8}}
-        />
+          {/* LISTA DE ATENDIMENTOS */}
+          {
+            listaAtendimentos.length > 0 ? 
+            (
+              listaAtendimentos.map((atendimentos) => {
+              let telefone = "Tel: "+atendimentos.telefone;
+              
+              return (
+                <Card.Title
+                  key={atendimentos.idAgendamento}
+                  title={atendimentos.nomeCliente}
+                  subtitle={telefone}
+                  left={(props) => <FontAwesome5 name="clipboard-check" size={34} color="#006699" />}
+                  right={(props) => <Text style={{paddingRight:4, fontStyle:'italic'}}>{atendimentos.data}</Text>}
+                  style={styles.boxCard} />
+              )
+            })
+          ): (
+            <Card.Title
+            titleStyle={{alignSelf:'center'}}
+            title="Nenhum atendimento encontrado!"
+            style={styles.boxCard}
+          />
+          )}
+        
         </ScrollView>
-      </View>
+        </View>
+   
     );
 }
