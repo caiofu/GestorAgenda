@@ -118,12 +118,12 @@ export default function DetalhesServicos(props) {
                     setDialogMensagem('Serviço removido.');
                 }
                 else {
-                    console.log('erro ao desavitar serviço')
+                    // console.log('erro ao desavitar serviço')
                 }
             });
         }
         else if (tipoServico === 'criado') {
-            console.log('desativando serviço criado.')
+            // console.log('desativando serviço criado.')
             UpdateAtivoServicoCustomizadoPorId(idServico, 0, (atualizacaoBemSucedida) => {
                 if (atualizacaoBemSucedida) {
                     setMsgAcaoVisivel(true);
@@ -139,7 +139,7 @@ export default function DetalhesServicos(props) {
                     setDialogMensagem('Serviço removido.');
                 }
                 else {
-                    console.log('erro ao desavitar serviço')
+                    // console.log('erro ao desavitar serviço')
                 }
             });
         }

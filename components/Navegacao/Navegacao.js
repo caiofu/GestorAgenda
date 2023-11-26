@@ -42,11 +42,11 @@ function Tabs()
 
     const { tema} = useAppState();
     //AQUI É ONDE FICA A BARRA NA PARTE INFERIOR COM OS BOTOES DE NAVEGAÇÃO
-    console.log('caiu nesse por que ?')
+    // console.log('caiu nesse por que ?')
     return(
         <Tab.Navigator screenOptions={{headerShown: false, tabBarActiveTintColor:'#006699',}}>
             <Tab.Screen name="Tela Inicial" component={OpTelaInicial} initialParams={{tema1:tema}} options={{tabBarIcon: ({color, size}) => (<FontAwesome5 name="home" size={size} color={color} />),}} ></Tab.Screen>
-            <Tab.Screen  name="Ações" component={OpAcoes} initialParams={{tema1:tema}} options={{ tabBarIcon: ({color, size}) => (<FontAwesome5 name="archive" size={size} color={color} />), headerShown:false}} ></Tab.Screen>
+            <Tab.Screen  name="Menu" component={OpAcoes} initialParams={{tema1:tema}} options={{ tabBarIcon: ({color, size}) => (<FontAwesome5 name="archive" size={size} color={color} />), headerShown:false}} ></Tab.Screen>
             
             <Tab.Screen name="Configuracoes"  component={ OpConfiguracoes}   options={{tabBarIcon: ({color, size}) => (<FontAwesome name="gear" size={size} color={color} />),headerShown:true, headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text, title:'Configurações'}   }></Tab.Screen>
         </Tab.Navigator>
@@ -58,7 +58,7 @@ function OpAcoes() {
     return (
         <Stack.Navigator screenOptions={{headerShown:true}}  >
              {/* <Stack.Screen name="Gestor Agenda" component={Agendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}} /> */}
-            <Stack.Screen name="Home" component={Home} options={{title:'Ações', headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}} />
+            <Stack.Screen name="Home" component={Home} options={{title:'Menu', headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}} />
             {/* <Stack.Screen name="Serviços" component={Servicos} options={{ headerLeft: null, headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text }} /> */}
             <Stack.Screen name="Serviços" component={Servicos} options={{ headerLeft: null, headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text }} />
             <Stack.Screen name="Novo Serviço" component={NovoServico} options={{ headerLeft: null, headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text }} />
@@ -79,7 +79,7 @@ function OpTelaInicial() {
        
 
     //     ConsultaEstabelecimento((resultado) => {
-    //       console.log("RESULTADO"+resultado)
+    //       // console.log("RESULTADO"+resultado)
          
 
     //        // let jsonTe = resultado;
@@ -116,7 +116,7 @@ function OpConfiguracoes() {
 }
 
 function PrimeiroCadastroEstabelecimento() {
-    console.log('PRIMEIRO CADASTRO ESTA')
+    // console.log('PRIMEIRO CADASTRO ESTA')
     return (
         <Stack.Navigator>
             <Stack.Screen name="Estabelecimento" component={Estabelecimento} />
@@ -146,7 +146,7 @@ export default function Navegacao()
        
       }, [tema]);
       
-      console.log('estabelecimento nave ',navegacaoEstabelecimento)
+      // console.log('estabelecimento nave ',navegacaoEstabelecimento)
         
    
     return(

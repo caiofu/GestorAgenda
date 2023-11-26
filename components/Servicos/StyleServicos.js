@@ -52,8 +52,8 @@ const styles = StyleSheet.create({
         marginLeft:10,
         fontSize:20,
         alignSelf:'center',
-        fontFamily:'Rubik_700Bold'
-
+        fontFamily:'Rubik_700Bold',
+        textAlign:'center'
     },
 
     btnTextNovoServico:

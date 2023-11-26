@@ -13,18 +13,18 @@ export function CriaNovoAgendamento(data, horario, nomeCliente, telefone, callba
       (tx, results) => {
         // Verificando se a inserção foi bem-sucedida
         if (results.rowsAffected > 0) {
-          console.log('Inserção bem-sucedida');
+          // console.log('Inserção bem-sucedida');
           // Recuperando o ID do novo registro
           const novoID = results.insertId;
           //Função de retorno (callback) com o resultado (novoID)
           callback(novoID);
         } else {
-          console.log('Falha ao inserir');
+          // console.log('Falha ao inserir');
           callback(null);
         }
       },
       (error) => {
-        console.log('Erro ao executar consulta Criar novo agendamento:', error);
+        // console.log('Erro ao executar consulta Criar novo agendamento:', error);
       }
     );
   });
@@ -47,7 +47,7 @@ export function ConsultaAgendamentoPorId(id, callback) {
         }
       },
       (error) => {
-        console.log('Erro ao extrair serviço por ID (servicos): ' + error);
+        // console.log('Erro ao extrair serviço por ID (servicos): ' + error);
       }
     );
   });
@@ -68,7 +68,7 @@ export function ConsultaAgendamentoPorHorarioData(horario, data, callback)
             callback(horario);
           },
           (error) => {
-            console.log('Erro ao extrair serviço por ID (servicos):' + error);
+            // console.log('Erro ao extrair serviço por ID (servicos):' + error);
           }
         );
       });
@@ -108,7 +108,7 @@ export function ConsultaAgendamentoPorData(data, callback) {
         callback(agendamentos);
       },
       (error) => {
-        console.log('Erro ao extrair agendamentos por data:', error);
+        // console.log('Erro ao extrair agendamentos por data:', error);
       }
     );
   });
@@ -131,7 +131,7 @@ export function ConsultaAgendamentoGeral( callback) {
         callback(agendamentos);
       },
       (error) => {
-        console.log('Erro ao extrair agendamentos por data:', error);
+        // console.log('Erro ao extrair agendamentos por data:', error);
       }
     );
   });
@@ -147,18 +147,18 @@ export function SalvarServicoAgendamento (idAgendamento, nomeServico , callback)
             (tx, results) => {
               // Verificando se a inserção foi bem-sucedida
               if (results.rowsAffected > 0) {
-                console.log('Inserção bem-sucedida');
+                // console.log('Inserção bem-sucedida');
                 // Recuperando o ID do novo registro
                 const novoID = results.insertId;
                 //Função de retorno (callback) com o resultado (novoID)
                 callback(novoID);
               } else {
-                console.log('Falha ao inserir');
+                // console.log('Falha ao inserir');
                 callback(null);
               }
             },
             (error) => {
-              console.log('Erro ao executar consulta salva servico agendamento ===>:', error);
+              // console.log('Erro ao executar consulta salva servico agendamento ===>:', error);
             }
           );
     })
@@ -170,7 +170,7 @@ export function ConsultaServicoAgendamentoPorId(id, callback) {
       'SELECT * FROM agendamento_servicos WHERE idAgendamento = ?',
       [id],
       (tx, results) => {
-        console.log('Número de registros encontrados:', results.rows.length);
+        // console.log('Número de registros encontrados:', results.rows.length);
 
         const servicos = [];
 
@@ -183,7 +183,7 @@ export function ConsultaServicoAgendamentoPorId(id, callback) {
         callback(servicos); // Chamar a função de callback com o array de serviços
       },
       (error) => {
-        console.log('Erro ao extrair serviços ativos: ' + error);
+        // console.log('Erro ao extrair serviços ativos: ' + error);
         callback(null); // Trate o erro e chame a função de callback com null
       }
     );
@@ -197,12 +197,12 @@ export function AlteraAgendamentoParaAtendimento(idAgendamento, callback)
       'UPDATE agendamento SET atendido =  ? WHERE idAgendamento = ?',
       [1, idAgendamento],
       (tx, results) => {
-        console.log('Colaborador atualizado com sucesso (UpdateColaboradorporId)');
+        // console.log('Colaborador atualizado com sucesso (UpdateColaboradorporId)');
         callback(true);
       },
       (error) => {
-        console.log('Erro ao atualizar serviço (UpdateColaboradorporId):' + error.message);
-        console.log(idColaborador, nome, funcao);
+        // console.log('Erro ao atualizar serviço (UpdateColaboradorporId):' + error.message);
+        // console.log(idColaborador, nome, funcao);
         callback(false);
       }
     );
@@ -216,12 +216,12 @@ export function CancelaAtendimento(idAgendamento, callback)
       'UPDATE agendamento SET cancelado =  ? WHERE idAgendamento = ?',
       [1, idAgendamento],
       (tx, results) => {
-        console.log('Colaborador atualizado com sucesso (UpdateColaboradorporId)');
+        // console.log('Colaborador atualizado com sucesso (UpdateColaboradorporId)');
         callback(true);
       },
       (error) => {
-        console.log('Erro ao atualizar serviço (UpdateColaboradorporId):' + error.message);
-        console.log(idColaborador, nome, funcao);
+        // console.log('Erro ao atualizar serviço (UpdateColaboradorporId):' + error.message);
+        // console.log(idColaborador, nome, funcao);
         callback(false);
       }
     );
@@ -237,18 +237,18 @@ export function SalvaColaboradorAtendimento(nomeColaborador, idColaborador, idAg
         (tx, results) => {
           // Verificando se a inserção foi bem-sucedida
           if (results.rowsAffected > 0) {
-            console.log('Inserção bem-sucedida');
+            // console.log('Inserção bem-sucedida');
             // Recuperando o ID do novo registro
             const novoID = results.insertId;
             //Função de retorno (callback) com o resultado (novoID)
             callback(novoID);
           } else {
-            console.log('Falha ao inserir');
+            // console.log('Falha ao inserir');
             callback(null);
           }
         },
         (error) => {
-          console.log('Erro ao executar consulta salva servico agendamento ===>:', error);
+          // console.log('Erro ao executar consulta salva servico agendamento ===>:', error);
         }
       );
 })
@@ -258,12 +258,12 @@ export function ExcluiColaboradorAtendimento(idAgendamento, callback) {
   db.transaction((tx) => {
     tx.executeSql('DELETE FROM agendamento_colaborador WHERE idAgendamento = ?', [idAgendamento], (tx, results) => {
       if (results.rowsAffected > 0) {
-        console.log('Registros com ID de agendamento', idAgendamento, 'foram excluídos com sucesso.');
+        // console.log('Registros com ID de agendamento', idAgendamento, 'foram excluídos com sucesso.');
         // Você não pode retornar diretamente de uma função de callback.
         // Em vez disso, chame uma função de retorno (callback) passando o resultado.
         callback(true);
       } else {
-        console.log('Nenhum registro foi excluído para o ID de agendamento', idAgendamento);
+        // console.log('Nenhum registro foi excluído para o ID de agendamento', idAgendamento);
         callback(true);
       }
     }, (error) => {

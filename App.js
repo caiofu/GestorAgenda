@@ -22,7 +22,7 @@ import Navegacao from './components/Navegacao/Navegacao';
 import SQLiteManager, { ExcluirBancoDeDados, ListaTodasTabelas } from './components/SQLiteManager/SQLiteManager';
 
 //ASYNC STORAGE
-import { houvePrimeiroAcesso, guardarPrimeiroAcesso, removerAsyncStorage, WizardAtivo, guardaWizardAtivo } from './components/AsyncStorage/AsyncStorage';
+import { houvePrimeiroAcesso, guardarPrimeiroAcesso, removerAsyncStorage, WizardAtivo, guardaWizardAtivo, setUsaTemaSistema } from './components/AsyncStorage/AsyncStorage';
 
 //COMPONENTES CRIADOS
 import BoasVindas from './components/BoasVindas/BoasVindas';
@@ -53,15 +53,18 @@ export default function App() {
   if (!fontsLoaded && !fontError) {
     return null;
   }
-  
-
-
 
   //Async storage  
   houvePrimeiroAcesso().then(ret => {
     setPrimeiroAcesso(ret);
   });
- 
+
+  //Inicializa tema como "usar do sistema"
+  houvePrimeiroAcesso().then(ret => {
+    if (ret) {
+      setUsaTemaSistema('true');
+    }
+  });
 
   //VERIFICANDO NO ASYNC STORAGE O ESTADO ATUAL DO PULOU TUTORIAL AO CARREGAR O COMPONENTE
   WizardAtivo().then(ret => {
@@ -78,7 +81,7 @@ export default function App() {
     setBoasVindasAtivo(novoValor);
   };
   //CONSULTA NO BANCO SE JA TEM ESTABELECIMENTO CADASTRADO
- 
+
   ConsultaEstabelecimento((resultado) => {
     if (resultado === null) {
       setEstabelecimentoCadastro(true);
@@ -96,8 +99,8 @@ export default function App() {
 
   return (
     <AppStateProvider>
-    <SafeAreaProvider>
-    
+      <SafeAreaProvider>
+
         <SafeAreaView style={styles.container}>
           <SQLiteManager></SQLiteManager>
 
@@ -106,8 +109,8 @@ export default function App() {
               : <Navegacao ></Navegacao>}
           <StatusBar style="auto" />
         </SafeAreaView>
-      
-    </SafeAreaProvider>
+
+      </SafeAreaProvider>
     </AppStateProvider>
   );
 }

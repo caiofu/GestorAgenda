@@ -62,7 +62,7 @@ export default function SQLiteManager() {
               'INSERT INTO ramoAtividade (nomeAtividade) VALUES (?), (?), (?), (?), (?), (?), (?), (?), (?), (?), (?)',
               ['Aula Particular', 'Barbearia', 'Estética', 'Massoterapia', 'Nutrição', 'Oficina Mecânica', 'Personal Trainer', 'Psicologia', 'Salão de Beleza', 'Serviços Gerais', 'Outro'],
               (_, result) => {
-                console.log('Tabela criada com sucesso e valores inseridos');
+                // console.log('Tabela criada com sucesso e valores inseridos');
 
               },
               (_, error) => {
@@ -71,7 +71,7 @@ export default function SQLiteManager() {
             )
           }
           else {
-            console.log('valores ja inseridos');
+            // console.log('valores ja inseridos');
           }
         });
      
@@ -85,7 +85,7 @@ export default function SQLiteManager() {
               ['Usuário', 'Proprietário', 1],
 
               (_, result) => {
-                console.log('Tabela criada com sucesso e valores inseridos - table Colaborador');
+                // console.log('Tabela criada com sucesso e valores inseridos - table Colaborador');
 
               },
               (_, error) => {
@@ -94,7 +94,7 @@ export default function SQLiteManager() {
             )
           }
           else {
-            console.log('valores ja inseridos - table Colaborador');
+            // console.log('valores ja inseridos - table Colaborador');
           }
         });
 
@@ -144,7 +144,7 @@ export default function SQLiteManager() {
               sql,
               valueSet,
               (_, result) => {
-                console.log('Valores inseridos com sucesso (servicos)');
+                // console.log('Valores inseridos com sucesso (servicos)');
               },
               (_, error) => {
                 console.error('Erro ao inserir valores (servicos):', error);
@@ -152,7 +152,7 @@ export default function SQLiteManager() {
             );
           });
         } else {
-          console.log('Valores já inseridos (servicos)');
+          // console.log('Valores já inseridos (servicos)');
         }
       });
     
@@ -168,7 +168,7 @@ export function ListaTodasTabelas() {
       [],
       (_, { rows }) => {
         const tableNames = rows._array.map(row => row.name);
-        console.log('Tabelas no banco de dados:', tableNames);
+        // console.log('Tabelas no banco de dados:', tableNames);
       }
     );
   });
@@ -179,7 +179,7 @@ export function ExcluirBancoDeDados() {
       'DROP TABLE IF EXISTS estabelecimento;',
       [],
       (_, result) => {
-        console.log('A tabela "usuarios" foi excluída com sucesso.');
+        // console.log('A tabela "usuarios" foi excluída com sucesso.');
       },
       (_, error) => {
         console.error('Erro ao excluir a tabela "usuarios":', error);
@@ -190,7 +190,7 @@ export function ExcluirBancoDeDados() {
       'DROP TABLE IF EXISTS ramoAtividade;',
       [],
       (_, result) => {
-        console.log('A tabela "usuarios" foi excluída com sucesso.');
+        // console.log('A tabela "usuarios" foi excluída com sucesso.');
       },
       (_, error) => {
         console.error('Erro ao excluir a tabela "usuarios":', error);
@@ -201,7 +201,7 @@ export function ExcluirBancoDeDados() {
       'DROP TABLE IF EXISTS servicos;',
       [],
       (_, result) => {
-        console.log('A tabela "usuarios" foi excluída com sucesso.');
+        // console.log('A tabela "usuarios" foi excluída com sucesso.');
       },
       (_, error) => {
         console.error('Erro ao excluir a tabela "usuarios":', error);
@@ -222,7 +222,7 @@ export function ExcluirTodasAsTabelas() {
           const tableName = rows.item(i).name;
           tx.executeSql(`DROP TABLE IF EXISTS ${tableName}`);
         }
-        console.log('Todas as tabelas foram excluídas com sucesso.');
+        // console.log('Todas as tabelas foram excluídas com sucesso.');
       },
       (_, error) => {
         console.error('Erro ao obter nomes das tabelas:', error);

@@ -29,7 +29,7 @@ export default function Agendamento()
       }
       else
       {
-        console.log('logo ----> ', resultado.logo)
+        // console.log('logo ----> ', resultado.logo)
         setNavegacaoEstabelecimento(false);
       }
     })
@@ -65,9 +65,9 @@ export default function Agendamento()
       // //BUSCA AGENDAMENTOS
       // const [listaAgendamentos, setListaAgendamentos] = useState([]);
       // useEffect(() =>{
-      //   console.log('açaoooooooooooooooooooooo !!!')
+      //   // console.log('açaoooooooooooooooooooooo !!!')
       //       ConsultaAgendamentoPorData(dataFormatada, (agendamentos) =>{
-      //           //console.log('aged ==' ,agendamentos)
+      //           //// console.log('aged ==' ,agendamentos)
       //            const retorno = agendamentos.map((listaAgendamentos) => ({
       //               idAgendamento: listaAgendamentos.idAgendamento.toString(),
       //               nomeCliente: listaAgendamentos.nomeCliente,
@@ -119,7 +119,7 @@ export default function Agendamento()
 
                 let atraso = 0;
                 
-                console.log('hora agendamento: ', horarioAgendamento+'  horarioAtual: ', horaAtual);
+                // console.log('hora agendamento: ', horarioAgendamento+'  horarioAtual: ', horaAtual);
 
                
 
@@ -129,23 +129,23 @@ export default function Agendamento()
                     //Verificando se foi atendido ou se foi cancelado
                     if(agendamento.atendido === 0 && agendamento.cancelado === 0)
                     {
-                        console.log('NAO FOI NEM ATENDIDO NEM CANCELADO PODE VERIFICAR SE ESTA EM ATRASO');
+                        // console.log('NAO FOI NEM ATENDIDO NEM CANCELADO PODE VERIFICAR SE ESTA EM ATRASO');
                         if(isBefore(horarioAgendamento, horaAtual))
                         {
-                          console.log('ESTA ATRASADO -<-----')
+                          // console.log('ESTA ATRASADO -<-----')
                           atraso =1;
                         }
                     }
                 }
                 else if (isBefore(dataAgendamento, dataAtual))
                 {
-                    console.log("A DATA É POSTERIOR NAO PRECISA VERIFICAR ATRASO")
+                    // console.log("A DATA É POSTERIOR NAO PRECISA VERIFICAR ATRASO")
                     if(agendamento.atendido === 0 && agendamento.cancelado === 0)
                     {
                         atraso = 1;
                     }
                 }
-                console.log('dataa ----> ', dataAgendamento + 'data atual: ', dataAtual);
+                // console.log('dataa ----> ', dataAgendamento + 'data atual: ', dataAtual);
                   
                   
                   return {
@@ -163,15 +163,15 @@ export default function Agendamento()
       
               setListaAgendamentos(retorno);
           });
-          console.log('vericou <--------------------------------------------------')
+          // console.log('vericou <--------------------------------------------------')
       }, [atualizaAgendamentos, dataFormatada, date]);
-      console.log('lista ?' ,listaAgendamentos)
+      // console.log('lista ?' ,listaAgendamentos)
   
     //   ConsultaAgendamentoGeral((geral) => {
-    //     console.log('GERAL ---> ', geral)
+    //     // console.log('GERAL ---> ', geral)
     //   })
       // ConsultaAgendamentoPorData(dataFormatada, (agendamentos) =>{
-      //   console.log('Por data ====> ',agendamentos)
+      //   // console.log('Por data ====> ',agendamentos)
       // })
 
       function CarregaDetalhesAgendamento(idAgendamento)
@@ -223,7 +223,7 @@ export default function Agendamento()
                                             style={{borderWidth:0.7, margin:4, borderRadius:10}}
                                             
                                         >
-                                          {console.log('atendido ? ', agendamento.atendido+ ' cancelado ? ', agendamento.cancelado)}
+                                          {/* {// console.log('atendido ? ', agendamento.atendido+ ' cancelado ? ', agendamento.cancelado)} */}
                                             {/* <Text  key={servico.idServico}>{servico.nomeServico} </Text> */}
                                             <List.Item key={agendamento.idAgendamento}
                                                         title={agendamento.nomeCliente}
