@@ -231,5 +231,24 @@ export function ExcluirTodasAsTabelas() {
   });
 }
 
+export async function backupTabela(nomeTabela){
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `SELECT * FROM ${nomeTabela}`,
+        [],
+        (_, { rows }) => {
+          const dados = rows._array;
+          resolve(dados);
+        },
+        (_, error) => {
+          reject(error);
+        }
+      );
+    });
+  });
+};
+
+
 
 

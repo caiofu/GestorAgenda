@@ -1,4 +1,4 @@
-import { ScrollView, View, Text, useColorScheme } from "react-native";
+import { ScrollView, View, TouchableOpacity, Text, useColorScheme } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Switch, Checkbox } from 'react-native-paper';
 import { useState } from "react";
@@ -13,6 +13,10 @@ import { RemoveTemaAsync, SalvaTema } from "../AsyncStorage/AsyncStorage";
 
 //CONTEXT
 import { useAppState } from "../Contexts/AppStateContext";
+
+//BACKUP & RESTORE
+import CreateBackup from "../Backup/Backup";
+import RestoreBackup from "../Backup/Restore";
 
 export default function Configuracoes()
 {
@@ -57,7 +61,7 @@ export default function Configuracoes()
         <SafeAreaView>
             <ScrollView>
             <View style={styles.CheckboxContainer}>
-                   
+
                     <Checkbox
                         status={temaSistema}
                         onPress={() => {MudaTemaSitema()}}
@@ -76,6 +80,16 @@ export default function Configuracoes()
                         </View>
                     
                 </View>
+                <View>
+                    <TouchableOpacity onPress={RestoreBackup}>
+                        <Text>Restore</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={CreateBackup}>
+                        <Text>Backup</Text>
+                    </TouchableOpacity>          
+                </View>
+
             </ScrollView>
         </SafeAreaView>
     )
