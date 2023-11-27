@@ -1,11 +1,10 @@
 import { ScrollView, View, Text, useColorScheme, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Switch, Checkbox, Dialog, Portal, Button, PaperProvider, TextInput, HelperText } from 'react-native-paper';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./StyleConfiguracoes";
 import darkTheme from '../../Tema/darkTheme';
 import lightTheme from '../../Tema/lightTheme';
-
 import { FontAwesome } from '@expo/vector-icons';
 
 //RESTART
@@ -15,44 +14,57 @@ import * as Updates from 'expo-updates';
 import { ExcluirTodasAsTabelas } from "../SQLiteManager/SQLiteManager";
 
 //ASYNC
-import { RemoveTemaAsync, removerAsyncStorage, guardaWizardAtivo, SalvaTema } from "../AsyncStorage/AsyncStorage";
-
+import { RemoveTemaAsync, removerAsyncStorage, guardaWizardAtivo, SalvaTema, setUsaTemaSistema, getUsaTemaSistema } from "../AsyncStorage/AsyncStorage";
 //CONTEXT
 import { useAppState } from "../Contexts/AppStateContext";
 
-export default function Configuracoes()
-{
+export default function Configuracoes() {
+    //Tema
+    const { tema, MudarTema, temaPadraoSistema, setTemaPadraoSistema, usaTemaSistemaAsyncStorage, setUsaTemaSistemaAsyncStorage } = useAppState();
+    console.log(usaTemaSistemaAsyncStorage);
 
-     //Tema
-     const { tema, MudarTema, temaPadraoSistema, setTemaPadraoSistema } = useAppState();
-    
-     const [darkModeOn, setDarkModeOn] = useState(tema === 'dark' ? true : false);
-    function AtivarDarkMode()
-    {
+    const [darkModeOn, setDarkModeOn] = useState(tema === 'dark' ? true : false);
+
+    function AtivarDarkMode() {
         setDarkModeOn(!darkModeOn);
         MudarTema();
     }
 
     //Tema do sistema
-    const [temaSistema, setTemaSistema] = useState('unchecked');
-    const [desativaSwitch, setDesativaSwitch] = useState(false);
- 
-    function MudaTemaSitema()
-    {
-      
-        
-       if(temaSistema === 'checked')
-       {
-        setTemaSistema('unchecked');
-        setDesativaSwitch(false);
-       }
-       else //Padrao do sistema operacional
-       {
-      
-        setTemaSistema('checked');
-      
-        setTemaPadraoSistema(true);
-        setDesativaSwitch(true);
+    const [temaSistema, setTemaSistema] = useState(usaTemaSistemaAsyncStorage === 'true' ? 'checked' : 'unchecked');
+    const [desativaSwitch, setDesativaSwitch] = useState(usaTemaSistemaAsyncStorage === 'true' ? false : true);
+
+    useEffect(() => {
+        if (temaSistema === 'checked') {
+            setTemaPadraoSistema(true);
+            setDesativaSwitch(true);
+        }
+        else {
+            setTemaPadraoSistema(false);
+            setDesativaSwitch(false);
+        }
+    }, [usaTemaSistemaAsyncStorage]);
+
+    useEffect(() => {
+        getUsaTemaSistema().then(ret => {
+            setUsaTemaSistemaAsyncStorage(ret);
+        });
+    }, [temaSistema, usaTemaSistemaAsyncStorage]);
+
+    function MudaTemaSitema() {
+        if (temaSistema === 'checked') {
+            setTemaSistema('unchecked');
+            setUsaTemaSistema('false');
+            setDesativaSwitch(false);
+            // console.log("Entrou no if - 111");
+        }
+        else //Padrao do sistema operacional
+        {
+            setTemaSistema('checked');
+            setUsaTemaSistema('true');
+
+            setTemaPadraoSistema(true);
+            setDesativaSwitch(true);
 
         //Excluir async
         RemoveTemaAsync();

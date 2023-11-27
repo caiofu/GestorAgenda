@@ -50,12 +50,12 @@ export default function Estabelecimento()
 
           
             // Aqui, você pode acessar o resultado retornado
-            //console.log("Resultado da consulta:", resultado);
+            //// console.log("Resultado da consulta:", resultado);
             
           } else {
             setPrimeiroCadastro(true);
             // Trate o caso em que nenhum resultado foi encontrado
-            console.log("Nenhum resultado encontrado.");
+            // console.log("Nenhum resultado encontrado.");
           }
          // setDadosCarregados(true);
         });
@@ -66,7 +66,7 @@ export default function Estabelecimento()
               key: atividade.idRamoAtividade.toString(),
               value: atividade.nomeAtividade,
           }));
-              //console.log(retorno);
+              //// console.log(retorno);
               setListaRamoAtividade(retorno);
             
           });
@@ -77,7 +77,7 @@ export default function Estabelecimento()
     useEffect(() => {
       // Obtendo chave correspondente ao valor do ramo de atividade
       const chaveSelecionada = listaRamoAtividade.find(item => item.value === selected)?.key;
-      console.log("Chave (key) correspondente ao valor de ramo de atividade:", chaveSelecionada);
+      // console.log("Chave (key) correspondente ao valor de ramo de atividade:", chaveSelecionada);
       setIdRamoAtividade(chaveSelecionada);
     }, [selected, listaRamoAtividade]); //Esse trecho éa dependencia do useEffect estamos falando para o useEffect fica oberservando as mudanças nesse trecho para alteraças
     
@@ -130,13 +130,13 @@ export default function Estabelecimento()
       
         if(resultado.canceled)
         {
-            console.log('seleção cancelada'); //Posteriormente podemos retirar esse if era para testar e ter uma base do funcionamento
+            // console.log('seleção cancelada'); //Posteriormente podemos retirar esse if era para testar e ter uma base do funcionamento
         }
         else if (resultado.assets)
         {
           
             setImage(resultado.assets[0].uri);
-            console.log("IMAGEM NOVA",image)
+            // console.log("IMAGEM NOVA",image)
         
         }
     }
@@ -154,7 +154,7 @@ export default function Estabelecimento()
           else if(cnpjValido == false && cnpj != "")
           {
            
-            console.log('cnpjInvalido')
+            // console.log('cnpjInvalido')
           }
            else {
             setEnvio(true);
@@ -246,8 +246,7 @@ export default function Estabelecimento()
           from: origem,
           to: destino,
         });
-       
-        console.log("IMAGEM ANTES ---> ", image)
+        // console.log('Imagem movida para:', destino);
         setImage(destino);
       
 
@@ -256,7 +255,7 @@ export default function Estabelecimento()
         console.error('Erro ao mover a imagem:', error);
       }
     } else {
-      console.log('Não é possível mover a imagem');
+      // console.log('Não é possível mover a imagem');
     }
 
        //INSERINDO DADOS (foi colocado nesse trecho que mesmo sem imagem e para salvar.)
@@ -274,13 +273,13 @@ export default function Estabelecimento()
               ConsultaRetornaIdRamoAtividade(ramoAtividade, (idRamoAtividade) => {
                 if (idRamoAtividade !== null) {
                   // O ID do ramo de atividade foi encontrado com sucesso
-                  console.log('ID do Ramo de Atividade:', idRamoAtividade);
+                  // console.log('ID do Ramo de Atividade:', idRamoAtividade);
                   //Ativa os serviços de acordo com o ramo de atividade
                   AtualizarServiçoAtivoPorIdRamoAtividade(idRamoAtividade, (error) =>{
                     if (error) {
                       console.error('Erro na atualização:', error);
                     } else {
-                      console.log('Registros de serviço atualizados com sucesso.');
+                      // console.log('Registros de serviço atualizados com sucesso.');
                     }
                   })
                 } else {
@@ -300,7 +299,7 @@ export default function Estabelecimento()
             } else {
               
               // Inserção falhou
-              console.log('erro ao inserir');
+              // console.log('erro ao inserir');
             }
           })
           .catch((error) => {
