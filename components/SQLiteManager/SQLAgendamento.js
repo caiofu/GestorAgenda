@@ -298,7 +298,7 @@ export function ConsultaAtendidosPorMesAno(ano, mes, callback) {
   db.transaction((tx) => {
    console.log("MES SELECIONADAO ---> ",mes)
     //Verificando quais campos foram passados para montar o sql
-    let sql = 'SELECT * FROM agendamento WHERE';
+    let sql = 'SELECT * FROM agendamento WHERE atendido = 1 AND';
 
     let condicoes   = [];
     let  parametros = [];
@@ -319,7 +319,7 @@ export function ConsultaAtendidosPorMesAno(ano, mes, callback) {
   
      sql += condicoes.join(' AND ');
      sql += 'ORDER BY nomeCliente, telefone';
-     console.log(' SQL NOVO -------------------------------------------------->', sql + ' parametros '+parametros)
+    //  console.log(' SQL NOVO -------------------------------------------------->', sql + ' parametros '+parametros)
     tx.executeSql(
       // 'SELECT * FROM agendamento WHERE data LIKE ? OR data LIKE ? ORDER BY nomeCliente, telefone',
       sql,
