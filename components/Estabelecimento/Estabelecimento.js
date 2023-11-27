@@ -34,7 +34,7 @@ export default function Estabelecimento()
        
 
         ConsultaEstabelecimento((resultado) => {
-          // console.log("RESULTADO"+resultado)
+        
           if (resultado !== null) {
             
             setPrimeiroCadastro(false);
@@ -225,13 +225,14 @@ export default function Estabelecimento()
     }
 
    async function SalvandoDados() {
-   
+   //Correçao de imagem (teste)
+   let destino;
     if (image !== null) 
     {
       const nomeImagem = image.split('/').pop();
       const origem = image;
       const pastaLogoUsuario = `${FileSystem.documentDirectory}logoUsuario/`;
-      const destino = `${pastaLogoUsuario}${nomeImagem}`;
+      destino = `${pastaLogoUsuario}${nomeImagem}`;
   
       try {
         // Cria a pasta "logoUsuario" se não existir
@@ -247,6 +248,7 @@ export default function Estabelecimento()
         });
         // console.log('Imagem movida para:', destino);
         setImage(destino);
+      
 
      
       } catch (error) {
@@ -262,7 +264,7 @@ export default function Estabelecimento()
         primeiroCadastro ? tipoAcao = "insercao" : tipoAcao = "atualizacao";
        
         InserirEstabelecimento(
-          nomeEstabelecimento,cnpj,image,ramoAtividade,tipoAcao, idEstabelecimento
+          nomeEstabelecimento,cnpj,destino,ramoAtividade,tipoAcao, idEstabelecimento
         )
           .then((inseridoComSucesso) => {
             //Insere serviços ao ramo de atividade

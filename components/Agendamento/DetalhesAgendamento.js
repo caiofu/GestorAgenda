@@ -1,10 +1,10 @@
-import { ScrollView, View, TouchableOpacity, Text } from "react-native";
+import { ScrollView, View, TouchableOpacity, Text, Linking, Image } from "react-native";
 import { useEffect, useState } from "react";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from "./StyleAgendamento";
 
-import { DarkTheme, useNavigation } from "@react-navigation/native";
-import { PaperProvider, Button, TextInput, Chip, Portal, Dialog, ProgressBar } from "react-native-paper";
+import {  DarkTheme, useNavigation } from "@react-navigation/native";
+import { PaperProvider, TextInput, Chip, Portal, Dialog, ProgressBar, Button } from "react-native-paper";
 import { FontAwesome5, Ionicons, FontAwesome } from '@expo/vector-icons';
 
 //SQLITE
@@ -17,10 +17,15 @@ import { ListaTodasTabelas } from "../SQLiteManager/SQLiteManager";
 import { useAppState } from "../Contexts/AppStateContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-//MULTI SELECt
+//MULTI SELECT
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
-import { MaterialIcons } from '@expo/vector-icons';
-export default function DetalhesAgendamento(props) {
+import {MaterialIcons} from '@expo/vector-icons';
+
+//CLIPBOARD
+import * as Clipboard from 'expo-clipboard';
+
+export default function DetalhesAgendamento(props)
+{
     // Acesse o valor do idServico por meio de props.route.params
     const idAgendamento = props.route.params.id;
 
@@ -32,7 +37,7 @@ export default function DetalhesAgendamento(props) {
     const [habilitaEdicao, setHabilitaEdicao] = useState(false);
     const [atualizaDados, setAtualizadados] = useState(false);
     //CONTEXT
-    const { tema, setAtualizaAgendamentos, atualizaAgendamentos } = useAppState();
+    const {tema,  setAtualizaAgendamentos , atualizaAgendamentos, nomeEstabelecimento} = useAppState();
 
     //COR DO TEMA
     const [corTema, setCorTema] = useState('#006699');
@@ -220,6 +225,21 @@ export default function DetalhesAgendamento(props) {
                                     });
                                 })
                             }
+<<<<<<< HEAD
+                        });
+                    })
+                }
+                
+                 //Volta para lista de agendamentos
+                 setAtualizaAgendamentos(!atualizaAgendamentos);
+                 setBoxDialogSucesso((att) => true);
+                 setTExtoBoxDialog("Cliente Atendido");
+         
+                  BoxDialog();
+                } else if (resultado === false) {
+               
+                console.log('algo deu errado...')
+=======
 
                             //Volta para lista de agendamentos
                             setAtualizaAgendamentos(!atualizaAgendamentos);
@@ -235,6 +255,7 @@ export default function DetalhesAgendamento(props) {
                         }
                     });
                     //SalvaColaboradorAtendimento();
+>>>>>>> master
                 } else {
                     // console.log('Erro ao atualizar o agendamento.');
                     // Lide com o erro de atualização, se necessário.
@@ -288,6 +309,49 @@ export default function DetalhesAgendamento(props) {
             }
         })
     }
+<<<<<<< HEAD
+}
+
+const [boxCompartilhar, setBoxCompartilhar] = useState(false);
+//Responsavel pela mensagem após ação
+const [boxMsgCopiar, setBoxMsgCopiar] = useState(false);
+const [txtBoxMsgCopiar, setTxtBoxMsgCopiar] = useState(false);
+
+//const textoParaCompartilhar = 'Olá, '+nome+' você tem um agendamento para o dia '+dataFormatada+' ás '+horarioFormatado+' para o seguinte serviço: '+listaServicosSalvo;
+const textoParaCompartilhar = 'Olá, '+nome+', aqui é do(a) '+nomeEstabelecimento+'.Você tem agendamento: '+listaServicosSalvo+' para o dia '+dataFormatada+' às '+horarioFormatado+'.'
+async function CopiarClipboard()
+{
+    await Clipboard.setStringAsync(textoParaCompartilhar);
+         setBoxCompartilhar(false);
+          setTxtBoxMsgCopiar("Copiado com sucesso!");
+          setBoxMsgCopiar(true);
+}
+
+
+
+const compartilharNoWhatsApp = () => {
+    const mensagem = encodeURIComponent(textoParaCompartilhar);
+    const url = `whatsapp://send?text=${mensagem}`;
+  
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (supported) {
+          //Enviado para o whatsapp  
+          return Linking.openURL(url);
+        } else {
+          console.log('WhatsApp não está instalado');
+          setBoxCompartilhar(false);
+          setTxtBoxMsgCopiar("Whatsapp não instalado!");
+          setBoxMsgCopiar(true);
+        }
+      })
+      .catch((error) => {
+        console.error('Erro ao tentar abrir WhatsApp:', error);
+      });
+  };
+  
+    return(
+=======
 
     //BOX DIALOG
     const [boxVisivel, setBoxVisivel] = useState(false);
@@ -346,6 +410,7 @@ export default function DetalhesAgendamento(props) {
         }
     }
     return (
+>>>>>>> master
         <PaperProvider >
             <SafeAreaView>
                 <ScrollView style={{ backgroundColor: cancelado === 1 ? '#efb4b48f' : '' }}>
@@ -356,10 +421,22 @@ export default function DetalhesAgendamento(props) {
 
 
                         {habilitaEdicao === false && cancelado === 0 ? (
+<<<<<<< HEAD
+                            <View style={{ flexDirection: 'row',  }}>
+                                <TouchableOpacity style={{alignSelf:'flex-start', flexDirection:'row', marginBottom:15, marginLeft:15, backgroundColor:'#006699', padding:4, borderRadius:5}} onPress={() => setHabilitaEdicao(true)}>
+                                <FontAwesome name="edit" size={24} color="#fff" />
+                                    <Text style={{marginEnd:20, fontFamily:'Rubik_700Bold',alignSelf:'center', color:'#fff'}}> Editar</Text>
+=======
                             <View>
                                 <TouchableOpacity style={{ alignSelf: 'flex-start', flexDirection: 'row', marginBottom: 15, marginLeft: 15, backgroundColor: '#006699', padding: 4, borderRadius: 5 }} onPress={() => setHabilitaEdicao(true)}>
                                     <FontAwesome name="edit" size={24} color="#fff" />
                                     <Text style={{ marginEnd: 20, fontFamily: 'Rubik_700Bold', alignSelf: 'center', color: '#fff' }}> Editar</Text>
+>>>>>>> master
+                                </TouchableOpacity>
+
+                                <TouchableOpacity style={{alignSelf:'flex-start', flexDirection:'row', marginBottom:15, marginLeft:15, backgroundColor:'#006699', padding:4, borderRadius:5}} onPress={() =>  setBoxCompartilhar(true)}>
+                                <FontAwesome name="edit" size={24} color="#fff" />
+                                    <Text style={{marginEnd:20, fontFamily:'Rubik_700Bold',alignSelf:'center', color:'#fff'}}>Compartilhar</Text>
                                 </TouchableOpacity>
                             </View>
                         ) : ''}
@@ -509,6 +586,51 @@ export default function DetalhesAgendamento(props) {
                                 </>
                             )
                             }
+<<<<<<< HEAD
+                    </View>
+                    ) : ''}   
+                      <Portal>
+                        <Dialog visible={boxVisivel} style={{backgroundColor:'#fff'}}>
+                            <Dialog.Content>
+                            <Text style={[styles.txtDialog, {color: boxDialogSucesso ? "#006699" : 'red'}]} variant="bodyMedium">{textoBoxDialog}</Text>
+                            <ProgressBar progress={barraProgresso} style={{height:10,  backgroundColor: 'rgba(112, 120, 147, 0.3)' }}  color='#006699' />
+                            </Dialog.Content>
+                        </Dialog>
+
+                        <Dialog visible={boxCompartilhar} style={{backgroundColor:'#fff'}}>
+                            <Dialog.Title style={{color:'#006699'}}>Compartilhar <FontAwesome5 name="share-alt" size={24} color="#006699" /></Dialog.Title>
+                            <View style={{borderBottomWidth:0.31, width:'90%', alignSelf:'center', marginBottom:20}}></View>
+                            <Dialog.Content>
+                                <View style={{alignItems:'center'}}>
+                                <TouchableOpacity onPress={compartilharNoWhatsApp} style={styles.btnCompartilhar}>
+                                    <FontAwesome5 name="whatsapp-square" size={50} color="green" />
+                                    <Text style={styles.txtBtnCompartilhar}>WhatsApp</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity onPress={CopiarClipboard} style={styles.btnCompartilhar}>
+                                <FontAwesome5 name="copy" size={50} color="gray" />
+                                        <Text style={styles.txtBtnCompartilhar}>Copiar</Text>
+                                     
+                                </TouchableOpacity>
+                            </View>
+                            
+                            </Dialog.Content>
+                            <View style={{borderBottomWidth:0.51, width:'90%', alignSelf:'center'}}></View>
+                            <Dialog.Actions >
+                                <Button  textColor="#006699"  onPress={() => setBoxCompartilhar(false)}>Fechar</Button>
+                            </Dialog.Actions>
+                        </Dialog>
+
+                        <Dialog visible={boxMsgCopiar} style={{backgroundColor:'#fff'}}>
+                            <Dialog.Content>
+                            <Text style={[styles.txtDialog, {color: "#006699", fontSize:22 }]} variant="bodyMedium">{txtBoxMsgCopiar}</Text>
+                            
+                            </Dialog.Content>
+                            <Dialog.Actions >
+                                <Button  textColor="#006699"  onPress={() => setBoxMsgCopiar(false)}>Fechar</Button>
+                            </Dialog.Actions>
+                        </Dialog>
+=======
                         </View>
                     ) : ''}
 
@@ -519,6 +641,7 @@ export default function DetalhesAgendamento(props) {
                                 <ProgressBar progress={barraProgresso} style={{ height: 10, backgroundColor: 'rgba(112, 120, 147, 0.3)' }} color='#006699' />
                             </Dialog.Content>
                         </Dialog>
+>>>>>>> master
                     </Portal>
 
                     {/* Confirmar exclusão: */}

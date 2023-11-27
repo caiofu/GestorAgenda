@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
 
-    switchContainer: {
+      Container: {
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
@@ -17,12 +17,58 @@ const styles = StyleSheet.create({
         fontFamily:'Rubik_700Bold'
       },
 
-      CheckboxContainer:
-      {
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
+      // CheckboxContainer:
+      // {
+      //   flexDirection: "row",
+      //   justifyContent: "center",
+      //   alignItems: "center",
        
+      // },
+      btnRestaurar:
+      {
+        margin:10,
+        padding:5,
+        borderRadius:4,
+        backgroundColor:'red'
+      },
+
+      txtBtnRestaurar:
+      {
+        color:'#fff',
+        fontFamily:'Rubik_700Bold'
+      },
+
+      txtDialog:
+      {
+        color:'#fff',
+        margin:3,
+        fontFamily:'Rubik_400Regular'
+      },
+
+      btnRestaurarDialog:
+      {
+        alignSelf:'center',
+        padding:5,
+        backgroundColor:'red',
+        borderRadius:5,
+        margin:10,
+        width:200,
+      },
+
+      txtBtnRestaurarDialog:
+      {
+        color:'#fff',
+        fontFamily:'Rubik_700Bold',
+        fontSize:20,
+        alignSelf:'center'
+      },
+
+      linha:
+      {
+        borderWidth:0.2,
+        borderColor: "#006699",
+        width:'98%', 
+        alignSelf:'center'
       }
 });
 export default styles;

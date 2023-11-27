@@ -19,7 +19,7 @@ export default function Agendamento()
 {
 
     //CONTEXT
-    const { navegacaoEstabelecimento, setNavegacaoEstabelecimento, atualizaAgendamentos } = useAppState();
+    const { navegacaoEstabelecimento, setNavegacaoEstabelecimento, atualizaAgendamentos, logo, setLogo, nomeEstabelecimento, setNomeEstabelecimento } = useAppState();
 
     //VERIFICA SE TEM CADASTRO DE ESTABELECIMENTO APRA DEFINIR QUAL PRIMEIRA TELA APARECERA
     ConsultaEstabelecimento((resultado) => {
@@ -33,6 +33,34 @@ export default function Agendamento()
         setNavegacaoEstabelecimento(false);
       }
     })
+
+   
+        useEffect(() => {
+            if(navegacaoEstabelecimento != null)
+            {
+            console.log('navegaçao estabelecimento ---> ', navegacaoEstabelecimento)
+            ConsultaEstabelecimento((resultado) => {
+              console.log("RESULTADO ?"+resultado)
+              console.log('LOGO ', resultado.logo +' bnome ', resultado.nomeEstabelecimento)
+             
+    
+               let jsonTe = resultado;
+               if( resultado && resultado.logo !== null)
+               {
+                   
+                    setLogo(resultado.logo); 
+               }
+              
+                 
+    
+               setNomeEstabelecimento(resultado.nomeEstabelecimento);
+              
+      
+            });
+        }
+        },[logo, navegacaoEstabelecimento ])
+   
+      
 
     //
     const navigation = useNavigation();
@@ -97,6 +125,7 @@ export default function Agendamento()
 
           ConsultaAgendamentoPorData(dataFormatada, (agendamentos) => {
               const retorno = agendamentos.map((agendamento) => {
+                console.log("retorno --->"+retorno)
                 // Dividir a string em partes (dia, mês e ano)
                 const partesData = agendamento.data.split('/'); // Isso resultará em um array ["25", "10", "2023"]
 
