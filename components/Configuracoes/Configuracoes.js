@@ -133,23 +133,23 @@ export default function Configuracoes() {
                 <Text>Restaurar Padrão de Fábrica</Text>
             </Dialog.Title>
             <View style={[styles.linha, {marginBottom:10, borderColor:'#fff'}]}></View>
-        <Dialog.Content style={{alignSelf:'center'}}>
-          <Text style={styles.txtDialog}>Esta ação apagará todos os seus dados do aplicativo</Text>
-          <Text style={styles.txtDialog}>Se voce tem certeza digite "CONFIRMAR"</Text>
-         
-          {msgHelper ? <HelperText style={{color:'red', fontStyle:'italic'}}><Text>* O texto não é valido!</Text></HelperText> : ''}   
-          <TextInput value={textoConfirmacao}
-        onChangeText={handleChangeTextoConfirmacao}></TextInput>
+            <Dialog.Content style={{alignSelf:'center'}}>
+            <Text style={styles.txtDialog}>Esta ação apagará todos os seus dados do aplicativo</Text>
+            <Text style={styles.txtDialog}>Se voce tem certeza digite "CONFIRMAR"</Text>
+            
+            {msgHelper ? <HelperText style={{color:'red', fontStyle:'italic'}}><Text>* O texto não é valido!</Text></HelperText> : ''}   
+            <TextInput value={textoConfirmacao}
+            onChangeText={handleChangeTextoConfirmacao}></TextInput>
 
-          <TouchableOpacity style={styles.btnRestaurarDialog} onPress={RestaurarPadroes}>
-            <Text style={styles.txtBtnRestaurarDialog}>RESTAURAR</Text>
-          </TouchableOpacity>
-        </Dialog.Content>
-        <View style={[styles.linha, {marginBottom:10, borderColor:'#fff'}]}></View>
-            <Dialog.Actions>
-            {/* <Button onPress={() => console.log('Cancel')}>Sim</Button> */}
-           <Button onPress={() => setMsgDialog(false)}>Cancelar</Button>
-            </Dialog.Actions>
+            <TouchableOpacity style={styles.btnRestaurarDialog} onPress={RestaurarPadroes}>
+                <Text style={styles.txtBtnRestaurarDialog}>RESTAURAR</Text>
+            </TouchableOpacity>
+            </Dialog.Content>
+            <View style={[styles.linha, {marginBottom:10, borderColor:'#fff'}]}></View>
+                <Dialog.Actions>
+                {/* <Button onPress={() => console.log('Cancel')}>Sim</Button> */}
+            <Button onPress={() => setMsgDialog(false)}>Cancelar</Button>
+                </Dialog.Actions>
         </Dialog>
         </Portal>
         </PaperProvider>

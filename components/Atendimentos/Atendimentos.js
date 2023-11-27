@@ -2,6 +2,7 @@ import { TouchableOpacity, Text, View,  } from "react-native";
 import { Picker } from '@react-native-picker/picker';
 import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
 import { Avatar, Card, IconButton } from 'react-native-paper';
+import { DarkTheme, useNavigation } from "@react-navigation/native";
 
 //CONTEXT
 import { useAppState } from "../Contexts/AppStateContext";
@@ -160,9 +161,11 @@ export default function Atendimentos()
                   key={atendimentos.idAgendamento}
                   title={atendimentos.nomeCliente}
                   subtitle={telefone}
-                  left={(props) => <FontAwesome5 name="clipboard-check" size={34} color="#006699" />}
-                  right={(props) => <Text style={{paddingRight:4, fontStyle:'italic'}}>{atendimentos.data}</Text>}
-                  style={styles.boxCard} />
+                  left={(props) => <FontAwesome5 name="clipboard-check" size={34} color={corTema} />}
+                  right={(props) => <Text style={{paddingRight:4, fontStyle:'italic', color:corTema}}>{atendimentos.data}</Text>}
+                  style={[styles.boxCard, {borderColor: corTema,}]}
+                  titleStyle={{color:corTema}}
+                  subtitleStyle={{color:corTema}} />
               )
             })
           ): (

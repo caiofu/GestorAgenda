@@ -48,6 +48,8 @@ export default function Estabelecimento()
            setSelected(resultado.ramoAtividade);
            setRamoAtividade(resultado.ramoAtividade);
 
+           console.log("l 51: ramo ", resultado.ramoAtividade)
+
           
             // Aqui, você pode acessar o resultado retornado
             //// console.log("Resultado da consulta:", resultado);
@@ -270,6 +272,7 @@ export default function Estabelecimento()
             //Insere serviços ao ramo de atividade
             if(ramoAtividade !== null)
             {
+              console.log("RAMO DE ATIVAIDDE : ", ramoAtividade)
               ConsultaRetornaIdRamoAtividade(ramoAtividade, (idRamoAtividade) => {
                 if (idRamoAtividade !== null) {
                   // O ID do ramo de atividade foi encontrado com sucesso
