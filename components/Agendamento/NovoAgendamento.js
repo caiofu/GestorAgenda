@@ -143,7 +143,7 @@ export default function NovoAgendamento()
             ConsultaAgendamentoPorHorarioData(horarioFormatado, dataFormatada,  (agendamento) => {
                 if (agendamento) {
                 // A consulta foi bem-sucedida, você pode acessar os dados do agendamento aqui
-                // console.log('Agendamento encontrado:', agendamento);
+                console.log('Agendamento encontrado:', agendamento);
                 setBoxDialogSucesso((att) => false);
                 setTExtoBoxDialog("Já existe um agendamento para essa data e horario!");
 
@@ -151,12 +151,12 @@ export default function NovoAgendamento()
 
                 } else {
                 // Não foi encontrado nenhum agendamento com o horário especificado
-                // console.log('Nenhum agendamento encontrado para o horário:', );
+                console.log('Nenhum agendamento encontrado para o horário:', );
                 //CRIA AGENDAMENTO
                 CriaNovoAgendamento(dataFormatada, horarioFormatado, nome, telefone, (idAgendamento) => {
-                    // console.log('novoid ',idAgendamento)
+                    console.log('novoid ',idAgendamento)
                     if (idAgendamento !== null) {
-                    // console.log(`Novo ID do agendamento inserido: ${idAgendamento}`);
+                    console.log(`Novo ID do agendamento inserido: ${idAgendamento}`);
                     //INSERE SERVIÇOS COM ID DO AGENDAMENTO
 
                     //Loop para caso conter mais de um serviço selecionado
@@ -164,26 +164,26 @@ export default function NovoAgendamento()
                     let totalInsercoes = servicoSelecionado.length;
 
                     servicoSelecionado.forEach((servicoSelecionado) => {
-                        // console.log('serviço selecionado para salvar  -->', servicoSelecionado)
+                        console.log('serviço selecionado para salvar  -->', servicoSelecionado)
                         //Precisa pega o id do serviço ou nome do serviço ? ?
                         SalvarServicoAgendamento(idAgendamento, servicoSelecionado, (idServicoAgendamento) => {
-                            // console.log('idAgendamentoSer ', idServicoAgendamento)
+                            console.log('idAgendamentoSer ', idServicoAgendamento)
                             if(idServicoAgendamento !== null )
                             {
-                                // console.log('caiu aquiiiii')
+                                console.log('caiu aquiiiii')
                                 insercaoBemSucedida = insercaoBemSucedida +1;
-                                // console.log(insercaoBemSucedida)
+                                console.log(insercaoBemSucedida)
                                 //Verifica se inseriu todas
 
                                     if(insercaoBemSucedida === totalInsercoes)
                                     {
-                                        // console.log('sucedidade ', insercaoBemSucedida+' total ', totalInsercoes)
+                                        console.log('sucedidade ', insercaoBemSucedida+' total ', totalInsercoes)
                                         //Chama a caixa de dialogo
                                         setAtualizaAgendamentos(true);
                                         setTExtoBoxDialog("Agendamento criado com sucesso!");
                                         setBoxDialogSucesso(true); //Chama o box de mensagem pela mudança de estado
                                     
-                                        // console.log('todos as '+totalInsercoes+ 'forma inseridas com sucesso');
+                                        console.log('todos as '+totalInsercoes+ 'forma inseridas com sucesso');
                                     }
                             }
                         } );
@@ -193,7 +193,7 @@ export default function NovoAgendamento()
                 //  SalvarServicoAgendamento(idAgendamento,)
 
                     } else {
-                        // console.log('Falha ao inserir o agendamento');
+                        console.log('Falha ao inserir o agendamento');
                     }
                 });
                 }
@@ -226,10 +226,10 @@ export default function NovoAgendamento()
                 boxDialogSucesso ? navigation.navigate('Gestor Agenda') : '';
                 setBoxVisivel(false);
                 setBarraProgresso(0);
-                // console.log('box dialogo sucesso, ',boxDialogSucesso)
+                console.log('box dialogo sucesso, ',boxDialogSucesso)
                 // if(boxDialogSucesso === true)
                 // {
-                //     // console.log('tedentro do if')
+                //     console.log('tedentro do if')
                 //     navigation.navigate('Gestor Agenda');
                 // }
 
@@ -329,7 +329,7 @@ export default function NovoAgendamento()
                             setSelected={(val) => {
                                 if (servicoSelecionado !== '')
                                 {
-                                    // console.log('valllll ????',val)
+                                    console.log('valllll ????',val)
                                      setServicoSelecionado(val);
                                 }
                             }}

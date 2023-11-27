@@ -42,12 +42,12 @@ export function CriaNovoColaborador(nomeColaborador, descricao, callback)
           //Função de retorno (callback) com o resultado (novoID)
           callback(novoID);
         } else {
-          // console.log('Falha ao inserir');
+          console.log('Falha ao inserir');
           callback(null);
         }
       },
       (error) => {
-        // console.log('Erro ao executar consulta:', error);
+        console.log('Erro ao executar consulta:', error);
       }
     );
   });
@@ -60,12 +60,12 @@ export function UpdateColaboradorPorId(idColaborador, nome, funcao, callback){
       'UPDATE colaborador SET nomeColaborador = ?, descricao = ? WHERE idColaborador = ?',
       [nome, funcao, idColaborador],
       (tx, results) => {
-        // console.log('Colaborador atualizado com sucesso (UpdateColaboradorporId)');
+        console.log('Colaborador atualizado com sucesso (UpdateColaboradorporId)');
         callback(true);
       },
       (error) => {
-        // console.log('Erro ao atualizar serviço (UpdateColaboradorporId):' + error.message);
-        // console.log(idColaborador, nome, funcao);
+        console.log('Erro ao atualizar serviço (UpdateColaboradorporId):' + error.message);
+        console.log(idColaborador, nome, funcao);
         callback(false);
       }
     );
@@ -79,30 +79,30 @@ export function ValidaNomeColaborador(nome, callback, errorCallback){
       'SELECT 1 from colaborador WHERE UPPER(nomeColaborador) = UPPER(?)',
       [nome],
       (tx, results)=>{
-        // // console.log("RETORNO ", results.rows.item(0))
+        // console.log("RETORNO ", results.rows.item(0))
         if (results.rows.length > 0){
-          // console.log("Já existe colaborador com este nome!");
+          console.log("Já existe colaborador com este nome!");
           callback(false);
         }
         else{
-          // console.log("Não existe colaborador com este nome!");
+          console.log("Não existe colaborador com este nome!");
           callback(true);
         } 
       },
       (error) => {
-        // console.log('Erro ao validar nome colaborador (ValidaNomeColaborador):' + error.message);
+        console.log('Erro ao validar nome colaborador (ValidaNomeColaborador):' + error.message);
         callback(false);
       }
     )},
     (error) => {
-      // console.log('Erro na transação SQL (ValidaNomeColaborador):' + error.message);
+      console.log('Erro na transação SQL (ValidaNomeColaborador):' + error.message);
       errorCallback(error);
     }
   )
 }
 
 export function AlteraStatusColaboradorPorId(idColaborador, ativo, callback){
-  // console.log('[LOGS] - AlteraStatusColaboradorPorId - IdColaborador: ', idColaborador);
+  console.log('[LOGS] - AlteraStatusColaboradorPorId - IdColaborador: ', idColaborador);
   const novoAtivo = ativo ? 1 : 0;
   db.transaction((tx) => {
     tx.executeSql(
@@ -110,21 +110,21 @@ export function AlteraStatusColaboradorPorId(idColaborador, ativo, callback){
       [novoAtivo, idColaborador],
       (tx, results) => {
         if(results.rowsAffected > 0){
-          // console.log("[LOGS] - Sucesso ao ativar/inativar colaborador.");
+          console.log("[LOGS] - Sucesso ao ativar/inativar colaborador.");
           callback(true);
         }
         else{
-          // console.log('[LOGS] - Fallha ao inativar colaborador.');
+          console.log('[LOGS] - Fallha ao inativar colaborador.');
           callback(false);
         }
       },
       (error) => {
-        // console.log('Erro no UPDATE ativar/inativar colaborador:' + error.message);
+        console.log('Erro no UPDATE ativar/inativar colaborador:' + error.message);
         callback(false);
       }
     )},
     (error) => {
-      // console.log('Erro na transação SQL do UPDATE ativar/inativar colaborador:' + error.message);
+      console.log('Erro na transação SQL do UPDATE ativar/inativar colaborador:' + error.message);
       callback(false);
     }
   )

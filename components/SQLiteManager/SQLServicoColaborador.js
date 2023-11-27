@@ -10,17 +10,17 @@ export function GetServicosEstabelecimento(callback, errorCallback) {
         {
           const rows = results.rows;
           const servicosArray = [];
-          // // console.log("linhas de retorno dos serviços: ",results.rows);
+          // console.log("linhas de retorno dos serviços: ",results.rows);
           for (let i = 0; i < rows.length; i++) {
-            // // console.log(rows.item(i));
+            // console.log(rows.item(i));
             servicosArray.push(rows.item(i));
           }
     
           if (servicosArray.length > 0) {
-            // console.log("[LOGS] - Servicos vinculados ao estabelecimento", servicosArray);
+            console.log("[LOGS] - Servicos vinculados ao estabelecimento", servicosArray);
             callback(servicosArray);
           } else {
-            // console.log('[LOGS] - Não há serviços vinculados ao estabelecimento');
+            console.log('[LOGS] - Não há serviços vinculados ao estabelecimento');
             callback(servicosArray);
           }
         },
@@ -34,7 +34,7 @@ export function GetServicosEstabelecimento(callback, errorCallback) {
 }
 
 export function GetServicosColaborador(idColaborador, callback) {
-  // console.log('[LOGS] GetServicosColaborador - idColaborador: ', idColaborador);
+  console.log('[LOGS] GetServicosColaborador - idColaborador: ', idColaborador);
   db.transaction((tx) => {
     tx.executeSql(
       'SELECT idServico as value, nomeServico as label FROM servicoColaborador WHERE idColaborador = ?',
@@ -47,20 +47,20 @@ export function GetServicosColaborador(idColaborador, callback) {
         }
 
         if (servicosArray.length > 0) {
-          // console.log("[LOGS] - Servicos vinculados ao colaborador", servicosArray);
+          console.log("[LOGS] - Servicos vinculados ao colaborador", servicosArray);
           callback(servicosArray);
         } else {
-          // console.log('[LOGS] - Colaborador não possui serviços favoritos');
+          console.log('[LOGS] - Colaborador não possui serviços favoritos');
           callback(servicosArray);
         }
       },
       (error) => {
-        // console.log("Erro na consulta SQL servicoColaborador: ", error.message);
+        console.log("Erro na consulta SQL servicoColaborador: ", error.message);
       }
     );
   },
   (error) => {
-    // console.log("Erro na transação SQL servicoColaborador: " + error.message);
+    console.log("Erro na transação SQL servicoColaborador: " + error.message);
   });
 }
 
@@ -71,40 +71,40 @@ export function FavoritarServicoColaborador(idColaborador, idServico, nomeServic
         'INSERT INTO servicoColaborador (idColaborador, idServico, nomeServico) VALUES (?, ?, ?)',
         [idColaborador, idServico, nomeServico],
         (tx, results) => {
-          // console.log("[LOGS] - Serviço Favoritado.");
+          console.log("[LOGS] - Serviço Favoritado.");
           callback(true);
         },
         (() =>{
-          // console.log('[LOGS] - Erro ao favoritar Serviço')
+          console.log('[LOGS] - Erro ao favoritar Serviço')
           callback(false);
         })
       );
     },
     (error)=>{
-      // console.log("[LOGS] - Erro na transação SQL: ", error.message);
+      console.log("[LOGS] - Erro na transação SQL: ", error.message);
     }
     );
     
 }
 
 export function DesfavoritarServicoColaborador(idColaborador, idServico, callback){
-    // console.log("LOGS] - DesfavoritarServicoColaborador - idColaborador: ", idColaborador);
+    console.log("LOGS] - DesfavoritarServicoColaborador - idColaborador: ", idColaborador);
     db.transaction((tx)=>{
       tx.executeSql(
         'DELETE FROM servicoColaborador WHERE idColaborador = ? AND idServico = ?',
         [idColaborador, idServico],
         (tx, results) => {
-          // console.log("[LOGS] - Serviço Desfavoritado.");
+          console.log("[LOGS] - Serviço Desfavoritado.");
           callback(true);
         },
         (() =>{
-          // console.log('[LOGS] - Erro ao desfavoritar Serviço')
+          console.log('[LOGS] - Erro ao desfavoritar Serviço')
           callback(false);
         })
       );
     },
     (error)=>{
-      // console.log("[LOGS] - Erro na transação SQL: ", error.message);
+      console.log("[LOGS] - Erro na transação SQL: ", error.message);
     }
     )
 }

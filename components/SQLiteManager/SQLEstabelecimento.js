@@ -24,7 +24,7 @@ export function InserirEstabelecimento(nome, cnpj, logo, ramoAtividade, tipoAcao
             query,
             tipoAcao === 'insercao' ?[nome, cnpj, logo, ramoAtividade] :[nome, cnpj, logo, ramoAtividade, id],
             () => {
-              // console.log('Empresa inserida com sucesso');
+              console.log('Empresa inserida com sucesso');
               resolve(true); // Resolve a Promise com sucesso
             },
             (_, error) => {
@@ -53,7 +53,7 @@ export function ConsultaEstabelecimento(callback) {
           // Se houver pelo menos um resultado, pegue o primeiro
           const row = results.rows.item(0);
           // Chame a função de retorno (callback) com o resultado
-          // console.log(row)
+          console.log(row)
           callback(row);
         } else {
           // Se não houver resultados, chame a função de retorno com null (ou outra marcação apropriada)
@@ -61,7 +61,7 @@ export function ConsultaEstabelecimento(callback) {
         }
       },
       (error) => {
-        // console.log('Erro ao executar consulta:');
+        console.log('Erro ao executar consulta:');
         
       }
     );

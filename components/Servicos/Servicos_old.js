@@ -24,10 +24,10 @@ export default function Servicos() {
   useEffect(() => {
     ConsultaEstabelecimento((resultado) => {
       if (resultado !== null) {
-        // console.log('O ramo salvo no banco é: ' + resultado.ramoAtividade);
+        console.log('O ramo salvo no banco é: ' + resultado.ramoAtividade);
         setRamoAtividade(resultado.ramoAtividade);
       } else {
-        // console.log("Nenhum resultado encontrado.");
+        console.log("Nenhum resultado encontrado.");
       }
     });
   }, []);
@@ -65,15 +65,15 @@ const [selected, setSelected] = React.useState([]);
       let listaGeral = [];
       let listaAtivos = [] ;
       resultado.forEach(element => {
-        // console.log('element --->', element)
+        console.log('element --->', element)
         listaGeral.push(element.nomeServico);
 
         if (element.ativo == 1) {
           listaAtivos.push(element.nomeServico);
         }
 
-        // console.log('Resultado de get servico por ramo - nome:' + element.nomeServico);
-        // console.log('Resultado de get servico por ramo - ativo:' + element.ativo);
+        console.log('Resultado de get servico por ramo - nome:' + element.nomeServico);
+        console.log('Resultado de get servico por ramo - ativo:' + element.ativo);
       });
       setListaServicos(listaGeral);
       setServicosSelecionados(listaAtivos);
@@ -81,11 +81,11 @@ const [selected, setSelected] = React.useState([]);
 
     //verificar se serviço está ativo, aí salva em servicosSelecionados
   }, []);
-// console.log('Servicos ativos ---->',servicosSelecionados)
+console.log('Servicos ativos ---->',servicosSelecionados)
   onSelectionsChange = (selecionados) => {
     // save the selections to this.state
     setServicosSelecionados(selecionados);
-    // console.log(selecionados);
+    console.log(selecionados);
   }
 
   return (
