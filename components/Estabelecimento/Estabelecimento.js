@@ -34,11 +34,12 @@ export default function Estabelecimento()
        
 
         ConsultaEstabelecimento((resultado) => {
-          console.log("RESULTADO"+resultado)
+          console.log("RESULTADO", resultado)
           if (resultado !== null) {
-            
+            console.log("Resultado: ", resultado);
             setPrimeiroCadastro(false);
            // let jsonTe = resultado;
+           console.log(resultado.logo);
             resultado.logo === '' ? setImage(null) :  setImage(resultado.logo); //Verifica se é a imagem padrao
           
            setIdEstabelecimento(resultado.idEstabelecimento);
@@ -225,13 +226,13 @@ export default function Estabelecimento()
     }
 
    async function SalvandoDados() {
-   
+    let destino;
     if (image !== null) 
     {
       const nomeImagem = image.split('/').pop();
       const origem = image;
       const pastaLogoUsuario = `${FileSystem.documentDirectory}logoUsuario/`;
-      const destino = `${pastaLogoUsuario}${nomeImagem}`;
+      destino = `${pastaLogoUsuario}${nomeImagem}`;
   
       try {
         // Cria a pasta "logoUsuario" se não existir
@@ -262,7 +263,7 @@ export default function Estabelecimento()
         primeiroCadastro ? tipoAcao = "insercao" : tipoAcao = "atualizacao";
        
         InserirEstabelecimento(
-          nomeEstabelecimento,cnpj,image,ramoAtividade,tipoAcao, idEstabelecimento
+          nomeEstabelecimento,cnpj,destino,ramoAtividade,tipoAcao, idEstabelecimento
         )
           .then((inseridoComSucesso) => {
             //Insere serviços ao ramo de atividade
@@ -327,7 +328,7 @@ export default function Estabelecimento()
         <KeyboardAvoidingView  behavior={Platform.OS === 'ios' ? 'padding' : null} enabled>
         <ScrollView>
           <View style={[styles.boxLogo, {borderColor: corTema}]}>
-            {image != null && image != '' ? (
+            {image !== null && image !== '' ? (
               <Image source={{ uri: image }} style={styles.imgLogo} />
             ) : (
               <Image source={require('../../assets/logo/logo-app.png')} style={{ width: 200, height: 200 }} />

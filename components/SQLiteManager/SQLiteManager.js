@@ -14,44 +14,44 @@ export default function SQLiteManager() {
   useEffect(() => {
 
     db.transaction(tx => {
+      CreateTables(tx);
+      // //ESTABELECIMENTO
+      // tx.executeSql('CREATE TABLE IF NOT EXISTS estabelecimento (idEstabelecimento INTEGER PRIMARY KEY AUTOINCREMENT, nomeEstabelecimento TEXT, cnpj TEXT, logo TEXT, ramoAtividade TEXT);',
+      // );
 
-      //ESTABELECIMENTO
-      tx.executeSql('CREATE TABLE IF NOT EXISTS estabelecimento (idEstabelecimento INTEGER PRIMARY KEY AUTOINCREMENT, nomeEstabelecimento TEXT, cnpj TEXT, logo TEXT, ramoAtividade TEXT);',
-      );
+      // //COLABORADOR
+      // tx.executeSql('CREATE TABLE IF NOT EXISTS colaborador (idColaborador INTEGER PRIMARY KEY AUTOINCREMENT, nomeColaborador TEXT, descricao TEXT, ativo INTEGER);'
+      // );
 
-      //COLABORADOR
-      tx.executeSql('CREATE TABLE IF NOT EXISTS colaborador (idColaborador INTEGER PRIMARY KEY AUTOINCREMENT, nomeColaborador TEXT, descricao TEXT, ativo INTEGER);'
-      );
+      // //AGENDAMENTO
+      // tx.executeSql('CREATE TABLE IF NOT EXISTS agendamento (idAgendamento INTEGER PRIMARY KEY AUTOINCREMENT, nomeCliente TEXT, telefone TEXT, data TEXT, horario TIME, atendido INTEGER, cancelado INTEGER);'
+      // );
 
-      //AGENDAMENTO
-      tx.executeSql('CREATE TABLE IF NOT EXISTS agendamento (idAgendamento INTEGER PRIMARY KEY AUTOINCREMENT, nomeCliente TEXT, telefone TEXT, data TEXT, horario TIME, atendido INTEGER, cancelado INTEGER);'
-      );
+      //  //AGENDAMENTO_SERVIÇO
+      //  tx.executeSql('CREATE TABLE IF NOT EXISTS agendamento_servicos (idAgendamentoServico INTEGER PRIMARY KEY AUTOINCREMENT, idAgendamento INTEGER, nomeServico TEXT);'
+      //  );
 
-       //AGENDAMENTO_SERVIÇO
-       tx.executeSql('CREATE TABLE IF NOT EXISTS agendamento_servicos (idAgendamentoServico INTEGER PRIMARY KEY AUTOINCREMENT, idAgendamento INTEGER, nomeServico TEXT);'
-       );
+      //  //AGENDAMENTO_COLABORADOR
+      //  tx.executeSql('CREATE TABLE IF NOT EXISTS agendamento_colaborador (idAgendamentoColaborador INTEGER PRIMARY KEY AUTOINCREMENT, idAgendamento INTEGER, nomeColaborador TEXT, idColaborador INTEGER);'
+      //  );
+      // //RAMO DE ATIVIDADE
+      // tx.executeSql(
+      //   'CREATE TABLE IF NOT EXISTS ramoAtividade (idRamoAtividade INTEGER PRIMARY KEY AUTOINCREMENT, nomeAtividade TEXT);'
+      // );
+      // //SERVIÇOS
+      // tx.executeSql(
+      //   'CREATE TABLE IF NOT EXISTS servicos (idServico INTEGER PRIMARY KEY AUTOINCREMENT, idRamoAtividade INTEGER, nomeServico TEXT, descricao TEXT, favorito INTEGER, ativo INTEGER, criado INTEGER);'
+      // );
 
-       //AGENDAMENTO_COLABORADOR
-       tx.executeSql('CREATE TABLE IF NOT EXISTS agendamento_colaborador (idAgendamentoColaborador INTEGER PRIMARY KEY AUTOINCREMENT, idAgendamento INTEGER, nomeColaborador TEXT, idColaborador INTEGER);'
-       );
-      //RAMO DE ATIVIDADE
-      tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS ramoAtividade (idRamoAtividade INTEGER PRIMARY KEY AUTOINCREMENT, nomeAtividade TEXT);'
-      );
-      //SERVIÇOS
-      tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS servicos (idServico INTEGER PRIMARY KEY AUTOINCREMENT, idRamoAtividade INTEGER, nomeServico TEXT, descricao TEXT, favorito INTEGER, ativo INTEGER, criado INTEGER);'
-      );
+      // //SERVIÇOS CRIADOS PELO USUARIO
+      // tx.executeSql(
+      //   'CREATE TABLE IF NOT EXISTS servicos_customizado (idServicoCustomizado INTEGER PRIMARY KEY AUTOINCREMENT,  nomeServico TEXT, descricao TEXT, favorito INTEGER, ativo INTEGER);'
+      // );   
 
-      //SERVIÇOS CRIADOS PELO USUARIO
-      tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS servicos_customizado (idServicoCustomizado INTEGER PRIMARY KEY AUTOINCREMENT,  nomeServico TEXT, descricao TEXT, favorito INTEGER, ativo INTEGER);'
-      );   
-
-      //SERVICO PREFERIDO COLABORADOR
-      tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS servicoColaborador (id INTEGER PRIMARY KEY AUTOINCREMENT,  idColaborador INTEGER, idServico INTEGER, nomeServico TEXT);'
-      );
+      // //SERVICO PREFERIDO COLABORADOR
+      // tx.executeSql(
+      //   'CREATE TABLE IF NOT EXISTS servicoColaborador (id INTEGER PRIMARY KEY AUTOINCREMENT,  idColaborador INTEGER, idServico INTEGER, nomeServico TEXT);'
+      // );
 
       //Inserindo dados iniciais ramo de atividade
       tx.executeSql('SELECT idRamoAtividade FROM ramoAtividade',
@@ -231,7 +231,7 @@ export function ExcluirTodasAsTabelas() {
   });
 }
 
-export async function backupTabela(nomeTabela){
+export async function BackupTabela(nomeTabela){
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -249,6 +249,72 @@ export async function backupTabela(nomeTabela){
   });
 };
 
+export async function CreateTables(tx){
+  // db.transaction(tx => {
 
+    //ESTABELECIMENTO
+    tx.executeSql('CREATE TABLE IF NOT EXISTS estabelecimento (idEstabelecimento INTEGER PRIMARY KEY AUTOINCREMENT, nomeEstabelecimento TEXT, cnpj TEXT, logo TEXT, ramoAtividade TEXT);',
+    );
 
+    //COLABORADOR
+    tx.executeSql('CREATE TABLE IF NOT EXISTS colaborador (idColaborador INTEGER PRIMARY KEY AUTOINCREMENT, nomeColaborador TEXT, descricao TEXT, ativo INTEGER);'
+    );
+
+    //AGENDAMENTO
+    tx.executeSql('CREATE TABLE IF NOT EXISTS agendamento (idAgendamento INTEGER PRIMARY KEY AUTOINCREMENT, nomeCliente TEXT, telefone TEXT, data TEXT, horario TIME, atendido INTEGER, cancelado INTEGER);'
+    );
+
+     //AGENDAMENTO_SERVIÇO
+     tx.executeSql('CREATE TABLE IF NOT EXISTS agendamento_servicos (idAgendamentoServico INTEGER PRIMARY KEY AUTOINCREMENT, idAgendamento INTEGER, nomeServico TEXT);'
+     );
+
+     //AGENDAMENTO_COLABORADOR
+     tx.executeSql('CREATE TABLE IF NOT EXISTS agendamento_colaborador (idAgendamentoColaborador INTEGER PRIMARY KEY AUTOINCREMENT, idAgendamento INTEGER, nomeColaborador TEXT, idColaborador INTEGER);'
+     );
+    //RAMO DE ATIVIDADE
+    tx.executeSql(
+      'CREATE TABLE IF NOT EXISTS ramoAtividade (idRamoAtividade INTEGER PRIMARY KEY AUTOINCREMENT, nomeAtividade TEXT);'
+    );
+    //SERVIÇOS
+    tx.executeSql(
+      'CREATE TABLE IF NOT EXISTS servicos (idServico INTEGER PRIMARY KEY AUTOINCREMENT, idRamoAtividade INTEGER, nomeServico TEXT, descricao TEXT, favorito INTEGER, ativo INTEGER, criado INTEGER);'
+    );
+
+    //SERVIÇOS CRIADOS PELO USUARIO
+    tx.executeSql(
+      'CREATE TABLE IF NOT EXISTS servicos_customizado (idServicoCustomizado INTEGER PRIMARY KEY AUTOINCREMENT,  nomeServico TEXT, descricao TEXT, favorito INTEGER, ativo INTEGER);'
+    );   
+
+    //SERVICO PREFERIDO COLABORADOR
+    tx.executeSql(
+      'CREATE TABLE IF NOT EXISTS servicoColaborador (id INTEGER PRIMARY KEY AUTOINCREMENT,  idColaborador INTEGER, idServico INTEGER, nomeServico TEXT);'
+    );
+  // });
+
+  console.log("[LOGS] createTables - Tabelas Criadas Zeradas!");
+}
+
+export async function RestaurarBanco(tabsSQLite) {
+  db.transaction(
+    async (tx) => {
+      await CreateTables(tx);
+      // Loop sobre cada tabela no JSON
+      Object.keys(tabsSQLite).forEach((tabela) => {
+        const registros = tabsSQLite[tabela];
+        console.log("Registros da tabela: ", tabela);
+        console.log(registros);
+        // Loop sobre cada registro e executa uma instrução SQL de inserção
+        registros.forEach((registro) => {
+          const colunas = Object.keys(registro);
+          const valores = colunas.map((coluna) => `"${registro[coluna]}"`).join(',');
+          console.log(registro);
+          tx.executeSql(`INSERT INTO ${tabela} (${colunas.join(',')}) VALUES (${valores})`);
+        });
+      });
+    console.log("Registros inseridos com sucesso!");
+    },
+    (erro) => console.error('Erro durante a transação de inserção:', erro),
+    () => console.log('Inserção em massa concluída com sucesso!')
+  );
+}
 

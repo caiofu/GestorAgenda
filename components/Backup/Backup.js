@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system';
 import * as SQLite from 'expo-sqlite';
-import { backupTabela, ListaTodasTabelas } from '../SQLiteManager/SQLiteManager';
+import { BackupTabela, ListaTodasTabelas } from '../SQLiteManager/SQLiteManager';
 import { ConsultaEstabelecimento } from '../SQLiteManager/SQLEstabelecimento';
 import { shareAsync } from 'expo-sharing';
 
@@ -16,7 +16,7 @@ export default async function CreateBackup() {
     logo: null,
   }
   try {
-    // // Inserção do asyncStorage no objeto de backup
+    // Inserção do asyncStorage no objeto de backup
     await encodeAsyncStorage(backupObj);
 
     // // Inserção do Sqlite no objeto de backup
@@ -51,15 +51,15 @@ async function encodeAsyncStorage(backupObj){
 
 async function encodeSQlite(backupObj){
     backupObj.sqlite = {
-      colaborador: await backupTabela('colaborador'),
-      ramoAtividade: await backupTabela('ramoAtividade'),
-      estabelecimento: await backupTabela('estabelecimento'),
-      servicos: await backupTabela('servicos'),
-      servicos_customizado: await backupTabela('servicos_customizado'),
-      servicoColaborador: await backupTabela('servicoColaborador'),
-      agendamento: await backupTabela('agendamento'),
-      agendamento_servicos: await backupTabela('agendamento_servicos'),
-      agendamento_colaborador: await backupTabela('agendamento_colaborador')
+      colaborador: await BackupTabela('colaborador'),
+      ramoAtividade: await BackupTabela('ramoAtividade'),
+      estabelecimento: await BackupTabela('estabelecimento'),
+      servicos: await BackupTabela('servicos'),
+      servicos_customizado: await BackupTabela('servicos_customizado'),
+      servicoColaborador: await BackupTabela('servicoColaborador'),
+      agendamento: await BackupTabela('agendamento'),
+      agendamento_servicos: await BackupTabela('agendamento_servicos'),
+      agendamento_colaborador: await BackupTabela('agendamento_colaborador')
     }
     console.log("[LOGS] encodeSQlite - Encode do SQlite feito com sucesso!");
   }

@@ -75,21 +75,21 @@ function OpTelaInicial() {
     const { tema} = useAppState();
     const [nomeEstabelecimento, setNomeEstabelecimento] = useState(null);
     const [logo, setLogo] = useState(null);
-    useEffect(() => {
+    // useEffect(() => {
        
 
-        ConsultaEstabelecimento((resultado) => {
-          console.log("RESULTADO"+resultado)
+    //     ConsultaEstabelecimento((resultado) => {
+    //       console.log("RESULTADO"+resultado)
          
 
-           // let jsonTe = resultado;
-            resultado.logo === '' ? setLogo(null) :  setLogo(resultado.logo); //Verifica se é a imagem padrao
+    //        // let jsonTe = resultado;
+    //         resultado.logo === '' ? setLogo(null) :  setLogo(resultado.logo); //Verifica se é a imagem padrao
 
-            setNomeEstabelecimento(resultado.nomeEstabelecimento);
+    //         setNomeEstabelecimento(resultado.nomeEstabelecimento);
           
   
-        });
-    },[])
+    //     });
+    // },[])
     return (
         <Stack.Navigator   >
              <Stack.Screen name="Gestor Agenda" component={Agendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text, headerTitle: (props) => ( <>

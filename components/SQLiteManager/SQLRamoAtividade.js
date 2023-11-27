@@ -35,6 +35,8 @@ export function ConsultaRamoAtividade(callback)
         'SELECT idRamoAtividade FROM ramoAtividade WHERE nomeAtividade = ?',
         [nomeRamoAtividade],
         (tx, results) => {
+          console.log(nomeRamoAtividade);
+          console.log(results);
           if (results.rows.length > 0) {
             const row = results.rows.item(0); // Pega apenas o primeiro resultado
             const idRamoAtividade = row.idRamoAtividade;
