@@ -264,6 +264,26 @@ export default function DetalhesAgendamento(props)
  
 
 //CANCELAR ATENDIMENTO
+
+const [msgConfirmacaoVisivel, setMsgConfirmacaoVisivel] = useState(false);
+const [dialogTitulo, setDialogTitulo] = useState('');
+const [dialogMensagem, setDialogMensagem] = useState('');
+const [dialogTipoMensagem, setDialogTipoMensagem] = useState('');
+const [dialogTelaRetorno, setDialogTelaRetorno] = useState('')
+
+const EscondeMsgConfirmacao = () => {
+    setMsgConfirmacaoVisivel(false);
+};
+
+//CONFIRMAR CANCELAR ATENDIMENTO
+function ConfirmarCancelarAtendimento() {
+    setMsgConfirmacaoVisivel(true);
+    setDialogTitulo('Deseja cancelar?');
+    setDialogTipoMensagem('E');
+    setDialogTelaRetorno('Serviços');
+}
+
+
 function CancelarAtendimento()
 {
     CancelaAtendimento(idAgendamento, (sucesso) => { 
@@ -537,13 +557,13 @@ const compartilharNoWhatsApp = () => {
                                         <Text style={styles.btnAcaoText}>ATENDER</Text>
                                     </View>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={[styles.btnAcaoDetalhes, { backgroundColor: 'red', marginTop: 20, padding: 10 }]} onPress={CancelarAtendimento}>
+                                <TouchableOpacity style={[styles.btnAcaoDetalhes, { backgroundColor: 'red', marginTop: 20, padding: 10 }]} onPress={ConfirmarCancelarAtendimento}>
                                         <View style={styles.btnContainer}>
                                             <Text style={styles.btnAcaoText}>CANCELAR ATENDIMENTO</Text>
                                         </View>
                                     </TouchableOpacity></>
                                     ) :(
-                                        <TouchableOpacity style={[styles.btnAcaoDetalhes, { backgroundColor: 'red', marginTop: 20, padding: 10 }]} onPress={CancelarAtendimento}>
+                                        <TouchableOpacity style={[styles.btnAcaoDetalhes, { backgroundColor: 'red', marginTop: 20, padding: 10 }]} onPress={ConfirmarCancelarAtendimento}>
                                         <View style={styles.btnContainer}>
                                             <Text style={styles.btnAcaoText}>CANCELAR ATENDIMENTO</Text>
                                         </View>
@@ -594,6 +614,21 @@ const compartilharNoWhatsApp = () => {
                                 <Button  textColor="#006699"  onPress={() => setBoxMsgCopiar(false)}>Fechar</Button>
                             </Dialog.Actions>
                         </Dialog>
+
+                        {/* Confirmar exclusão: */}
+                        <Portal>
+                            <Dialog visible={msgConfirmacaoVisivel} dismissable={false} style={tema === 'light' ? styles.dialogLight : styles.dialogDark}>
+                                <Dialog.Title style={[styles.dialogTitulo, { color: corTema }]}>{dialogTitulo}</Dialog.Title>
+                                <Dialog.Content>
+                                    <Text variant="bodyMedium" style={[styles.dialogContent, { color: tema === 'light' ? 'black' : "#fff" }]}>{dialogMensagem}</Text>
+                                </Dialog.Content>
+                                <Dialog.Actions>
+                                    <Button labelStyle={{ fontFamily: 'Rubik_700Bold', color: tema === 'light' ? '#006699' : '#fff' }} onPress={() => CancelarAtendimento()}>Confirmar</Button>
+                                    <Button labelStyle={{ fontFamily: 'Rubik_700Bold', color: tema === 'light' ? '#006699' : '#fff' }} onPress={() => EscondeMsgConfirmacao()}>Cancelar</Button>
+                                </Dialog.Actions>
+                            </Dialog>
+                        </Portal>
+
                     </Portal>
                 </ScrollView>
             </SafeAreaView>
