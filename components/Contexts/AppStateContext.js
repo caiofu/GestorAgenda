@@ -53,6 +53,10 @@ export const AppStateProvider = ({ children }) => {
   //RESPONSAVEL POR ATUALIZAR A LISTA DE AGENDAMENTO
   const [atualizaAgendamentos, setAtualizaAgendamentos] = useState(false);
 
+  //RESPONSAVEL POR TROCAR A LOGO
+  const [logo, setLogo] = useState('../../assets/logo/logo-app.png');
+  const [nomeEstabelecimento, setNomeEstabelecimento]   = useState(null);
+
   // console.log(`tema = ${tema} temaSistema = ${temaSistema} temaPadraoSistema = ${temaPadraoSistema}`);
 
   return (
@@ -71,7 +75,11 @@ export const AppStateProvider = ({ children }) => {
         atualizaAgendamentos,
         setAtualizaAgendamentos,
         usaTemaSistemaAsyncStorage, 
-        setUsaTemaSistemaAsyncStorage
+        setUsaTemaSistemaAsyncStorage,
+              logo,
+              setLogo,
+              nomeEstabelecimento,
+              setNomeEstabelecimento
       }}>
       {children}
     </AppStateContext.Provider>
