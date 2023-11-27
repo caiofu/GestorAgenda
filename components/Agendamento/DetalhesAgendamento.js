@@ -126,46 +126,46 @@ export default function Agendamento()
         } )
     },[habilitaEdicao])
 
-      //LISTA DE SERVIÇOS
-      const [listaServicos, setListaServicos]             = useState([]);
-      const [servicoSelecionado, setServicoSelecionado]   = useState([]);
-      
-      //LISTA COLABORADORES
-      const [listaColaboradores, setListaColaboradores]             = useState([]);
-      const [colaboradorSelecionado, setColaboradorSelecionado]     = useState([]);
-      const [abrirListaColaborador, setAbrirListaColaborador]       = useState(false);
-      
-      useEffect(() =>{
-            // RetornaServicosEstabelecimento(function(resultados) {
-            //     console.log('lista serv est ',resultados)
-            //   const resultadosTratados = resultados.map((item, index) => ({
-            //     label: item, // Identificador único crescente
-            //     value: item,     // Nome do serviço
-            //   }));
-  
-            //   setListaServicos(resultadosTratados)
-            // });
+    //LISTA DE SERVIÇOS
+    const [listaServicos, setListaServicos] = useState([]);
+    const [servicoSelecionado, setServicoSelecionado] = useState([]);
 
-            RetornaServicosEstabelecimento(function(resultados) {
-                
-              const resultadosTratados = resultados.map((item, index) => ({
-                name: item, 
-                id: index,     
-              }));
-              console.log('servico estabe --> ', resultadosTratados)
-              setListaServicos(resultadosTratados)
-            });
+    //LISTA COLABORADORES
+    const [listaColaboradores, setListaColaboradores] = useState([]);
+    const [colaboradorSelecionado, setColaboradorSelecionado] = useState([]);
+    const [abrirListaColaborador, setAbrirListaColaborador] = useState(false);
 
-            //Listar colaboradores
-            listarColaboradores(function(retorno) {
-               
-                const resultadoColaboradores = retorno.map((item, index) =>({
-                    name: item.nomeColaborador,
-                    id: item.idColaborador,
-                }));
-                setListaColaboradores(resultadoColaboradores);
-                console.log('colaboradores', resultadoColaboradores);
-            })
+    useEffect(() => {
+        // RetornaServicosEstabelecimento(function(resultados) {
+        //     console.log('lista serv est ',resultados)
+        //   const resultadosTratados = resultados.map((item, index) => ({
+        //     label: item, // Identificador único crescente
+        //     value: item,     // Nome do serviço
+        //   }));
+
+        //   setListaServicos(resultadosTratados)
+        // });
+
+        RetornaServicosEstabelecimento(function (resultados) {
+
+            const resultadosTratados = resultados.map((item, index) => ({
+                name: item,
+                id: index,
+            }));
+            console.log('servico estabe --> ', resultadosTratados)
+            setListaServicos(resultadosTratados)
+        });
+
+        //Listar colaboradores
+        listarColaboradores(function (retorno) {
+
+            const resultadoColaboradores = retorno.map((item, index) => ({
+                name: item.nomeColaborador,
+                id: item.idColaborador,
+            }));
+            setListaColaboradores(resultadoColaboradores);
+            console.log('colaboradores', resultadoColaboradores);
+        })
 
             //LISTA COLABORADORES JA SALVOS PARA ESSE ATENDIMENTO (FAZER CONSULTA AINDA)
       }, [habilitaEdicao])
@@ -179,17 +179,17 @@ export default function Agendamento()
             const retorno = servicos.map((servico, index) => (servico.nomeServico ));
             setListaServicoSalvo(retorno);
             console.log('map servico salvo ', retorno)
-      
+
         })
     }, [habilitaEdicao])
 
     const [colaboradorSalvo, setColaboradorSalvo ] = useState([]);
 
-    useEffect(() =>{
-      ConsultaColaboradoresPorAgendamento(idAgendamento, (colaboradores) => {
-          const retorno = colaboradores.map((colaborador, index) => (colaborador.nomeColaborador ));
-          console.log('RESULTADOS AC -->', retorno)
-          setColaboradorSalvo(retorno);
+    useEffect(() => {
+        ConsultaColaboradoresPorAgendamento(idAgendamento, (colaboradores) => {
+            const retorno = colaboradores.map((colaborador, index) => (colaborador.nomeColaborador));
+            console.log('RESULTADOS AC -->', retorno)
+            setColaboradorSalvo(retorno);
         });
     },[])
 
@@ -212,61 +212,58 @@ export default function Agendamento()
     if(listaServicosSalvo.length > 0 )
     {
 
-        //Altera de agendamento para atendimento
-        AlteraAgendamentoParaAtendimento(idAgendamento, (sucesso) => {
-            if (sucesso) {
-            console.log('Agendamento atualizado com sucesso.');
-            setAtualizadados(!atualizaDados);
-            
-            //Drop nos registro para nao subscrever (alterar essa forma posteriormente)
-            ExcluiColaboradorAtendimento(idAgendamento, (resultado) => {
-                if (resultado === true) {
-                // Faça algo em caso de sucesso.
-                console.log('Excluido com sucesso!');
-                if(colaboradorSalvo.length > 0)
-                {
-                    colaboradorSalvo.forEach((colaboradorSelecionado) => {
-                        const nomeColaborador = listaColaboradores.find(colaborador => colaborador.name === colaboradorSelecionado);
-                        console.log('---------------------->')
-                        //console.log('foi ', colaboradorSelecionado, ' t = ',nomeColaborador.id +' t2 ', nomeColaborador.name);
-                        //LOGICA PARA SALVAR OS COLABORADORES
-                        SalvaColaboradorAtendimento(nomeColaborador.name, nomeColaborador.id, idAgendamento, (resultado) =>{
-                            console.log('inserido ----------------------->  ', resultado)
-                            if(resultado !== 0)
-                            {
-                             
-                               
-                               // navigation.navigate('Gestor Agenda'); 
-                            
+            //Altera de agendamento para atendimento
+            AlteraAgendamentoParaAtendimento(idAgendamento, (sucesso) => {
+                if (sucesso) {
+                    console.log('Agendamento atualizado com sucesso.');
+                    setAtualizadados(!atualizaDados);
+
+                    //Drop nos registro para nao subscrever (alterar essa forma posteriormente)
+                    ExcluiColaboradorAtendimento(idAgendamento, (resultado) => {
+                        if (resultado === true) {
+                            // Faça algo em caso de sucesso.
+                            console.log('Excluido com sucesso!');
+                            if (colaboradorSalvo.length > 0) {
+                                colaboradorSalvo.forEach((colaboradorSelecionado) => {
+                                    const nomeColaborador = listaColaboradores.find(colaborador => colaborador.name === colaboradorSelecionado);
+                                    console.log('---------------------->')
+                                    //console.log('foi ', colaboradorSelecionado, ' t = ',nomeColaborador.id +' t2 ', nomeColaborador.name);
+                                    //LOGICA PARA SALVAR OS COLABORADORES
+                                    SalvaColaboradorAtendimento(nomeColaborador.name, nomeColaborador.id, idAgendamento, (resultado) => {
+                                        console.log('inserido ----------------------->  ', resultado)
+                                        if (resultado !== 0) {
+
+
+                                            // navigation.navigate('Gestor Agenda'); 
+
+                                        }
+                                    });
+                                })
                             }
-                        });
-                    })
-                }
-                
-                 //Volta para lista de agendamentos
-                 setAtualizaAgendamentos(!atualizaAgendamentos);
-                 setBoxDialogSucesso((att) => true);
-                 setTExtoBoxDialog("Cliente Atendido");
-         
-                  BoxDialog();
-                } else if (resultado === false) {
-               
-                console.log('algo deu errado...')
+
+                            //Volta para lista de agendamentos
+                            setAtualizaAgendamentos(!atualizaAgendamentos);
+                            setBoxDialogSucesso((att) => true);
+                            setTExtoBoxDialog("Cliente Atendido");
+
+                            BoxDialog();
+                        } else if (resultado === false) {
+                            // Faça algo em caso de nenhum registro excluído.
+                            console.log('algo deu errado...')
+                        } else {
+                            console.log('else ao tentar atender')
+                        }
+                    });
+                    //SalvaColaboradorAtendimento();
                 } else {
-                 console.log('else ao tentar atender')
+                    console.log('Erro ao atualizar o agendamento.');
+                    // Lide com o erro de atualização, se necessário.
                 }
             });
-            //SalvaColaboradorAtendimento();
-            } else {
-            console.log('Erro ao atualizar o agendamento.');
-            // Lide com o erro de atualização, se necessário.
-            }
-        });
-    }
-    else
-    {
-        setBoxDialogSucesso((att) => false);
-        setTExtoBoxDialog("Você tem que selecionar pelo menos um serviço");
+        }
+        else {
+            setBoxDialogSucesso((att) => false);
+            setTExtoBoxDialog("Você tem que selecionar pelo menos um serviço");
 
          BoxDialog();
     }
@@ -275,56 +272,53 @@ export default function Agendamento()
 
  
 
-//CANCELAR ATENDIMENTO
-function CancelarAtendimento()
-{
-    CancelaAtendimento(idAgendamento, (sucesso) => { 
-        if(sucesso)
-        {
-            console.log('atendimento cancelado com sucesso!');
-            setAtualizaAgendamentos(!atualizaAgendamentos);
-            setBoxDialogSucesso((att) => true);
-            setTExtoBoxDialog("Atendimento cancelado!");
-    
-             BoxDialog();
-        }
-        else
-        {
-            console.log('não foi possivel cancelar o atendimento!')
-            setAtualizaAgendamentos(!atualizaAgendamentos);
-            setBoxDialogSucesso((att) => false);
-            setTExtoBoxDialog("Não foi possivel cancelar o atendimento!");
-    
-             BoxDialog();
-        }
-    })
-}
-  
-  //BOX DIALOG
-  const [boxVisivel, setBoxVisivel] = useState(false);
-  const [barraProgresso , setBarraProgresso] = useState(0)
-  const [textoBoxDialog, setTExtoBoxDialog] = useState("")
-  const [boxDialogSucesso, setBoxDialogSucesso] = useState(null);
+    //CANCELAR ATENDIMENTO
+    function CancelarAtendimento() {
+        CancelaAtendimento(idAgendamento, (sucesso) => {
+            if (sucesso) {
+                console.log('atendimento cancelado com sucesso!');
+                setAtualizaAgendamentos(!atualizaAgendamentos);
+                setBoxDialogSucesso((att) => true);
+                setTExtoBoxDialog("Atendimento cancelado!");
+
+                BoxDialog();
+            }
+            else {
+                console.log('não foi possivel cancelar o atendimento!')
+                setAtualizaAgendamentos(!atualizaAgendamentos);
+                setBoxDialogSucesso((att) => false);
+                setTExtoBoxDialog("Não foi possivel cancelar o atendimento!");
+
+                BoxDialog();
+            }
+        })
+    }
+
+    //BOX DIALOG
+    const [boxVisivel, setBoxVisivel] = useState(false);
+    const [barraProgresso, setBarraProgresso] = useState(0)
+    const [textoBoxDialog, setTExtoBoxDialog] = useState("")
+    const [boxDialogSucesso, setBoxDialogSucesso] = useState(null);
 
   function BoxDialog()
   {
 
-      setBoxVisivel(true);
-      let novoProgresso = 0;
-     const intervalo =   setInterval(() =>{
-          novoProgresso += 0.1;
-          if(novoProgresso >=1) //Para finalizar o intervalo
-          {
-              clearInterval(intervalo);
-              boxDialogSucesso ? navigation.navigate('Gestor Agenda') : '';
-              setBoxVisivel(false);
-              setBarraProgresso(0);
-              console.log('box dialogo sucesso, ',boxDialogSucesso)
-              // if(boxDialogSucesso === true)
-              // {
-              //     console.log('tedentro do if')
-              //     navigation.navigate('Gestor Agenda');
-              // }
+        setBoxVisivel(true);
+        let novoProgresso = 0;
+        const intervalo = setInterval(() => {
+            novoProgresso += 0.1;
+            if (novoProgresso >= 1) //Para finalizar o intervalo
+            {
+                clearInterval(intervalo);
+                boxDialogSucesso ? navigation.navigate('Gestor Agenda') : '';
+                setBoxVisivel(false);
+                setBarraProgresso(0);
+                console.log('box dialogo sucesso, ', boxDialogSucesso)
+                // if(boxDialogSucesso === true)
+                // {
+                //     console.log('tedentro do if')
+                //     navigation.navigate('Gestor Agenda');
+                // }
 
 
           }
@@ -348,60 +342,18 @@ function CancelarAtendimento()
 
 
 
-//ATUALIZAR DADOS
-function AtualizarDados()
-{
-    console.log(listaServicosSalvo.length)
-    //VALIDAR SE TODOS OS DADOS OBRIGATORIOS FORAM PREENCHIDOS
-    if( nome === null || telefone === null ||  horarioFormatado === null || listaServicosSalvo.length === 0)
-    {
-        console.log('nao pode salvar')
-    }
-    else
-    {
-        console.log('pode salvar')
-    }
-}
-
-const [boxCompartilhar, setBoxCompartilhar] = useState(false);
-//Responsavel pela mensagem após ação
-const [boxMsgCopiar, setBoxMsgCopiar] = useState(false);
-const [txtBoxMsgCopiar, setTxtBoxMsgCopiar] = useState(false);
-
-//const textoParaCompartilhar = 'Olá, '+nome+' você tem um agendamento para o dia '+dataFormatada+' ás '+horarioFormatado+' para o seguinte serviço: '+listaServicosSalvo;
-const textoParaCompartilhar = 'Olá, '+nome+', aqui é do(a) '+nomeEstabelecimento+'.Você tem agendamento: '+listaServicosSalvo+' para o dia '+dataFormatada+' às '+horarioFormatado+'.'
-async function CopiarClipboard()
-{
-    await Clipboard.setStringAsync(textoParaCompartilhar);
-         setBoxCompartilhar(false);
-          setTxtBoxMsgCopiar("Copiado com sucesso!");
-          setBoxMsgCopiar(true);
-}
-
-
-
-const compartilharNoWhatsApp = () => {
-    const mensagem = encodeURIComponent(textoParaCompartilhar);
-    const url = `whatsapp://send?text=${mensagem}`;
-  
-    Linking.canOpenURL(url)
-      .then((supported) => {
-        if (supported) {
-          //Enviado para o whatsapp  
-          return Linking.openURL(url);
-        } else {
-          console.log('WhatsApp não está instalado');
-          setBoxCompartilhar(false);
-          setTxtBoxMsgCopiar("Whatsapp não instalado!");
-          setBoxMsgCopiar(true);
+    //ATUALIZAR DADOS
+    function AtualizarDados() {
+        console.log(listaServicosSalvo.length)
+        //VALIDAR SE TODOS OS DADOS OBRIGATORIOS FORAM PREENCHIDOS
+        if (nome === null || telefone === null || horarioFormatado === null || listaServicosSalvo.length === 0) {
+            console.log('nao pode salvar')
         }
-      })
-      .catch((error) => {
-        console.error('Erro ao tentar abrir WhatsApp:', error);
-      });
-  };
-  
-    return(
+        else {
+            console.log('pode salvar')
+        }
+    }
+    return (
         <PaperProvider >
             <SafeAreaView>
                 <ScrollView style={{backgroundColor: cancelado === 1 ? '#efb4b48f' : ''}}>

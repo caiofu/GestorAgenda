@@ -43,7 +43,7 @@ function Tabs()
 
     const { tema} = useAppState();
     //AQUI É ONDE FICA A BARRA NA PARTE INFERIOR COM OS BOTOES DE NAVEGAÇÃO
-
+    console.log('caiu nesse por que ?')
     return(
         <Tab.Navigator screenOptions={{headerShown: false, tabBarActiveTintColor:'#006699',}}>
             <Tab.Screen name="Tela Inicial" component={OpTelaInicial} initialParams={{tema1:tema}} options={{tabBarIcon: ({color, size}) => (<FontAwesome5 name="home" size={size} color={color} />),}} ></Tab.Screen>
@@ -74,18 +74,24 @@ function OpAcoes() {
 }
 
 function OpTelaInicial() {
-    const { tema, logo, setLogo, nomeEstabelecimento, setNomeEstabelecimento} = useAppState();
-    // const [nomeEstabelecimento, setNomeEstabelecimento] = useState(null);
-    // const [logo, setLogo] = useState('../../assets/logo/logo-app.png');
+    const { tema} = useAppState();
+    const [nomeEstabelecimento, setNomeEstabelecimento] = useState(null);
+    const [logo, setLogo] = useState(null);
+    // useEffect(() => {
+       
 
-    const [teste, setTeste] = useState(null);
-    useEffect(() => {
-       setTeste(logo);
+    //     ConsultaEstabelecimento((resultado) => {
+    //       console.log("RESULTADO"+resultado)
+         
 
-    },[logo])
-    console.log(teste)
-    
-    //FAZER NO CONTEXT A TRATATIVA
+    //        // let jsonTe = resultado;
+    //         resultado.logo === '' ? setLogo(null) :  setLogo(resultado.logo); //Verifica se é a imagem padrao
+
+    //         setNomeEstabelecimento(resultado.nomeEstabelecimento);
+          
+  
+    //     });
+    // },[])
     return (
         <Stack.Navigator   >
              <Stack.Screen name="Gestor Agenda" component={Agendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text, headerTitle: (props) => ( <>
@@ -110,7 +116,7 @@ function OpConfiguracoes() {
 }
 
 function PrimeiroCadastroEstabelecimento() {
- 
+    console.log('PRIMEIRO CADASTRO ESTA')
     return (
         <Stack.Navigator>
             <Stack.Screen name="Estabelecimento" component={Estabelecimento} />
@@ -140,7 +146,7 @@ export default function Navegacao()
        
       }, [tema]);
       
-
+      console.log('estabelecimento nave ',navegacaoEstabelecimento)
         
    
     return(

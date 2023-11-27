@@ -93,10 +93,10 @@ export default function NovoServico()
                     key: atividade.idRamoAtividade.toString(),
                     value: atividade.nomeAtividade,
                 }));
-                    //console.log(retorno);
-                    setListaRamoAtividade(retorno);
-                  
-                });
+                //console.log(retorno);
+                setListaRamoAtividade(retorno);
+
+            });
         }
 
     }, [btnImportar])
@@ -108,14 +108,13 @@ export default function NovoServico()
         const chaveSelecionada = listaRamoAtividade.find(item => item.value === ramoAtividadeSelecionado)?.key;
         setIdRamoAtividade(chaveSelecionada);
         console.log(chaveSelecionada)
-      }, [ramoAtividadeSelecionado, listaRamoAtividade]);
-    
-     //BUSCA A LISTA DE SERVIÇOS DE ACORDO COM RAMO ESCOLHIDO
-     useEffect(() => {
-        if(idRamoAtividade != null)
-        {
-            GetServicosPorRamo(idRamoAtividade,(servicos) => {
-             
+    }, [ramoAtividadeSelecionado, listaRamoAtividade]);
+
+    //BUSCA A LISTA DE SERVIÇOS DE ACORDO COM RAMO ESCOLHIDO
+    useEffect(() => {
+        if (idRamoAtividade != null) {
+            GetServicosPorRamo(idRamoAtividade, (servicos) => {
+
                 const retorno = servicos.map((listaServico) => ({
                     key: listaServico.idServico.toString(),
                     // idRamoAtividade: listaServico.idRamoAtividade,
@@ -141,35 +140,61 @@ export default function NovoServico()
   
         // Para cada serviço selecionado, encontre o id correspondente na listaServicos
         servicoSelecionado.forEach((servicoSelecionado) => {
-          const servicoEncontrado = listaServicos.find((item) => item.value === servicoSelecionado);
-          if (servicoEncontrado) {
-            // idsSelecionados.push(servicoEncontrado.key);UpdateAtivoServicoPorId(idServico, 0);
-            UpdateAtivoServicoPorId(servicoEncontrado.key, 1, (atualizacaoBemSucedida) => {
-                setImportadoSucesso(atualizacaoBemSucedida);
-                if(atualizacaoBemSucedida)
-                {
-                    chamadasBemSucedidas++;
-                }
-                    console.log('contador', chamadasBemSucedidas + 'toatal ',servicoSelecionado.length)
-                if(chamadasBemSucedidas === totalChamadas)
-                {
-                    //setImportMensagemVisible(true);
-                    setDialogTitulo('Sucesso');
-                    setDialogMensagem('Serviço importado')
-                    setDialogTipoMensagem('S');
-                    setDialogTelaRetorno('Novo Serviço')
-                    setBtnImportar(false);
-                    setMsgAcaoVisivel(true)
-                    setAtualisaListaServico(true);
-                    
-                }
-              });
-         
-          }
+            const servicoEncontrado = listaServicos.find((item) => item.value === servicoSelecionado);
+
+            if (servicoEncontrado) {
+                // idsSelecionados.push(servicoEncontrado.key);UpdateAtivoServicoPorId(idServico, 0);
+                UpdateAtivoServicoPorId(servicoEncontrado.key, 1, (atualizacaoBemSucedida) => {
+                    setImportadoSucesso(atualizacaoBemSucedida);
+                    if (atualizacaoBemSucedida) {
+                        chamadasBemSucedidas++;
+                    }
+                    console.log('contador', chamadasBemSucedidas + 'toatal ', servicoSelecionado.length)
+                    if (chamadasBemSucedidas === totalChamadas) {
+                        //setImportMensagemVisible(true);
+                        setDialogTitulo('Sucesso');
+                        setDialogMensagem('Serviço importado')
+                        setDialogTipoMensagem('S');
+                        setDialogTelaRetorno('Novo Serviço')
+                        setBtnImportar(false);
+                        setMsgAcaoVisivel(true)
+                        setAtualisaListaServico(true);
+                    }
+                });
+            }
         });
-  
-      }
-   
+    }
+
+    function BotaoSalvaTodosImportacao() {
+        let chamadasBemSucedidas = 0;
+        const totalChamadas = listaServicos.length;
+
+        listaServicos.forEach((servico) => {
+            const servicoEncontrado = servico;
+
+            if (servicoEncontrado) {
+                // idsSelecionados.push(servicoEncontrado.key);UpdateAtivoServicoPorId(idServico, 0);
+                UpdateAtivoServicoPorId(servicoEncontrado.key, 1, (atualizacaoBemSucedida) => {
+                    setImportadoSucesso(atualizacaoBemSucedida);
+                    if (atualizacaoBemSucedida) {
+                        chamadasBemSucedidas++;
+                    }
+                    console.log('contador', chamadasBemSucedidas + 'toatal ', listaRamoAtividade.length)
+                    if (chamadasBemSucedidas === totalChamadas) {
+                        //setImportMensagemVisible(true);
+                        setDialogTitulo('Sucesso');
+                        setDialogMensagem('Serviços importados')
+                        setDialogTipoMensagem('S');
+                        setDialogTelaRetorno('Novo Serviço')
+                        setBtnImportar(false);
+                        setMsgAcaoVisivel(true)
+                        setAtualisaListaServico(true);
+                    }
+                });
+            };
+        });
+    }
+
     //NOVO SERVIÇO
     const [novoNomeServico, setNovoNomeServico] = useState('');
     const [novaDescricao, setNovaDescricao]     = useState('');
@@ -195,23 +220,23 @@ export default function NovoServico()
        
             CriaNovoServico(novoNomeServico, novaDescricao, favorito, (novoID) => {
                 if (novoID !== null) {
-                // A inserção foi bem-sucedida
-                console.log(`Inserção bem-sucedida. Novo ID: ${novoID}`);
-                setDialogTitulo('Sucesso');
-                setDialogMensagem('Serviço criado!')
-                setDialogTelaRetorno('Novo Serviço')
-                setDialogTipoMensagem('S');
-                setMsgAcaoVisivel(true);
-                setBtnNovo(false);
-                //setAtualisaListaServico(true); ATUALIZAR LISTA DE SERVIÇO CUSTOMIZADO
+                    // A inserção foi bem-sucedida
+                    console.log(`Inserção bem-sucedida. Novo ID: ${novoID}`);
+                    setDialogTitulo('Sucesso');
+                    setDialogMensagem('Serviço criado!')
+                    setDialogTelaRetorno('Novo Serviço')
+                    setDialogTipoMensagem('S');
+                    setMsgAcaoVisivel(true);
+                    setBtnNovo(false);
+                    //setAtualisaListaServico(true); ATUALIZAR LISTA DE SERVIÇO CUSTOMIZADO
                 } else {
-                // A inserção falhou
-                console.log('Falha ao inserir');
-                setDialogTitulo('Atenção');
-                setDialogMensagem('Não foi possivel criar o serviço')
-                setDialogTipoMensagem('E');
-                setMsgAcaoVisivel(true)
-            
+                    // A inserção falhou
+                    console.log('Falha ao inserir');
+                    setDialogTitulo('Atenção');
+                    setDialogMensagem('Não foi possivel criar o serviço')
+                    setDialogTipoMensagem('E');
+                    setMsgAcaoVisivel(true)
+
                 }
             });
         }

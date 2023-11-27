@@ -1,6 +1,6 @@
 import { ScrollView, View, Text, useColorScheme, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Switch, Checkbox, Dialog, Portal, Button, PaperProvider, TextInput, HelperText } from 'react-native-paper';
+import { Switch, Checkbox } from 'react-native-paper';
 import { useState } from "react";
 import styles from "./StyleConfiguracoes";
 import darkTheme from '../../Tema/darkTheme';
@@ -8,14 +8,8 @@ import lightTheme from '../../Tema/lightTheme';
 
 import { FontAwesome } from '@expo/vector-icons';
 
-//RESTART
-import * as Updates from 'expo-updates';
-
-//SQLITE
-import { ExcluirTodasAsTabelas } from "../SQLiteManager/SQLiteManager";
-
 //ASYNC
-import { RemoveTemaAsync, removerAsyncStorage, guardaWizardAtivo, SalvaTema } from "../AsyncStorage/AsyncStorage";
+import { RemoveTemaAsync, SalvaTema } from "../AsyncStorage/AsyncStorage";
 
 //CONTEXT
 import { useAppState } from "../Contexts/AppStateContext";
@@ -59,87 +53,30 @@ export default function Configuracoes()
        }
     }
    
-    const [msgDialog, setMsgDialog ] = useState(false);
-    const [textoConfirmacao, setTextoConfirmacao] = useState('');
-    const [msgHelper, setMsgHelper] = useState(false);
-    const handleChangeTextoConfirmacao = (novoTexto) => {
-        setTextoConfirmacao(novoTexto);
-      };
-      async function RestaurarPadroes() {
-        if (textoConfirmacao === 'CONFIRMAR') {
-          removerAsyncStorage();
-          guardaWizardAtivo('true');
-          ExcluirTodasAsTabelas();
-      
-          // Força uma atualização
-          await Updates.reloadAsync();
-        } else {
-          setMsgHelper(true);
-        }
-      }
-
     return(
-        <PaperProvider>
-          <Portal>
-            <SafeAreaView>
-                <ScrollView>
-                    
-                        <View style={styles.Container}>
-                            
-                                <Checkbox
-                                    status={temaSistema}
-                                    onPress={() => {MudaTemaSitema()}}
-                                    color={tema === 'light' ? '#006699' : ''}
-                                    uncheckedColor={tema === 'light' ? '' : '#fff'}
-                                    />
-                                    <Text style={[styles.txtSwitchTema, {color: tema === 'light' ? lightTheme.textColor : darkTheme.textColor}  ]}>Usar tema do Sistema</Text>
-                        </View>
-                            <View style={styles.linha}></View>
-                        <View style={[styles.Container, {backgroundColor: desativaSwitch ? '#adadadb3': null}]}>
-                            
-                                    <Text style={[styles.txtSwitchTema, {color: tema === 'light' ? lightTheme.textColor : darkTheme.textColor}  ]}>Tema Escuro</Text>
-                                    <Switch  style={styles.switch}  color= '#006699'  value={darkModeOn} onValueChange={AtivarDarkMode} disabled={desativaSwitch}></Switch>
-                                    <View style={{marginLeft:5}}>
-                                    { tema === 'light' ? <FontAwesome name="sun-o" size={24} color="#006699" /> : <FontAwesome name="moon-o" size={24} color="#fff" />}
-                                    </View>
-                                
-                        </View>
-                            <View style={styles.linha}></View>
-
-                        <View style={styles.Container}>
-                                <TouchableOpacity style={styles.btnRestaurar} onPress={() => setMsgDialog(true)}>
-                                    <Text style={styles.txtBtnRestaurar}>Restaurar padrões de fabrica</Text>
-                                </TouchableOpacity>
+        <SafeAreaView>
+            <ScrollView>
+            <View style={styles.CheckboxContainer}>
+                   
+                    <Checkbox
+                        status={temaSistema}
+                        onPress={() => {MudaTemaSitema()}}
+                        color={tema === 'light' ? '#006699' : ''}
+                        uncheckedColor={tema === 'light' ? '' : '#fff'}
+                        />
+                         <Text style={[styles.txtSwitchTema, {color: tema === 'light' ? lightTheme.textColor : darkTheme.textColor}  ]}>Usar tema do Sistema</Text>
+                    </View>
+                    {console.log(desativaSwitch)}
+                <View style={[styles.switchContainer, {backgroundColor: desativaSwitch ? '#adadadb3': null}]}>
+                  
+                        <Text style={[styles.txtSwitchTema, {color: tema === 'light' ? lightTheme.textColor : darkTheme.textColor}  ]}>Tema Escuro</Text>
+                        <Switch  style={styles.switch}  color= '#006699'  value={darkModeOn} onValueChange={AtivarDarkMode} disabled={desativaSwitch}></Switch>
+                        <View style={{marginLeft:5}}>
+                        { tema === 'light' ? <FontAwesome name="sun-o" size={24} color="#006699" /> : <FontAwesome name="moon-o" size={24} color="#fff" />}
                         </View>
                     
-                    
-                    
-                </ScrollView>
-            </SafeAreaView>
-        <Dialog visible={msgDialog} >
-            <Dialog.Title>
-                <Text>Restaurar Padrão de Fábrica</Text>
-            </Dialog.Title>
-            <View style={[styles.linha, {marginBottom:10, borderColor:'#fff'}]}></View>
-        <Dialog.Content style={{alignSelf:'center'}}>
-          <Text style={styles.txtDialog}>Esta ação apagará todos os seus dados do aplicativo</Text>
-          <Text style={styles.txtDialog}>Se voce tem certeza digite "CONFIRMAR"</Text>
-         
-          {msgHelper ? <HelperText style={{color:'red', fontStyle:'italic'}}><Text>* O texto não é valido!</Text></HelperText> : ''}   
-          <TextInput value={textoConfirmacao}
-        onChangeText={handleChangeTextoConfirmacao}></TextInput>
-
-          <TouchableOpacity style={styles.btnRestaurarDialog} onPress={RestaurarPadroes}>
-            <Text style={styles.txtBtnRestaurarDialog}>RESTAURAR</Text>
-          </TouchableOpacity>
-        </Dialog.Content>
-        <View style={[styles.linha, {marginBottom:10, borderColor:'#fff'}]}></View>
-            <Dialog.Actions>
-            {/* <Button onPress={() => console.log('Cancel')}>Sim</Button> */}
-           <Button onPress={() => setMsgDialog(false)}>Cancelar</Button>
-            </Dialog.Actions>
-        </Dialog>
-        </Portal>
-        </PaperProvider>
+                </View>
+            </ScrollView>
+        </SafeAreaView>
     )
 }

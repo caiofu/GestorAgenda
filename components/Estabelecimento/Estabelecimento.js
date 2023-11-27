@@ -34,7 +34,7 @@ export default function Estabelecimento()
        
 
         ConsultaEstabelecimento((resultado) => {
-        
+          console.log("RESULTADO"+resultado)
           if (resultado !== null) {
             
             setPrimeiroCadastro(false);
@@ -246,8 +246,7 @@ export default function Estabelecimento()
           from: origem,
           to: destino,
         });
-       
-        console.log("IMAGEM ANTES ---> ", image)
+        console.log('Imagem movida para:', destino);
         setImage(destino);
       
 

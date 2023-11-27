@@ -148,7 +148,7 @@ export default function Agendamento()
 
                 let atraso = 0;
                 
-           
+                console.log('hora agendamento: ', horarioAgendamento+'  horarioAtual: ', horaAtual);
 
                
 

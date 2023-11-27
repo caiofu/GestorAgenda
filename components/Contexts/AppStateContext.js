@@ -20,7 +20,7 @@ export const AppStateProvider = ({ children }) => {
   useEffect(() => {
     async function carregaTema(){ //Usamos dentro de uma função async para poder espera o resultado de VerificaTema
       const temaAsync = await  VerificaTema();
-      
+      console.log('TEMAASYNC ==', temaAsync + 'tema ===>', tema)
       setTema( temaAsync !== '' ? temaAsync : temaSistema);
     }
     carregaTema();
@@ -44,10 +44,6 @@ export const AppStateProvider = ({ children }) => {
   //RESPONSAVEL POR ATUALIZAR A LISTA DE AGENDAMENTO
   const [atualizaAgendamentos, setAtualizaAgendamentos] = useState(false);
 
-  //RESPONSAVEL POR TROCAR A LOGO
-  const [logo, setLogo] = useState('../../assets/logo/logo-app.png');
-  const [nomeEstabelecimento, setNomeEstabelecimento]   = useState(null);
-
   return (
     <AppStateContext.Provider 
     value={{  navegacaoEstabelecimento, 
@@ -61,11 +57,7 @@ export const AppStateProvider = ({ children }) => {
               temaPadraoSistema, 
               setTemaPadraoSistema,
               atualizaAgendamentos,
-              setAtualizaAgendamentos,
-              logo,
-              setLogo,
-              nomeEstabelecimento,
-              setNomeEstabelecimento
+              setAtualizaAgendamentos
               }}>
       {children}
     </AppStateContext.Provider>
