@@ -6,6 +6,7 @@ import styles from "./StyleConfiguracoes";
 import darkTheme from '../../Tema/darkTheme';
 import lightTheme from '../../Tema/lightTheme';
 import { FontAwesome } from '@expo/vector-icons';
+import { DarkTheme, useNavigation } from "@react-navigation/native";
 
 //RESTART
 import * as Updates from 'expo-updates';
@@ -17,12 +18,19 @@ import { ExcluirTodasAsTabelas } from "../SQLiteManager/SQLiteManager";
 import { RemoveTemaAsync, removerAsyncStorage, guardaWizardAtivo, SalvaTema, setUsaTemaSistema, getUsaTemaSistema } from "../AsyncStorage/AsyncStorage";
 //CONTEXT
 import { useAppState } from "../Contexts/AppStateContext";
+import { color } from "react-native-elements/dist/helpers";
 
 export default function Configuracoes() {
     //Tema
     const { tema, MudarTema, temaPadraoSistema, setTemaPadraoSistema, usaTemaSistemaAsyncStorage, setUsaTemaSistemaAsyncStorage } = useAppState();
+    
     console.log(usaTemaSistemaAsyncStorage);
+ //COR DO TEMA
+ const [corTema, setCorTema] = useState('#006699');
+ useEffect(()=>{
 
+    tema === 'light' ? setCorTema('#006699') : setCorTema(DarkTheme.colors.text);
+      },[tema])
     const [darkModeOn, setDarkModeOn] = useState(tema === 'dark' ? true : false);
 
     function AtivarDarkMode() {
@@ -128,18 +136,18 @@ export default function Configuracoes() {
                     
                 </ScrollView>
             </SafeAreaView>
-        <Dialog visible={msgDialog} >
+        <Dialog visible={msgDialog} style={{backgroundColor: tema === 'light' ? '#fff' : 'black'}}>
             <Dialog.Title>
-                <Text>Restaurar Padrão de Fábrica</Text>
+                <Text style={{color: corTema}}>Restaurar Padrão de Fábrica</Text>
             </Dialog.Title>
             <View style={[styles.linha, {marginBottom:10, borderColor:'#fff'}]}></View>
             <Dialog.Content style={{alignSelf:'center'}}>
-            <Text style={styles.txtDialog}>Esta ação apagará todos os seus dados do aplicativo</Text>
+            <Text style={[styles.txtDialog, {color: corTema}]}>Esta ação apagará todos os seus dados do aplicativo</Text>
             <Text style={styles.txtDialog}>Se voce tem certeza digite "CONFIRMAR"</Text>
             
             {msgHelper ? <HelperText style={{color:'red', fontStyle:'italic'}}><Text>* O texto não é valido!</Text></HelperText> : ''}   
             <TextInput value={textoConfirmacao}
-            onChangeText={handleChangeTextoConfirmacao}></TextInput>
+            onChangeText={handleChangeTextoConfirmacao} style={{backgroundColor: corTema, fontWeight:'bold', color:'#fff'}}></TextInput>
 
             <TouchableOpacity style={styles.btnRestaurarDialog} onPress={RestaurarPadroes}>
                 <Text style={styles.txtBtnRestaurarDialog}>RESTAURAR</Text>
@@ -148,7 +156,7 @@ export default function Configuracoes() {
             <View style={[styles.linha, {marginBottom:10, borderColor:'#fff'}]}></View>
                 <Dialog.Actions>
                 {/* <Button onPress={() => console.log('Cancel')}>Sim</Button> */}
-            <Button onPress={() => setMsgDialog(false)}>Cancelar</Button>
+            <Button onPress={() => setMsgDialog(false)} textColor={corTema} >Cancelar</Button>
                 </Dialog.Actions>
         </Dialog>
         </Portal>
