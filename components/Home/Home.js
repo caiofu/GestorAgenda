@@ -52,8 +52,19 @@ export default function Home({ navigation }) {
       <TouchableOpacity onPress={() => navigation.navigate('Colaboradores')}>
         <View style={styles.boxBotao}>
           <View style={styles.iconeBotao}>
-            <FontAwesome5 style={styles.iconeBotao} name="house-user" size={34} color='#ffffff' />
+            <FontAwesome5 style={styles.iconeBotao} name="users" size={34} color='#ffffff' />
             <Text style={styles.txtBotao}>Colaboradores</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+
+      {/* ATENDIMENTOS */}
+      <TouchableOpacity onPress={() => navigation.navigate('Atendimentos')}>
+        <View style={styles.boxBotao}>
+          <View style={styles.iconeBotao}>
+            
+            <FontAwesome5 style={styles.iconeBotao} name="calendar-check" size={34} color='#ffffff' />
+            <Text style={styles.txtBotao}>Atendimentos</Text>
           </View>
         </View>
       </TouchableOpacity>

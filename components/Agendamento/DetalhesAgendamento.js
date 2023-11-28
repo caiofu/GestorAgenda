@@ -1,10 +1,10 @@
-import { ScrollView, View, TouchableOpacity, Text } from "react-native";
+import { ScrollView, View, TouchableOpacity, Text, Linking, Image } from "react-native";
 import { useEffect, useState } from "react";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from "./StyleAgendamento";
 
 import {  DarkTheme, useNavigation } from "@react-navigation/native";
-import { PaperProvider, TextInput, Chip, Portal, Dialog, ProgressBar } from "react-native-paper";
+import { PaperProvider, TextInput, Chip, Portal, Dialog, ProgressBar, Button } from "react-native-paper";
 import { FontAwesome5, Ionicons, FontAwesome } from '@expo/vector-icons';
 
 //SQLITE
@@ -17,9 +17,13 @@ import { ListaTodasTabelas } from "../SQLiteManager/SQLiteManager";
 import { useAppState } from "../Contexts/AppStateContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-//MULTI SELECt
+//MULTI SELECT
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import {MaterialIcons} from '@expo/vector-icons';
+
+//CLIPBOARD
+import * as Clipboard from 'expo-clipboard';
+
 export default function DetalhesAgendamento(props)
 {
     // Acesse o valor do idServico por meio de props.route.params
@@ -33,7 +37,7 @@ export default function DetalhesAgendamento(props)
     const [habilitaEdicao, setHabilitaEdicao] = useState(false);
     const [atualizaDados, setAtualizadados]  = useState(false);
     //CONTEXT
-    const {tema,  setAtualizaAgendamentos , atualizaAgendamentos} = useAppState();
+    const {tema,  setAtualizaAgendamentos , atualizaAgendamentos, nomeEstabelecimento} = useAppState();
 
     //COR DO TEMA
     const [corTema, setCorTema] = useState('#006699');
@@ -234,7 +238,7 @@ export default function DetalhesAgendamento(props)
          
                   BoxDialog();
                 } else if (resultado === false) {
-                // Faça algo em caso de nenhum registro excluído.
+               
                 console.log('algo deu errado...')
                 } else {
                  console.log('else ao tentar atender')
@@ -260,6 +264,26 @@ export default function DetalhesAgendamento(props)
  
 
 //CANCELAR ATENDIMENTO
+
+const [msgConfirmacaoVisivel, setMsgConfirmacaoVisivel] = useState(false);
+const [dialogTitulo, setDialogTitulo] = useState('');
+const [dialogMensagem, setDialogMensagem] = useState('');
+const [dialogTipoMensagem, setDialogTipoMensagem] = useState('');
+const [dialogTelaRetorno, setDialogTelaRetorno] = useState('')
+
+const EscondeMsgConfirmacao = () => {
+    setMsgConfirmacaoVisivel(false);
+};
+
+//CONFIRMAR CANCELAR ATENDIMENTO
+function ConfirmarCancelarAtendimento() {
+    setMsgConfirmacaoVisivel(true);
+    setDialogTitulo('Deseja cancelar?');
+    setDialogTipoMensagem('E');
+    setDialogTelaRetorno('Serviços');
+}
+
+
 function CancelarAtendimento()
 {
     CancelaAtendimento(idAgendamento, (sucesso) => { 
@@ -346,6 +370,45 @@ function AtualizarDados()
         console.log('pode salvar')
     }
 }
+
+const [boxCompartilhar, setBoxCompartilhar] = useState(false);
+//Responsavel pela mensagem após ação
+const [boxMsgCopiar, setBoxMsgCopiar] = useState(false);
+const [txtBoxMsgCopiar, setTxtBoxMsgCopiar] = useState(false);
+
+//const textoParaCompartilhar = 'Olá, '+nome+' você tem um agendamento para o dia '+dataFormatada+' ás '+horarioFormatado+' para o seguinte serviço: '+listaServicosSalvo;
+const textoParaCompartilhar = 'Olá, '+nome+', aqui é do(a) '+nomeEstabelecimento+'.Você tem agendamento: '+listaServicosSalvo+' para o dia '+dataFormatada+' às '+horarioFormatado+'.'
+async function CopiarClipboard()
+{
+    await Clipboard.setStringAsync(textoParaCompartilhar);
+         setBoxCompartilhar(false);
+          setTxtBoxMsgCopiar("Copiado com sucesso!");
+          setBoxMsgCopiar(true);
+}
+
+
+
+const compartilharNoWhatsApp = () => {
+    const mensagem = encodeURIComponent(textoParaCompartilhar);
+    const url = `whatsapp://send?text=${mensagem}`;
+  
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (supported) {
+          //Enviado para o whatsapp  
+          return Linking.openURL(url);
+        } else {
+          console.log('WhatsApp não está instalado');
+          setBoxCompartilhar(false);
+          setTxtBoxMsgCopiar("Whatsapp não instalado!");
+          setBoxMsgCopiar(true);
+        }
+      })
+      .catch((error) => {
+        console.error('Erro ao tentar abrir WhatsApp:', error);
+      });
+  };
+  
     return(
         <PaperProvider >
             <SafeAreaView>
@@ -357,10 +420,15 @@ function AtualizarDados()
 
                     
                         {habilitaEdicao === false && cancelado === 0 ? (
-                            <View>
+                            <View style={{ flexDirection: 'row',  }}>
                                 <TouchableOpacity style={{alignSelf:'flex-start', flexDirection:'row', marginBottom:15, marginLeft:15, backgroundColor:'#006699', padding:4, borderRadius:5}} onPress={() => setHabilitaEdicao(true)}>
                                 <FontAwesome name="edit" size={24} color="#fff" />
                                     <Text style={{marginEnd:20, fontFamily:'Rubik_700Bold',alignSelf:'center', color:'#fff'}}> Editar</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity style={{alignSelf:'flex-start', flexDirection:'row', marginBottom:15, marginLeft:15, backgroundColor:'#006699', padding:4, borderRadius:5}} onPress={() =>  setBoxCompartilhar(true)}>
+                                <FontAwesome name="edit" size={24} color="#fff" />
+                                    <Text style={{marginEnd:20, fontFamily:'Rubik_700Bold',alignSelf:'center', color:'#fff'}}>Compartilhar</Text>
                                 </TouchableOpacity>
                             </View>
                         ): ''}
@@ -489,13 +557,13 @@ function AtualizarDados()
                                         <Text style={styles.btnAcaoText}>ATENDER</Text>
                                     </View>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={[styles.btnAcaoDetalhes, { backgroundColor: 'red', marginTop: 20, padding: 10 }]} onPress={CancelarAtendimento}>
+                                <TouchableOpacity style={[styles.btnAcaoDetalhes, { backgroundColor: 'red', marginTop: 20, padding: 10 }]} onPress={ConfirmarCancelarAtendimento}>
                                         <View style={styles.btnContainer}>
                                             <Text style={styles.btnAcaoText}>CANCELAR ATENDIMENTO</Text>
                                         </View>
                                     </TouchableOpacity></>
                                     ) :(
-                                        <TouchableOpacity style={[styles.btnAcaoDetalhes, { backgroundColor: 'red', marginTop: 20, padding: 10 }]} onPress={CancelarAtendimento}>
+                                        <TouchableOpacity style={[styles.btnAcaoDetalhes, { backgroundColor: 'red', marginTop: 20, padding: 10 }]} onPress={ConfirmarCancelarAtendimento}>
                                         <View style={styles.btnContainer}>
                                             <Text style={styles.btnAcaoText}>CANCELAR ATENDIMENTO</Text>
                                         </View>
@@ -506,12 +574,61 @@ function AtualizarDados()
                     </View>
                     ) : ''}   
                       <Portal>
-                    <Dialog visible={boxVisivel} style={{backgroundColor:'#fff'}}>
-                        <Dialog.Content>
-                        <Text style={[styles.txtDialog, {color: boxDialogSucesso ? "#006699" : 'red'}]} variant="bodyMedium">{textoBoxDialog}</Text>
-                        <ProgressBar progress={barraProgresso} style={{height:10,  backgroundColor: 'rgba(112, 120, 147, 0.3)' }}  color='#006699' />
-                        </Dialog.Content>
-                    </Dialog>
+                        <Dialog visible={boxVisivel} style={{backgroundColor:'#fff'}}>
+                            <Dialog.Content>
+                            <Text style={[styles.txtDialog, {color: boxDialogSucesso ? "#006699" : 'red'}]} variant="bodyMedium">{textoBoxDialog}</Text>
+                            <ProgressBar progress={barraProgresso} style={{height:10,  backgroundColor: 'rgba(112, 120, 147, 0.3)' }}  color='#006699' />
+                            </Dialog.Content>
+                        </Dialog>
+
+                        <Dialog visible={boxCompartilhar} style={{backgroundColor:'#fff'}}>
+                            <Dialog.Title style={{color:'#006699'}}>Compartilhar <FontAwesome5 name="share-alt" size={24} color="#006699" /></Dialog.Title>
+                            <View style={{borderBottomWidth:0.31, width:'90%', alignSelf:'center', marginBottom:20}}></View>
+                            <Dialog.Content>
+                                <View style={{alignItems:'center'}}>
+                                <TouchableOpacity onPress={compartilharNoWhatsApp} style={styles.btnCompartilhar}>
+                                    <FontAwesome5 name="whatsapp-square" size={50} color="green" />
+                                    <Text style={styles.txtBtnCompartilhar}>WhatsApp</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity onPress={CopiarClipboard} style={styles.btnCompartilhar}>
+                                <FontAwesome5 name="copy" size={50} color="gray" />
+                                        <Text style={styles.txtBtnCompartilhar}>Copiar</Text>
+                                     
+                                </TouchableOpacity>
+                            </View>
+                            
+                            </Dialog.Content>
+                            <View style={{borderBottomWidth:0.51, width:'90%', alignSelf:'center'}}></View>
+                            <Dialog.Actions >
+                                <Button  textColor="#006699"  onPress={() => setBoxCompartilhar(false)}>Fechar</Button>
+                            </Dialog.Actions>
+                        </Dialog>
+
+                        <Dialog visible={boxMsgCopiar} style={{backgroundColor:'#fff'}}>
+                            <Dialog.Content>
+                            <Text style={[styles.txtDialog, {color: "#006699", fontSize:22 }]} variant="bodyMedium">{txtBoxMsgCopiar}</Text>
+                            
+                            </Dialog.Content>
+                            <Dialog.Actions >
+                                <Button  textColor="#006699"  onPress={() => setBoxMsgCopiar(false)}>Fechar</Button>
+                            </Dialog.Actions>
+                        </Dialog>
+
+                        {/* Confirmar exclusão: */}
+                        <Portal>
+                            <Dialog visible={msgConfirmacaoVisivel} dismissable={false} style={tema === 'light' ? styles.dialogLight : styles.dialogDark}>
+                                <Dialog.Title style={[styles.dialogTitulo, { color: corTema }]}>{dialogTitulo}</Dialog.Title>
+                                <Dialog.Content>
+                                    <Text variant="bodyMedium" style={[styles.dialogContent, { color: tema === 'light' ? 'black' : "#fff" }]}>{dialogMensagem}</Text>
+                                </Dialog.Content>
+                                <Dialog.Actions>
+                                    <Button labelStyle={{ fontFamily: 'Rubik_700Bold', color: tema === 'light' ? '#006699' : '#fff' }} onPress={() => CancelarAtendimento()}>Confirmar</Button>
+                                    <Button labelStyle={{ fontFamily: 'Rubik_700Bold', color: tema === 'light' ? '#006699' : '#fff' }} onPress={() => EscondeMsgConfirmacao()}>Cancelar</Button>
+                                </Dialog.Actions>
+                            </Dialog>
+                        </Portal>
+
                     </Portal>
                 </ScrollView>
             </SafeAreaView>

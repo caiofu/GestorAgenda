@@ -96,6 +96,26 @@ const styles = StyleSheet.create({
         color:'red',
         fontFamily:'Rubik_700Bold',
         marginBottom:5
+    },
+
+    btnCompartilhar:
+    {
+        flexDirection:'row',
+        alignItems:'center',
+        borderWidth:1,
+        padding:10,
+        width:'70%',
+        margin:10,
+        borderRadius:10,
+        borderColor: '#006699'
+    },
+
+    txtBtnCompartilhar:
+    {
+        fontFamily:'Rubik_700Bold',
+        fontSize:23,
+        marginLeft:5
+        
     }
 
 

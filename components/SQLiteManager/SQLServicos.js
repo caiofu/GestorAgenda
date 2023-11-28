@@ -16,13 +16,13 @@ export function GetServicosPorRamo(idRamoAtividade, callback) {
         for (let i = 0; i < len; i++) {
           const row = results.rows.item(i);
           servicos.push(row);
-          console.log('row --->', row)
+          // console.log('row --->', row)
         }
-        console.log('Dentro de servicos: ' + servicos[0])
+        // console.log('Dentro de servicos: ' + servicos[0])
         callback(servicos);
       },
       (error) => {
-        console.log('Erro ao executar consulta (servicos):' + error);
+        // console.log('Erro ao executar consulta (servicos):' + error);
       }
     );
   });
@@ -40,7 +40,7 @@ export function GetServicosPorId(idServico, callback) {
         callback(servico);
       },
       (error) => {
-        console.log('Erro ao extrair serviço por ID (servicos):' + error);
+        // console.log('Erro ao extrair serviço por ID (servicos):' + error);
       }
     );
   });
@@ -52,7 +52,7 @@ export function GetServicosAtivo(callback) {
       'SELECT * FROM servicos WHERE ativo = ?',
       [1],
       (tx, results) => {
-        console.log('Número de registros encontrados:', results.rows.length);
+        // console.log('Número de registros encontrados:', results.rows.length);
 
         const servicos = [];
 
@@ -65,7 +65,7 @@ export function GetServicosAtivo(callback) {
         callback(servicos); // Chamar a função de callback com o array de serviços
       },
       (error) => {
-        console.log('Erro ao extrair serviços ativos: ' + error);
+        // console.log('Erro ao extrair serviços ativos: ' + error);
         callback(null); // Trate o erro e chame a função de callback com null
       }
     );
@@ -81,10 +81,10 @@ export function UpdateAtivoServico (nomeServico, ativo, idRamoAtividade) {
       'UPDATE servicos SET ativo = ? WHERE nomeServico = ? and idRamoAtividade = ?',
       [ativo, nomeServico, idRamoAtividade],
       (tx, results) => {
-        console.log('Serviço atualizado com sucesso.');
+        // console.log('Serviço atualizado com sucesso.');
       },
       (error) => {
-        console.log('Erro ao atualizar serviço:' + error);
+        // console.log('Erro ao atualizar serviço:' + error);
       }
     );
   });
@@ -97,11 +97,11 @@ export function UpdateAtivoServicoPorId (idServico, campoAtivo, callback) {
       [campoAtivo, idServico],
       (tx, results) => {
         callback(true);
-       // console.log('Serviço atualizado com sucesso (UpdateAtivoServicoPorId)');
+       // // console.log('Serviço atualizado com sucesso (UpdateAtivoServicoPorId)');
       },
       (error) => {
         callback(false);
-        //console.log('Erro ao atualizar serviço (UpdateAtivoServicoPorId):' + error);
+        //// console.log('Erro ao atualizar serviço (UpdateAtivoServicoPorId):' + error);
       }
     );
   });
@@ -113,10 +113,10 @@ export function UpdateServicoPorId (idServico, nome, descricao) {
       'UPDATE servicos SET nomeServico = ? WHERE idServico = ?',
       [nome, idServico],
       (tx, results) => {
-        console.log('Serviço atualizado com sucesso (Update nome)');
+        // console.log('Serviço atualizado com sucesso (Update nome)');
       },
       (error) => {
-        console.log('Erro ao atualizar serviço (Update nome):' + error);
+        // console.log('Erro ao atualizar serviço (Update nome):' + error);
       }
     );
 
@@ -124,10 +124,10 @@ export function UpdateServicoPorId (idServico, nome, descricao) {
       'UPDATE servicos SET descricao = ? WHERE idServico = ?',
       [descricao, idServico],
       (tx, results) => {
-        console.log('Serviço atualizado com sucesso (Update descricao)');
+        // console.log('Serviço atualizado com sucesso (Update descricao)');
       },
       (error) => {
-        console.log('Erro ao atualizar serviço (Update descricao):' + error);
+        // console.log('Erro ao atualizar serviço (Update descricao):' + error);
       }
     );
   });
@@ -139,10 +139,10 @@ export function UpdateFavoritoServicoPorId (idServico, favorito) {
       'UPDATE servicos SET favorito = ? WHERE idServico = ?',
       [favorito, idServico],
       (tx, results) => {
-        console.log('Serviço atualizado com sucesso (UpdateFavoritoServicoPorId)');
+        // console.log('Serviço atualizado com sucesso (UpdateFavoritoServicoPorId)');
       },
       (error) => {
-        console.log('Erro ao atualizar serviço (UpdateFavoritoServicoPorId):' + error);
+        // console.log('Erro ao atualizar serviço (UpdateFavoritoServicoPorId):' + error);
       }
     );
   });
@@ -157,18 +157,18 @@ export function CriaNovoServico(nomeServico, descricao, favorito, callback)
       (tx, results) => {
         // Verificando se a inserção foi bem-sucedida
         if (results.rowsAffected > 0) {
-          console.log('Inserção bem-sucedida');
+          // console.log('Inserção bem-sucedida');
           // Recuperando o ID do novo registro
           const novoID = results.insertId;
           //Função de retorno (callback) com o resultado (novoID)
           callback(novoID);
         } else {
-          console.log('Falha ao inserir');
+          // console.log('Falha ao inserir');
           callback(null);
         }
       },
       (error) => {
-        console.log('Erro ao executar consulta:', error);
+        // console.log('Erro ao executar consulta:', error);
       }
     );
   });
@@ -181,7 +181,7 @@ export function GetServicosCustomizadosAtivos(callback) {
       'SELECT * FROM servicos_customizado WHERE ativo = ?',
       [1],
       (tx, results) => {
-        console.log('Número de registros encontrados:', results.rows.length);
+        // console.log('Número de registros encontrados:', results.rows.length);
 
         const servicos = [];
 
@@ -194,7 +194,7 @@ export function GetServicosCustomizadosAtivos(callback) {
         callback(servicos); // Chamar a função de callback com o array de serviços
       },
       (error) => {
-        console.log('Erro ao extrair serviços customizados ativos: ');
+        // console.log('Erro ao extrair serviços customizados ativos: ');
         callback(null); // Trate o erro e chame a função de callback com null
       }
     );
@@ -215,7 +215,7 @@ export function GetServicosCustomizadosPorId(idServico, callback) {
         callback(servico);
       },
       (error) => {
-        console.log('Erro ao extrair serviço customizado por ID (servicos):id: '+idServico);
+        // console.log('Erro ao extrair serviço customizado por ID (servicos):id: '+idServico);
       }
     );
   });
@@ -228,11 +228,11 @@ export function UpdateAtivoServicoCustomizadoPorId (idServico, campoAtivo, callb
       [campoAtivo, idServico],
       (tx, results) => {
         callback(true);
-       // console.log('Serviço atualizado com sucesso (UpdateAtivoServicoPorId)');
+       // // console.log('Serviço atualizado com sucesso (UpdateAtivoServicoPorId)');
       },
       (error) => {
         callback(false);
-        //console.log('Erro ao atualizar serviço (UpdateAtivoServicoPorId):' + error);
+        //// console.log('Erro ao atualizar serviço (UpdateAtivoServicoPorId):' + error);
       }
     );
   });
@@ -244,10 +244,10 @@ export function UpdateFavoritoServicoCustomizadoPorId (idServico, favorito) {
       'UPDATE servicos_customizado SET favorito = ? WHERE idServicoCustomizado = ?',
       [favorito, idServico],
       (tx, results) => {
-        console.log('Serviço atualizado com sucesso (UpdateFavoritoServicoPorId)');
+        // console.log('Serviço atualizado com sucesso (UpdateFavoritoServicoPorId)');
       },
       (error) => {
-        console.log('Erro ao atualizar serviço (UpdateFavoritoServicoPorId):');
+        // console.log('Erro ao atualizar serviço (UpdateFavoritoServicoPorId):');
       }
     );
   });
@@ -263,10 +263,10 @@ export function UpdateServicoCustomizadoPorId (idServico, nome, descricao) {
       `,
       [nome, descricao, idServico],
       (tx, results) => {
-        console.log('Serviço atualizado com sucesso (Update nome e descrição)');
+        // console.log('Serviço atualizado com sucesso (Update nome e descrição)');
       },
       (error) => {
-        console.log('Erro ao atualizar serviço (Update nome e descrição):' + error);
+        // console.log('Erro ao atualizar serviço (Update nome e descrição):' + error);
       }
     );
   });
@@ -279,7 +279,7 @@ export function AtualizarServiçoAtivoPorIdRamoAtividade(idRamoAtividade, callba
       'UPDATE servicos SET ativo = 1 WHERE idRamoAtividade = ?',
       [idRamoAtividade],
       (tx, results) => {
-        console.log('Registros atualizados com sucesso.');
+        // console.log('Registros atualizados com sucesso.');
         if (callback) {
           callback(null); // Chama o callback sem erros
         }
@@ -313,7 +313,7 @@ export function RetornaServicosEstabelecimento(callback) {
         callback(resultados); //callback com os resultados
       },
       (tx, error) => {
-        console.log('Erro ao executar a consulta: ' + error.message);
+        // console.log('Erro ao executar a consulta: ' + error.message);
       }
     );
   });
