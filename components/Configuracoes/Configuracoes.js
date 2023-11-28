@@ -140,7 +140,7 @@ export default function Configuracoes() {
             <Dialog.Title>
                 <Text style={{color: corTema}}>Restaurar Padrão de Fábrica</Text>
             </Dialog.Title>
-            <View style={[styles.linha, {marginBottom:10, borderColor:'#fff'}]}></View>
+            <View style={[styles.linha, {marginBottom:10, borderColor: tema === 'light' ? '#006699' :'#fff'}]}></View>
             <Dialog.Content style={{alignSelf:'center'}}>
             <Text style={[styles.txtDialog, {color: corTema}]}>Esta ação apagará todos os seus dados do aplicativo</Text>
             <Text style={[styles.txtDialog, {color: corTema}]}>Se voce tem certeza digite "CONFIRMAR"</Text>
@@ -153,7 +153,7 @@ export default function Configuracoes() {
                 <Text style={styles.txtBtnRestaurarDialog}>RESTAURAR</Text>
             </TouchableOpacity>
             </Dialog.Content>
-            <View style={[styles.linha, {marginBottom:10, borderColor:'#fff'}]}></View>
+            <View style={[styles.linha, {marginBottom:10, borderColor: tema === 'light' ? '#006699' :'#fff'}]}></View>
                 <Dialog.Actions>
                 {/* <Button onPress={() => console.log('Cancel')}>Sim</Button> */}
             <Button onPress={() => setMsgDialog(false)} textColor={corTema} >Cancelar</Button>
