@@ -301,13 +301,17 @@ export async function RestaurarBanco(tabsSQLite) {
       // Loop sobre cada tabela no JSON
       Object.keys(tabsSQLite).forEach((tabela) => {
         const registros = tabsSQLite[tabela];
-        console.log("Registros da tabela: ", tabela);
-        console.log(registros);
+        if(tabela === "estabelecimento"){
+          console.log("tabela: ", tabela);
+          console.log(registros);
+        }
+        // console.log("Registros da tabela: ", tabela);
+        // console.log(registros);
         // Loop sobre cada registro e executa uma instrução SQL de inserção
         registros.forEach((registro) => {
           const colunas = Object.keys(registro);
           const valores = colunas.map((coluna) => `"${registro[coluna]}"`).join(',');
-          console.log(registro);
+          // console.log(registro);
           tx.executeSql(`INSERT INTO ${tabela} (${colunas.join(',')}) VALUES (${valores})`);
         });
       });

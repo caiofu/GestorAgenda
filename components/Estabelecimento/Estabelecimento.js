@@ -328,7 +328,7 @@ export default function Estabelecimento()
         <KeyboardAvoidingView  behavior={Platform.OS === 'ios' ? 'padding' : null} enabled>
         <ScrollView>
           <View style={[styles.boxLogo, {borderColor: corTema}]}>
-            {image !== null && image !== '' ? (
+            {image !== null && image !== '' && image !== "null" ? (
               <Image source={{ uri: image }} style={styles.imgLogo} />
             ) : (
               <Image source={require('../../assets/logo/logo-app.png')} style={{ width: 200, height: 200 }} />
