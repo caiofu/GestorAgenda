@@ -35,7 +35,8 @@ const styles = StyleSheet.create({
       txtBtnRestaurar:
       {
         color:'#fff',
-        fontFamily:'Rubik_700Bold'
+        fontFamily:'Rubik_700Bold',
+        padding:5
       },
 
       txtDialog:

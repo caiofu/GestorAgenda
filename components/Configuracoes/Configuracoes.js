@@ -132,13 +132,13 @@ export default function Configuracoes() {
 
                         <View style={styles.Container}>
                                 <TouchableOpacity style={styles.btnRestaurar} onPress={() => setMsgDialog(true)}>
-                                    <Text style={styles.txtBtnRestaurar}>Restaurar padrões de fabrica</Text>
+                                    <Text style={styles.txtBtnRestaurar}>RESTAURAR PADRÕES DE FÁBRICA</Text>
                                 </TouchableOpacity>
                         </View>
                         <View style={[styles.linha, {marginBottom:20}]}></View>
                         <View style={styles.Container}>
                         <TouchableOpacity onPress={RestoreBackup} style={ tema === 'light' ?styles.btn : styles.btnDark}>
-                            <Text style={tema === 'light' ? styles.btnTxt : styles.btnTxtDark}>Restore</Text>
+                            <Text style={tema === 'light' ? styles.btnTxt : styles.btnTxtDark}>RESTORE</Text>
                         </TouchableOpacity>
 
                        
@@ -148,7 +148,7 @@ export default function Configuracoes() {
                        
 
                         <TouchableOpacity onPress={CreateBackup} style={ tema === 'light' ?styles.btn : styles.btnDark}>
-                            <Text style={tema === 'light' ? styles.btnTxt : styles.btnTxtDark}>Backup</Text>
+                            <Text style={tema === 'light' ? styles.btnTxt : styles.btnTxtDark}>BACKUP</Text>
                         </TouchableOpacity> 
                         </View>
                     
