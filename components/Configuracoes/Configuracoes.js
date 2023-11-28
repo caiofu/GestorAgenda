@@ -143,7 +143,7 @@ export default function Configuracoes() {
             <View style={[styles.linha, {marginBottom:10, borderColor:'#fff'}]}></View>
             <Dialog.Content style={{alignSelf:'center'}}>
             <Text style={[styles.txtDialog, {color: corTema}]}>Esta ação apagará todos os seus dados do aplicativo</Text>
-            <Text style={styles.txtDialog}>Se voce tem certeza digite "CONFIRMAR"</Text>
+            <Text style={[styles.txtDialog, {color: corTema}]}>Se voce tem certeza digite "CONFIRMAR"</Text>
             
             {msgHelper ? <HelperText style={{color:'red', fontStyle:'italic'}}><Text>* O texto não é valido!</Text></HelperText> : ''}   
             <TextInput value={textoConfirmacao}
