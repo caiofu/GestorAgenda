@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        
+       
       },
       
       switch: {
@@ -69,6 +69,48 @@ const styles = StyleSheet.create({
         borderColor: "#006699",
         width:'98%', 
         alignSelf:'center'
-      }
+      },
+      btn:
+      {
+        borderWidth:1,
+        borderColor:'#006699',
+        borderRadius:5,
+        width:'60%',
+        marginBottom:10,
+        backgroundColor:'#006699',
+        
+        
+      },
+      btnTxt:
+      {
+        color:'#fff',
+        fontFamily:'Rubik_700Bold',
+        fontSize:20,
+        alignSelf:'center',
+        padding:5,
+        
+      },
+
+      btnDark:
+      {
+        borderWidth:1,
+        borderColor:'#fff',
+        borderRadius:5,
+        marginBottom:10,
+        backgroundColor:'gray'
+        
+      },
+
+      btnTxtDark:
+      {
+        color:'#fff',
+        fontFamily:'Rubik_700Bold',
+        fontSize:20,
+        alignSelf:'center',
+        padding:5,
+        
+      },
+   
+
 });
 export default styles;

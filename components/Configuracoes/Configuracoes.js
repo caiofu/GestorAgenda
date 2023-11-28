@@ -135,17 +135,25 @@ export default function Configuracoes() {
                                     <Text style={styles.txtBtnRestaurar}>Restaurar padrões de fabrica</Text>
                                 </TouchableOpacity>
                         </View>
-                    
-                    
+                        <View style={[styles.linha, {marginBottom:20}]}></View>
+                        <View style={styles.Container}>
+                        <TouchableOpacity onPress={RestoreBackup} style={ tema === 'light' ?styles.btn : styles.btnDark}>
+                            <Text style={tema === 'light' ? styles.btnTxt : styles.btnTxtDark}>Restore</Text>
+                        </TouchableOpacity>
+
+                       
+                        </View>
+
+                        <View style={styles.Container}>
+                       
+
+                        <TouchableOpacity onPress={CreateBackup} style={ tema === 'light' ?styles.btn : styles.btnDark}>
+                            <Text style={tema === 'light' ? styles.btnTxt : styles.btnTxtDark}>Backup</Text>
+                        </TouchableOpacity> 
+                        </View>
                     
                     <View>
-                    <TouchableOpacity onPress={RestoreBackup}>
-                        <Text>Restore</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={CreateBackup}>
-                        <Text>Backup</Text>
-                    </TouchableOpacity>          
+                             
                 </View>
 
             </ScrollView>
