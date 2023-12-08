@@ -18,7 +18,7 @@ export default function Wizard({ atualizarWizardAtivo }) {
     
     const { tema} = useAppState();
     
-    let totalPassos = 2;
+    let totalPassos = 4;
 
     function ProximoPasso() {
         if (passo < totalPassos) {
@@ -59,7 +59,22 @@ export default function Wizard({ atualizarWizardAtivo }) {
                     </TouchableOpacity>
                     {passo === 1 && (
                         <View style={{ height: '83%' }}>
-                            <Image source={require('../../assets/wizard/wizard-estabelecimento.gif')} style={{ width: '100%', height: '100%' }} />
+                            <Image source={require('../../assets/wizard/4.png')} style={{ width: '100%', height: '100%' }} />
+                        </View>
+                    )}
+                    {passo === 2 && (
+                        <View style={{ height: '83%' }}>
+                            <Image source={require('../../assets/wizard/2.png')} style={{ width: '100%', height: '100%' }} />
+                        </View>
+                    )}
+                    {passo === 3 && (
+                        <View style={{ height: '83%' }}>
+                            <Image source={require('../../assets/wizard/3.png')} style={{ width: '100%', height: '100%' }} />
+                        </View>
+                    )}
+                    {passo === 4 && (
+                        <View style={{ height: '83%' }}>
+                            <Image source={require('../../assets/wizard/1.png')} style={{ width: '100%', height: '100%' }} />
                         </View>
                     )}
                 </View>
