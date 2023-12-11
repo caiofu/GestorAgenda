@@ -107,7 +107,6 @@ export default function NovoAgendamento()
 
    function AgendarServico()
    {
-
     //VALIDAR SE TODOS OS DADOS OBRIGATORIOS FORAM PREENCHIDOS
     if(nome === null || telefone === null ||  horarioFormatado === null || servicoSelecionado.length === 0)
     {
@@ -118,22 +117,32 @@ export default function NovoAgendamento()
         //Verifica se esta na data de hj e se o horario é maior que o horario atual (pelo menos uma hora a mais para nao dar erro)
         let dataHora = new Date();
         let dataAtual =  new Date();
-        dataAtual.setHours(0,0,0,0)
+        // dataAtual.setHours(0,0,0,0) 
     
         const dataSelecionadaFormatada = date;
         dataSelecionadaFormatada.setHours(0,0,0,0)
 
-         const dataIgual = isEqual(dataAtual, date)
-        
-      
-       // if(dataIgual &&  horario.getHours() <=  dataHora.getHours() && horario.getMinutes() > dataHora.getMinutes()+10)
-       if(isBefore(horario, dataHora)) 
-       {
-          
-            setBoxDialogSucesso((att) => false);
-              setTExtoBoxDialog("O horario não pode ser menor que o horario atual nesta data!");
+        const dataIgual = isEqual(dataAtual, date) // tem que aposentar esse cara, pra que q ele ta aqui?
 
-               BoxDialog();
+       const horas = horario.getHours();
+       const minutos = horario.getMinutes();
+       const segundos = horario.getSeconds();
+       const milissegundos = horario.getMilliseconds();
+
+       // Configurando date para que o mesmo possua a data e horário escolhido
+       date.setHours(horas, minutos, segundos, milissegundos);
+
+       console.log("dataAtual: ", dataAtual);
+       console.log("dataEscolhida: ", date);
+
+       // if(dataIgual &&  horario.getHours() <=  dataHora.getHours() && horario.getMinutes() > dataHora.getMinutes()+10)
+       //if(isBefore(horario, dataHora)) //if antigo
+       if(isBefore(date, dataAtual))
+       {
+            setBoxDialogSucesso((att) => false);
+            setTExtoBoxDialog("Não é possível agendar para esta data!");
+
+            BoxDialog();
         }
         else
         {
@@ -193,9 +202,10 @@ export default function NovoAgendamento()
                 //  SalvarServicoAgendamento(idAgendamento,)
 
                     } else {
-                        // console.log('Falha ao inserir o agendamento');
+                        console.log('Falha ao inserir o agendamento');
                     }
                 });
+                console.log("aqui");
                 }
             });
 

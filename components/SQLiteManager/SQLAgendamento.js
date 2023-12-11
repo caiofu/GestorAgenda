@@ -9,7 +9,7 @@ export function CriaNovoAgendamento(data, horario, nomeCliente, telefone, callba
   db.transaction((tx) => {
     tx.executeSql(
       'INSERT INTO agendamento (nomeCliente, telefone, data, horario, atendido, cancelado) VALUES (?, ?, ?, ?, ?, ?)',
-      [nomeCliente, telefone,data, horario,0,0], 
+      [nomeCliente, telefone,data, horario, 0, 0], 
       (tx, results) => {
         // Verificando se a inserção foi bem-sucedida
         if (results.rowsAffected > 0) {
@@ -19,12 +19,12 @@ export function CriaNovoAgendamento(data, horario, nomeCliente, telefone, callba
           //Função de retorno (callback) com o resultado (novoID)
           callback(novoID);
         } else {
-          // console.log('Falha ao inserir');
+          console.log('Falha ao inserir');
           callback(null);
         }
       },
       (error) => {
-        // console.log('Erro ao executar consulta Criar novo agendamento:', error);
+        console.log('Erro ao executar consulta Criar novo agendamento:', error);
       }
     );
   });

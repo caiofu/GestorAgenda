@@ -28,6 +28,31 @@ export function listarColaboradores(callback, errorCallback) {
   });
 }
 
+export function listarColaboradoresAtivos(callback, errorCallback) {
+  db.transaction((tx) => {
+    tx.executeSql('SELECT * FROM colaborador WHERE ativo = 1', [], (tx, results) => 
+    {
+      const rows = results.rows;
+      const colaboradoresArray = [];
+      
+      for (let i = 0; i < rows.length; i++) {
+        colaboradoresArray.push(rows.item(i));
+      }
+      if (colaboradoresArray.length > 0) {
+        callback(colaboradoresArray);
+      } else {
+        errorCallback("Nenhum colaborador encontrado.");
+      }
+    },
+    (error) => {
+      errorCallback("Erro na consulta SQL: " + error.message);
+    });
+  },
+  (error) => {
+    errorCallback("Erro na transação SQL: " + error.message);
+  });
+}
+
 export function CriaNovoColaborador(nomeColaborador, descricao, callback)
 {
   db.transaction((tx) => {

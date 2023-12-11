@@ -10,7 +10,7 @@ import { FontAwesome5, Ionicons, FontAwesome } from '@expo/vector-icons';
 //SQLITE
 import { ConsultaColaboradoresPorAgendamento, ConsultaAgendamentoPorId, ConsultaServicoAgendamentoPorId, CancelaAtendimento, AlteraAgendamentoParaAtendimento, SalvaColaboradorAtendimento, ExcluiColaboradorAtendimento } from "../SQLiteManager/SQLAgendamento";
 import { RetornaServicosEstabelecimento } from "../SQLiteManager/SQLServicos";
-import { listarColaboradores } from "../SQLiteManager/SQLiteColaborador";
+import { listarColaboradoresAtivos } from "../SQLiteManager/SQLiteColaborador";
 import { ListaTodasTabelas } from "../SQLiteManager/SQLiteManager";
 
 //CONTEXT
@@ -144,8 +144,8 @@ export default function DetalhesAgendamento(props)
               setListaServicos(resultadosTratados)
             });
 
-            //Listar colaboradores
-            listarColaboradores(function(retorno) {
+            //Listar colaboradores ativos
+            listarColaboradoresAtivos(function(retorno) {
                
                 const resultadoColaboradores = retorno.map((item, index) =>({
                     name: item.nomeColaborador,
