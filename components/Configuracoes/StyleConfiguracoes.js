@@ -5,13 +5,12 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-       
       },
       
       switch: {
         marginLeft: 10,
-      
       },
+
       txtSwitchTema:
       {
         fontFamily:'Rubik_700Bold'
@@ -22,8 +21,8 @@ const styles = StyleSheet.create({
       //   flexDirection: "row",
       //   justifyContent: "center",
       //   alignItems: "center",
-       
       // },
+
       btnRestaurar:
       {
         margin:10,
@@ -99,7 +98,6 @@ const styles = StyleSheet.create({
         borderRadius:5,
         marginBottom:10,
         backgroundColor:'gray'
-        
       },
 
       btnTxtDark:
@@ -109,9 +107,14 @@ const styles = StyleSheet.create({
         fontSize:20,
         alignSelf:'center',
         padding:5,
-        
       },
-   
 
+      txtBkpDialog:
+      {
+        alignSelf: 'center',
+        color:'#fff',
+        margin:3,
+        fontFamily:'Rubik_400Regular'
+      },
 });
 export default styles;

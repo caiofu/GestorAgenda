@@ -6,7 +6,8 @@ import { ConsultaEstabelecimento } from '../SQLiteManager/SQLEstabelecimento';
 import * as DocumentPicker from 'expo-document-picker';
 import { guardaWizardAtivo, houvePrimeiroAcesso, removerAsyncStorage } from '../AsyncStorage/AsyncStorage';
 import { ConsultaRamoAtividade } from '../SQLiteManager/SQLRamoAtividade';
-
+//RESTART
+import * as Updates from 'expo-updates';
 const db = SQLite.openDatabase('gestorAgenda.db');
 
 export default async function RestoreBackup() {
@@ -29,19 +30,22 @@ export default async function RestoreBackup() {
                 
             if(houvePrimeiroAcesso){
                 //excluir registros e efetuar restore
-                await ClearData((resultado)=>{
+                await ClearData( async (resultado)=>{
                     if(resultado){
                         //Restauração dos Dados
                         // console.log("Arquivo: ", arquivo);
                         // console.log("Assets: ", arquivo.assets);
                         // console.log("URI: ", arquivo.assets[0].uri);
                         console.log("Aqui");
-                        RestoreData(arquivo.assets[0].uri);
+                        await RestoreData(arquivo.assets[0].uri);
+
+                        console.log("RealodAsync!!!");
+                        // Retornar à tela inicial 
+                        await Updates.reloadAsync();
                     }
                     else{
                         console.log("[LOGS] RestoreBackup - Falha na etapa de limpeza dos dados!");
                     }
-                    console.log("aqui2");
                 });
 
                 
@@ -67,7 +71,7 @@ async function ClearData(callback){
         callback(true);   
     }
     catch(error){
-        console.log("LOGS] ClearData - Erro ao limpar os dados: ", error);
+        console.log("[LOGS] ClearData - Erro ao limpar os dados: ", error);
         callback(false);
     }
     
@@ -90,12 +94,6 @@ async function RestoreData(uri){
             // console.log("Logo: ", dataJson.logo)
             await RestaurarLogo(dataJson.logo);
         })
-
-        
-        
-
-        
-        
     }
     catch(error){
         console.log("Erro ao Restaurar Dados: ", error);
@@ -126,7 +124,6 @@ async function RestaurarLogo(logo){
                 console.log(estabelecimento.logo);
                 nomeLogo = estabelecimento.logo.split('/').pop();
             }
-            else nomeLogo = null;
             resolve(nomeLogo);
         })
     })
@@ -145,14 +142,14 @@ async function RestaurarLogo(logo){
                 // Cria a pasta "logoUsuario" se não existir
                 const pastaInfo = FileSystem.getInfoAsync(pastaLogoUsuario);
                 if (!pastaInfo.exists) {
-                await FileSystem.makeDirectoryAsync(pastaLogoUsuario);
+                    await FileSystem.makeDirectoryAsync(pastaLogoUsuario);
                 }
             
                 await FileSystem.moveAsync({
                 from: origem,
                 to: destino,
                 });
-                console.log('Imagem movida para:', destino);
+                console.log('[LOGS] RestaurarLogo - Imagem salva em: ', destino);
             });
         } else {
         console.log('[LOGS] RestaurarLogo - Não há imagem a ser salva!');

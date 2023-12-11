@@ -315,10 +315,9 @@ export async function RestaurarBanco(tabsSQLite) {
           tx.executeSql(`INSERT INTO ${tabela} (${colunas.join(',')}) VALUES (${valores})`);
         });
       });
-    console.log("Registros inseridos com sucesso!");
+    console.log("Inserção em massa concluída com sucesso!");
     },
-    (erro) => console.error('Erro durante a transação de inserção:', erro),
-    () => console.log('Inserção em massa concluída com sucesso!')
+    (erro) => console.error('Erro durante a transação de inserção:', erro)
   );
 }
 

@@ -7,7 +7,7 @@ import { shareAsync } from 'expo-sharing';
 
 const db = SQLite.openDatabase('gestorAgenda.db');
 
-export default async function CreateBackup() {
+export default async function CreateBackup(callback) {
 
   // Criação do objeto de Backup
   let backupObj = {
@@ -26,21 +26,38 @@ export default async function CreateBackup() {
     await encodeLogo(backupObj);
 
     await FileSystem.writeAsStringAsync(FileSystem.documentDirectory + 'GestorAgendaBackup.json', JSON.stringify(backupObj));
-    salvar(FileSystem.documentDirectory + 'GestorAgendaBackup.json');
-    console.log('[LOGS] - Backup criado e compartilhado com sucesso!');
-    console.log("Lista de Arquivos no Diretórios de Arquivos da Aplicação: ", await FileSystem.readDirectoryAsync(FileSystem.documentDirectory));
-    
+    const sucesso = await salvar(FileSystem.documentDirectory + 'GestorAgendaBackup.json');
+
+    if(sucesso){
+      console.log('[LOGS] - Backup criado e compartilhado com sucesso!');
+      console.log("Lista de Arquivos no Diretórios de Arquivos da Aplicação: ", await FileSystem.readDirectoryAsync(FileSystem.documentDirectory));
+      callback(true);
+    }
+    else callback(false)
     
   } catch (error) {
     console.error('Erro ao criar o backup:', error);
+    callback(false);
   }
 };
 
-const salvar = (uri) => {
+const salvar = async (uri) => {
   if(uri === null){
     console.log("[LOGS] Caminho fornecido é NULL!");
+    return false;
   }
-  else shareAsync(uri);
+  else{
+    try{
+      await shareAsync(uri);
+      console.log("[LOGS] Backup foi salvo!");
+      return true
+    }
+    catch(error){
+      console.log("[LOGS] Backup não foi salvo!");
+      return false
+    }
+    
+  } 
 }
 
 async function encodeAsyncStorage(backupObj){
