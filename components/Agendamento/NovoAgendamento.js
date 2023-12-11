@@ -26,7 +26,7 @@ export default function NovoAgendamento()
      const navigation = useNavigation();
 
     //CONTEXT
-    const {tema,  setAtualizaAgendamentos } = useAppState();
+    const {tema,  setAtualizaAgendamentos, atualizaAgendamentos } = useAppState();
 
     //COR DO TEMA
      const [corTema, setCorTema] = useState('#006699');
@@ -179,16 +179,16 @@ export default function NovoAgendamento()
                             // console.log('idAgendamentoSer ', idServicoAgendamento)
                             if(idServicoAgendamento !== null )
                             {
-                                // console.log('caiu aquiiiii')
+                               
                                 insercaoBemSucedida = insercaoBemSucedida +1;
-                                // console.log(insercaoBemSucedida)
+                               
                                 //Verifica se inseriu todas
 
                                     if(insercaoBemSucedida === totalInsercoes)
                                     {
                                         // console.log('sucedidade ', insercaoBemSucedida+' total ', totalInsercoes)
                                         //Chama a caixa de dialogo
-                                        setAtualizaAgendamentos(true);
+                                        setAtualizaAgendamentos(!atualizaAgendamentos);
                                         setTExtoBoxDialog("Agendamento criado com sucesso!");
                                         setBoxDialogSucesso(true); //Chama o box de mensagem pela mudança de estado
                                     
@@ -328,8 +328,10 @@ export default function NovoAgendamento()
                             arrowicon={<FontAwesome5 name="chevron-down" size={17} color={corTema} />}
                             searchicon={<FontAwesome5 name="search" size={17} color={corTema} />}
                             closeicon={<FontAwesome name="close" size={24} color={corTema} />}
-                            inputStyles={{ color: helperTextCampos === true && servicoSelecionado.length === 0 ? 'red' : corTema }}
+                           
+                            inputStyles={{ color: helperTextCampos === true && servicoSelecionado.length === 0 ? 'red' : corTema } }
                             notFoundText=""
+                            
                             key={limparLista}
                             data={listaServicos}
 

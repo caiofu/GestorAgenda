@@ -19,8 +19,14 @@ export default function Agendamento()
 {
 
     //CONTEXT
-    const { navegacaoEstabelecimento, setNavegacaoEstabelecimento, atualizaAgendamentos, logo, setLogo, nomeEstabelecimento, setNomeEstabelecimento } = useAppState();
+    const { navegacaoEstabelecimento, setNavegacaoEstabelecimento, atualizaAgendamentos, logo, setLogo, nomeEstabelecimento, setNomeEstabelecimento, tema } = useAppState();
 
+     //COR DO TEMA
+     const [corTema, setCorTema] = useState('#006699');
+     useEffect(()=>{
+  
+        tema === 'light' ? setCorTema('#006699') : setCorTema(DarkTheme.colors.text);
+          },[tema])
     //VERIFICA SE TEM CADASTRO DE ESTABELECIMENTO APRA DEFINIR QUAL PRIMEIRA TELA APARECERA
     ConsultaEstabelecimento((resultado) => {
       if(resultado === null)
@@ -222,7 +228,7 @@ export default function Agendamento()
                 {abriDataPicker ? (
                     <DateTimePicker value={date} mode='date' onChange={onChangeDataPicker} />
                 ) : null}
-            <View style={{borderWidth:1, flex:1,marginBottom:70, marginTop:2, borderRadius:4, borderColor:'#006699'}}>
+            <View style={{borderWidth:1, flex:1,marginBottom:70, marginTop:2, borderRadius:4, borderColor: corTema}}>
                 <ScrollView>
 
                     {/* LISTA*/}
@@ -249,7 +255,7 @@ export default function Agendamento()
                                         <TouchableOpacity 
                                              key={agendamento.idAgendamento}
                                              onPress={() => CarregaDetalhesAgendamento(agendamento.idAgendamento)} 
-                                            style={{borderWidth:0.7, margin:4, borderRadius:10}}
+                                            style={{borderWidth:0.7, margin:4, borderRadius:10, borderColor:corTema}}
                                             
                                         >
                                           {/* {// console.log('atendido ? ', agendamento.atendido+ ' cancelado ? ', agendamento.cancelado)} */}
@@ -257,11 +263,11 @@ export default function Agendamento()
                                             <List.Item key={agendamento.idAgendamento}
                                                         title={agendamento.nomeCliente}
                                                         description={textoStatus}
-                                                        titleStyle={{color:'black', fontSize:12}}
-                                                        descriptionStyle={{color:'gray', fontSize:10}}
+                                                        titleStyle={{color:corTema, fontSize:12}}
+                                                        descriptionStyle={{color:corTema, fontSize:10}}
                                                         descriptionNumberOfLines={1}
-                                                        style={{backgroundColor: corStatus, borderRadius:10}}
-                                                        right={props =>  <><FontAwesome5 name="clock" size={18} color='#006699' /><Text style={{marginLeft:5, fontFamily:'Rubik_700Bold', color:'#006699'}}>{agendamento.horario}</Text></>} />
+                                                        style={{backgroundColor: corStatus, borderRadius:10,}}
+                                                        right={props =>  <><FontAwesome5 name="clock" size={18} color={corTema} /><Text style={{marginLeft:5, fontFamily:'Rubik_700Bold', color:corTema}}>{agendamento.horario}</Text></>} />
                                             </TouchableOpacity>
 
                         )               

@@ -54,7 +54,7 @@ export const AppStateProvider = ({ children }) => {
   const [atualizaAgendamentos, setAtualizaAgendamentos] = useState(false);
 
   //RESPONSAVEL POR TROCAR A LOGO
-  const [logo, setLogo] = useState('../../assets/logo/logo-app.png');
+  const [logo, setLogo] = useState('padrao');
   const [nomeEstabelecimento, setNomeEstabelecimento]   = useState(null);
 
   // console.log(`tema = ${tema} temaSistema = ${temaSistema} temaPadraoSistema = ${temaPadraoSistema}`);

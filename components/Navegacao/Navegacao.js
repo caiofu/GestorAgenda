@@ -83,15 +83,16 @@ function OpTelaInicial() {
        setTeste(logo);
 
     },[logo])
-    console.log(teste)
+    console.log('logo de teste -> ',teste)
     
     //FAZER NO CONTEXT A TRATATIVA
     return (
         <Stack.Navigator   >
              <Stack.Screen name="Gestor Agenda" component={Agendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text, headerTitle: (props) => ( <>
-              <Image  source={{ uri: logo}} style={{ width: 60, height: 60 }}
-             />
-            <Text style={{marginLeft:10}}>{nomeEstabelecimento}</Text></>)}} />
+            {logo === 'padrao' ? (
+                <Image source={require('../../assets/logo/logo-app.png')} style={{ width: 60, height: 60 }} />
+            ):( <Image  source={{ uri: logo}} style={{ width: 60, height: 60 }}  />)} 
+            <Text style={{marginLeft:10, color: tema === 'light' ? '#006699' : '#fff'}}>{nomeEstabelecimento}</Text></>)}} />
              <Stack.Screen name="Novo Agendamento" component={NovoAgendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}}></Stack.Screen>
              <Stack.Screen name="Detalhes Agendamento" component={DetalhesAgendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}}></Stack.Screen>
            
