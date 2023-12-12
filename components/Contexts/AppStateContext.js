@@ -43,6 +43,7 @@ export const AppStateProvider = ({ children }) => {
     setTema(novoTema); //Muda no appContext para popular para todo o app
     SalvaTema(tema); //salva no asyncStorage
   };
+  
 
   //RESPONSAVEL PELO SERVIÇO (ATUALIZAÇAO DA LISTA)
   const [atulizaListaServico, setAtualisaListaServico] = useState(true);
@@ -54,10 +55,12 @@ export const AppStateProvider = ({ children }) => {
   const [atualizaAgendamentos, setAtualizaAgendamentos] = useState(false);
 
   //RESPONSAVEL POR TROCAR A LOGO
-  const [logo, setLogo] = useState('padrao');
-  const [nomeEstabelecimento, setNomeEstabelecimento]   = useState(null);
+  const [attLogo, setAttLogo] = useState('padrao');
+  const [attNomeEstabelecimento, setAttNomeEstabelecimento]   = useState(null);
 
   // console.log(`tema = ${tema} temaSistema = ${temaSistema} temaPadraoSistema = ${temaPadraoSistema}`);
+
+
 
   return (
     <AppStateContext.Provider
@@ -76,10 +79,11 @@ export const AppStateProvider = ({ children }) => {
         setAtualizaAgendamentos,
         usaTemaSistemaAsyncStorage, 
         setUsaTemaSistemaAsyncStorage,
-              logo,
-              setLogo,
-              nomeEstabelecimento,
-              setNomeEstabelecimento
+              attLogo,
+              setAttLogo,
+              attNomeEstabelecimento,
+              setAttNomeEstabelecimento,
+              
       }}>
       {children}
     </AppStateContext.Provider>

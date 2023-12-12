@@ -47,9 +47,13 @@ export default function Estabelecimento()
            setSelected(resultado.ramoAtividade);
            setRamoAtividade(resultado.ramoAtividade);
 
+           //CONTEXT
+           setAttNomeEstabelecimento(resultado.nomeEstabelecimento);
+           setAttLogo(resultado.logo === '' || resultado.logo == null || resultado.logo === 'undefined' ? 'padrao' : resultado.logo);
+           console.log('resultado logo', resultado.logo)
            console.log("l 51: ramo ", resultado.ramoAtividade)
            console.log('l 51 selected ',selected) 
-            
+            console.log('effect logo ', attLogo)
           } else {
             setPrimeiroCadastro(true);
             // Trate o caso em que nenhum resultado foi encontrado
@@ -71,7 +75,7 @@ export default function Estabelecimento()
           });
 
           
-    }, []);
+    }, [nomeEstabelecimento]);
     //UseEffect exlcuiso para o selectlis ramo de atividade
     useEffect(() => {
       // Obtendo chave correspondente ao valor do ramo de atividade
@@ -106,8 +110,10 @@ export default function Estabelecimento()
 
     const [primeiroCadastro, setPrimeiroCadastro]               = useState(false);
 
+    //CONTEXT
+    const {tema, setAttNomeEstabelecimento, attNomeEstabelecimento, setAttLogo, attLogo} = useAppState();
     //COR DO TEMA
-    const {tema} = useAppState();
+  
     const [corTema, setCorTema] = useState('#006699');
 
      useEffect(()=>{
@@ -267,6 +273,9 @@ export default function Estabelecimento()
           nomeEstabelecimento,cnpj,destino,ramoAtividade,tipoAcao, idEstabelecimento
         )
           .then((inseridoComSucesso) => {
+            setAttNomeEstabelecimento(nomeEstabelecimento);
+            setAttLogo(image == null  ? 'padrao' :destino)
+          
             //Insere serviços ao ramo de atividade
             if(ramoAtividade !== null)
             {

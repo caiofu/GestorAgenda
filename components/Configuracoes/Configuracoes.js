@@ -262,7 +262,7 @@ console.log("usaTemaSistemaAsyncStorage: ", usaTemaSistemaAsyncStorage);
             
             {msgHelper ? <HelperText style={{color:'red', fontStyle:'italic'}}><Text>* O texto não é valido!</Text></HelperText> : ''}   
             <TextInput value={textoConfirmacao}
-            onChangeText={handleChangeTextoConfirmacao} textColor='#fff' style={{backgroundColor: corTema, fontWeight:'bold', color:'#fff'}}></TextInput>
+            onChangeText={handleChangeTextoConfirmacao} textColor={tema === 'light' ? '#fff' : 'black'}style={{backgroundColor: corTema, fontWeight:'bold', color:'#fff'}}></TextInput>
 
             <TouchableOpacity style={styles.btnRestaurarDialog} onPress={RestaurarPadroes}>
                 <Text style={styles.txtBtnRestaurarDialog}>RESTAURAR</Text>

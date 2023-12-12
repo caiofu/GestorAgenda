@@ -502,7 +502,7 @@ const compartilharNoWhatsApp = () => {
                         selectedText='selecionados'
                         confirmText="Confirmar"
                         colors={{text:'red'}}
-                        styles={{selectToggle:{borderWidth:1, borderRadius:5, padding:5, borderColor:corTema, backgroundColor:'#fff'} }}
+                        styles={{selectToggle:{borderWidth:1, borderRadius:5, padding:5, borderColor:corTema, height:50, marginBottom:10, backgroundColor:'#fff', alignContent:'center' } }}
                         
                         uniqueKey="name"
                         selectText="Serviços selecionados"
@@ -515,7 +515,7 @@ const compartilharNoWhatsApp = () => {
                         
                         />
                     </View>
-
+                   
                     <View style={{marginRight:20, marginLeft:20, paddingTop:10}}>
                         <SectionedMultiSelect
                          
@@ -524,7 +524,7 @@ const compartilharNoWhatsApp = () => {
                         selectedText='selecionados'
                         confirmText="Confirmar"
                         colors={{text:'red'}}
-                        styles={{selectToggle:{borderWidth:1, borderRadius:5, padding:5,backgroundColor:'#fff'},
+                        styles={{selectToggle:{borderWidth:1, borderRadius:5, padding:5, borderColor:corTema, height:50, marginBottom:10, backgroundColor:'#fff', alignContent:'center'},
                                 }}
                         uniqueKey="name"
                         

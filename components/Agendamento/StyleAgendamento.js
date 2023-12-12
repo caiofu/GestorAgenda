@@ -48,6 +48,9 @@ const styles = StyleSheet.create({
         backgroundColor:'#006699',
         marginLeft:20,
         marginRight:20,
+        height:50,
+        alignContent:'center',
+        justifyContent:'center',
         padding:6,
         borderRadius:5,
         
@@ -62,6 +65,7 @@ const styles = StyleSheet.create({
         fontFamily:'Rubik_700Bold'
 
     },
+
 
     inputFormularioSelect:
     {
@@ -116,7 +120,8 @@ const styles = StyleSheet.create({
         fontSize:23,
         marginLeft:5
         
-    }
+    },
+ 
 
 
 });

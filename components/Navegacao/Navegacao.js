@@ -74,25 +74,29 @@ function OpAcoes() {
 }
 
 function OpTelaInicial() {
-    const { tema, logo, setLogo, nomeEstabelecimento, setNomeEstabelecimento} = useAppState();
+    const { tema, attLogo, setAttLogo, attNomeEstabelecimento, setAttNomeEstabelecimento} = useAppState();
     // const [nomeEstabelecimento, setNomeEstabelecimento] = useState(null);
     // const [logo, setLogo] = useState('../../assets/logo/logo-app.png');
 
-    const [teste, setTeste] = useState(null);
-    useEffect(() => {
-       setTeste(logo);
+    //const [teste, setTeste] = useState(null);
+    // useEffect(() => {
+    //    setTeste(logo);
 
-    },[logo])
-    console.log('logo de teste -> ',teste)
+    // },[logo])
+
+ console.log('att logo ', attLogo)
+    
+
+
     
     //FAZER NO CONTEXT A TRATATIVA
     return (
         <Stack.Navigator   >
              <Stack.Screen name="Gestor Agenda" component={Agendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text, headerTitle: (props) => ( <>
-            {logo === 'padrao' ? (
+            {attLogo === 'padrao' ? (
                 <Image source={require('../../assets/logo/logo-app.png')} style={{ width: 60, height: 60 }} />
-            ):( <Image  source={{ uri: logo}} style={{ width: 60, height: 60 }}  />)} 
-            <Text style={{marginLeft:10, color: tema === 'light' ? '#006699' : '#fff'}}>{nomeEstabelecimento}</Text></>)}} />
+            ):( <Image  source={{ uri: attLogo}} style={{ width: 60, height: 60 }}  />)} 
+            <Text style={{marginLeft:10, color: tema === 'light' ? '#006699' : '#fff', fontSize:18, fontWeight:'bold'}}>{attNomeEstabelecimento}</Text></>)}} />
              <Stack.Screen name="Novo Agendamento" component={NovoAgendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}}></Stack.Screen>
              <Stack.Screen name="Detalhes Agendamento" component={DetalhesAgendamento} options={{headerTintColor: tema === 'light' ? '#006699': DarkTheme.colors.text}}></Stack.Screen>
            

@@ -19,7 +19,7 @@ export default function Agendamento()
 {
 
     //CONTEXT
-    const { navegacaoEstabelecimento, setNavegacaoEstabelecimento, atualizaAgendamentos, logo, setLogo, nomeEstabelecimento, setNomeEstabelecimento, tema } = useAppState();
+    const { navegacaoEstabelecimento, setNavegacaoEstabelecimento, atualizaAgendamentos, attLogo, setAttLogo, attNomeEstabelecimento, setAttNomeEstabelecimento, tema } = useAppState();
 
      //COR DO TEMA
      const [corTema, setCorTema] = useState('#006699');
@@ -54,17 +54,17 @@ export default function Agendamento()
                if( resultado && resultado.logo !== null)
                {
                    
-                    setLogo(resultado.logo); 
+                    setAttLogo(resultado.logo); 
                }
               
                  
     
-               setNomeEstabelecimento(resultado.nomeEstabelecimento);
+               setAttNomeEstabelecimento(resultado.nomeEstabelecimento);
               
       
             });
         }
-        },[logo, navegacaoEstabelecimento ])
+        },[attLogo, navegacaoEstabelecimento ])
    
       
 

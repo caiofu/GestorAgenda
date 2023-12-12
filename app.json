@@ -4,10 +4,10 @@
     "slug": "GestorAgenda",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo/logo-app.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/logo/logo-app.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -19,16 +19,24 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/logo/logo-app.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.caiofu.GestorAgenda"
     },
-    "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"],
+    "permissions": [
+      "CAMERA",
+      "READ_EXTERNAL_STORAGE",
+      "WRITE_EXTERNAL_STORAGE"
+    ],
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
-      "RubikRegular": "./assets/fonts" 
+      "RubikRegular": "./assets/fonts",
+      "eas": {
+        "projectId": "d9caa867-98ca-421d-a671-eeb29b8461c4"
+      }
     }
   }
 }
