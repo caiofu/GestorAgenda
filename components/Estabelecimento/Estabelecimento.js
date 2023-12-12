@@ -34,12 +34,10 @@ export default function Estabelecimento()
        
 
         ConsultaEstabelecimento((resultado) => {
-          console.log("RESULTADO"+resultado)
+      
           if (resultado !== null) {
-            console.log("Resultado: ", resultado);
+          
             setPrimeiroCadastro(false);
-           // let jsonTe = resultado;
-           console.log(resultado.logo);
             resultado.logo === '' ? setImage(null) :  setImage(resultado.logo); //Verifica se é a imagem padrao
           
            setIdEstabelecimento(resultado.idEstabelecimento);
@@ -50,10 +48,7 @@ export default function Estabelecimento()
            setRamoAtividade(resultado.ramoAtividade);
 
            console.log("l 51: ramo ", resultado.ramoAtividade)
-
-          
-            // Aqui, você pode acessar o resultado retornado
-            //// console.log("Resultado da consulta:", resultado);
+           console.log('l 51 selected ',selected) 
             
           } else {
             setPrimeiroCadastro(true);
@@ -68,8 +63,9 @@ export default function Estabelecimento()
           const retorno = ramoAtividades.map((atividade) => ({
               key: atividade.idRamoAtividade.toString(),
               value: atividade.nomeAtividade,
+
           }));
-              //// console.log(retorno);
+             
               setListaRamoAtividade(retorno);
             
           });
@@ -82,7 +78,8 @@ export default function Estabelecimento()
       const chaveSelecionada = listaRamoAtividade.find(item => item.value === selected)?.key;
       // console.log("Chave (key) correspondente ao valor de ramo de atividade:", chaveSelecionada);
       setIdRamoAtividade(chaveSelecionada);
-    }, [selected, listaRamoAtividade]); //Esse trecho éa dependencia do useEffect estamos falando para o useEffect fica oberservando as mudanças nesse trecho para alteraças
+      console.log('l 85: ramo -> ',ramoAtividade)
+    }, [selected, listaRamoAtividade]); 
     
    
     //VARIAVEIS DE ESTADO
@@ -325,7 +322,7 @@ export default function Estabelecimento()
   //MODAL
   const [modalVisivel, setModalVisivel] = useState(false);
 
-
+console.log('Ramo de atividade ? --> ', ramoAtividade)
 
     return(
       
@@ -387,7 +384,7 @@ export default function Estabelecimento()
             fontFamily="Rubik_400Regular"
             boxStyles={styles.inputFormularioSelect}
             dropdownStyles={{ alignSelf:'center',   width:'89%'}}
-            setSelected={(val) => {setRamoAtividade(val);}}
+            setSelected={(val) => {  setRamoAtividade(isNaN(parseFloat(val)) ? val : null);}}
             data={listaRamoAtividade}
             dropdownTextStyles={{color: corTema}}
             save="value"

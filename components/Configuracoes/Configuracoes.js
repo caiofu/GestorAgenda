@@ -210,7 +210,7 @@ console.log("usaTemaSistemaAsyncStorage: ", usaTemaSistemaAsyncStorage);
 
                         {/* Botão de Restore */}
                         <View style={styles.Container}>
-                            <TouchableOpacity onPress={RestoreBackup} style={ tema === 'light' ?styles.btn : styles.btnDark}>
+                            <TouchableOpacity onPress={RestoreBackup} style={ tema === 'light' ? styles.btn : styles.btnDark}>
                                 <Text style={tema === 'light' ? styles.btnTxt : styles.btnTxtDark}>RESTORE</Text>
                             </TouchableOpacity>                      
                         </View> 
@@ -262,7 +262,7 @@ console.log("usaTemaSistemaAsyncStorage: ", usaTemaSistemaAsyncStorage);
             
             {msgHelper ? <HelperText style={{color:'red', fontStyle:'italic'}}><Text>* O texto não é valido!</Text></HelperText> : ''}   
             <TextInput value={textoConfirmacao}
-            onChangeText={handleChangeTextoConfirmacao} style={{backgroundColor: corTema, fontWeight:'bold', color:'#fff'}}></TextInput>
+            onChangeText={handleChangeTextoConfirmacao} textColor='#fff' style={{backgroundColor: corTema, fontWeight:'bold', color:'#fff'}}></TextInput>
 
             <TouchableOpacity style={styles.btnRestaurarDialog} onPress={RestaurarPadroes}>
                 <Text style={styles.txtBtnRestaurarDialog}>RESTAURAR</Text>
